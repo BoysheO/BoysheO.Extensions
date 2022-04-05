@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+        <LangVersion>8.0</LangVersion>
+        <RootNamespace>BoysheO</RootNamespace>
+        <GenerateDocumentationFile>True</GenerateDocumentationFile>
+        <Nullable>enable</Nullable>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Authors>BoysheO</Authors>
+        <Version>1.0.4</Version>
+        <Copyright>MIT</Copyright>
+        <RepositoryUrl>https://github.com/BoysheO/BoysheO.Extensions</RepositoryUrl>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <NoWarn>1701;1702;1591</NoWarn>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <NoWarn>1701;1702;1591</NoWarn>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="IndexRange" Version="1.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Primitives" Version="5.0.0" />
+        <PackageReference Include="System.Memory" Version="4.5.4" />
+    </ItemGroup>
+
+</Project>
