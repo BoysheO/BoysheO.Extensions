@@ -1,0 +1,46 @@
+﻿<#@ template debug="true" hostspecific="true" language="C#"  #>
+<#@ import namespace="System.Linq"#>
+<#@ import namespace="System"#>
+<#@ assembly name="System.Core" #> 
+<#@ assembly name="mscorlib.dll"#>
+<#@ assembly name="$(NuGetPackageRoot)\unity3d.sdk\2020.3.2.1\lib\UnityEngine.dll"#>
+<#@ import namespace="UnityEngine" #>
+/* The Code is Auto Generated.
+ */
+using UnityEngine;
+using System.Runtime.CompilerServices;
+
+namespace Extensions
+{
+    public static partial class TransformExtensions
+    {
+<#
+    var type = typeof(UnityEngine.Transform);
+    var members = type.GetProperties()
+        .Where(v => v.PropertyType == typeof(Vector3) && v.CanWrite);
+    foreach (var vecMember in members)
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            string m;
+            if (i == 0) m = "X";
+            else if (i == 1) m = "Y";
+            else if (i == 2) m = "Z";
+            else throw new Exception();
+            var firstChar = vecMember.Name[0].ToString().ToUpper();
+            var name = firstChar + vecMember.Name.Substring(1);
+#>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Transform Set<#= name #><#= m #>(this Transform transform, float <#= m.ToLower() #>)
+        {
+            var v = transform.<#= vecMember.Name #>;
+            v.<#= m.ToLower() #> = <#= m.ToLower() #>;
+            transform.<#= vecMember.Name #> = v;
+            return transform;
+        }
+<#
+        }
+    }
+#>
+    }
+}

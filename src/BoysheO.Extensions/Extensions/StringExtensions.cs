@@ -539,5 +539,39 @@ namespace BoysheO.Extensions
         {
             return source.AsMemoryByteSpan().MemoryToString();
         }
+        
+        /// <summary>
+        /// 如果首字母不是字母则抛异常
+        /// </summary>
+        public static string MakeFirstCharUpper(this string str)
+        {
+            if (str.Length == 0) return "";
+            if (str.Length == 1) return str.ToUpper();
+            var c = str[0];
+            c = c.ToUpper();
+            return c + str.Substring(1);
+        }
+        
+        public static string MakeFirstCharUpper2(this string str)
+        {
+            return str.Length>1 && str[0].Isatoz() ? MakeFirstCharLower(str) : str;
+        }
+        
+        /// <summary>
+        /// 如果首字母不是字母则抛异常
+        /// </summary>
+        public static string MakeFirstCharLower(this string str)
+        {
+            if (str.Length == 0) return "";
+            if (str.Length == 1) return str.ToLower();
+            var c = str[0]; 
+            c = c.ToLower();
+            return c + str.Substring(1);
+        }
+
+        public static string MakeFirstCharLower2(this string str)
+        {
+            return str.Length>1 && str[0].IsAtoZ() ? MakeFirstCharLower(str) : str;
+        }
     }
 }
