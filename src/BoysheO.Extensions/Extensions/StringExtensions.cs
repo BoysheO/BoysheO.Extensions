@@ -573,5 +573,13 @@ namespace BoysheO.Extensions
         {
             return str.Length>1 && str[0].IsAtoZ() ? MakeFirstCharLower(str) : str;
         }
+
+        /// <summary>
+        /// 等价于<see cref="Int32.Parse"/>
+        /// </summary>
+        public static int ToIntNumber(this string str)
+        {
+            return int.Parse(str);
+        }
     }
 }

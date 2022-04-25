@@ -5,6 +5,16 @@ namespace BoysheO.Extensions
 {
     public static class CharExtensions
     {
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        // ReSharper disable once InconsistentNaming
+        public static int To0to9(this char c)
+        {
+            if (!c.Is0to9()) throw new Exception($"arg={c} is not 0-9");
+            return c;
+        }
+
+        
         //48－57 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         // ReSharper disable once InconsistentNaming

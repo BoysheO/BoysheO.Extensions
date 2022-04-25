@@ -38,15 +38,31 @@ namespace BoysheO.Extensions
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static double ClampMin(this double value, double min)
+        public static double Max(this double value, double min)
         {
-            return value < min ? min : value;
+            return Math.Max(value, min);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static double Min(this double value, double min)
+        {
+            return Math.Min(value, min);
+        }
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static double Clamp01(this double value)
         {
             return Clamp(value, 0, 1);
+        }
+
+        /// <summary>
+        /// 将NaN和Infinity作为0输出
+        /// </summary>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static double AvoidNaNInfinityAs0(this double value)
+        {
+            return double.IsInfinity(value) || double.IsNaN(value) ? 0 : value;
         }
     }
 }
