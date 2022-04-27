@@ -11,9 +11,10 @@ namespace BoysheO.Extensions.Unity3DCore
         /// </summary>
         [NotNull]
         public static T GetRequireComponent<T>(this Component component)
+            where T:Component
         {
             var com = component.GetComponent<T>();
-            // if (com is null) throw new Exception($"{component.name} is missing component {typeof(T).Name}");//C#7不支持判空
+            if (com is null) throw new Exception($"{component.name} is missing component {typeof(T).Name}");
             return com;
         }
 
@@ -34,6 +35,11 @@ namespace BoysheO.Extensions.Unity3DCore
         public static bool HasComponent<T>(this Component com) where T : Component
         {
             return !(com.GetComponent<T>() is null);
+        }
+
+        public static bool IsDestroyed(this Component component)
+        {
+            return component == null;
         }
     }
 }

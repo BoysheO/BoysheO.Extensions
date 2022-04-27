@@ -581,5 +581,23 @@ namespace BoysheO.Extensions
         {
             return int.Parse(str);
         }
+
+        public static string Format(this string str, object a)
+        {
+            return string.Format(str, a);
+        }
+        public static string Format(this string str, object a,object b)
+        {
+            return string.Format(str, a);
+        }
+        public static string Format(this string str, object a,object b,object c)
+        {
+            return string.Format(str, a);
+        }
+        public static string Format(this string str,params object[] args)
+        {
+            return string.Format(str, args);
+        }
+        
     }
 }

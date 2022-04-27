@@ -48,5 +48,10 @@ namespace BoysheO.Extensions.Unity3DCore
         {
             return !(go.GetComponent<T>() is null);
         }
+        
+        public static bool IsDestroyed(this GameObject component)
+        {
+            return component == null;
+        }
     }
 }
