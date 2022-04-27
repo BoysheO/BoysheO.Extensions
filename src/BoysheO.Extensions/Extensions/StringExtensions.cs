@@ -582,17 +582,32 @@ namespace BoysheO.Extensions
             return int.Parse(str);
         }
 
+        /// <summary>
+        /// 拥有更多异常信息
+        /// </summary>
+        /// <exception cref="ArgumentException">空arg或不是number</exception>
+        public static int ToIntNumber2(this string str)
+        {
+            if (str.IsNullOrWhiteSpace()) throw new ArgumentException($"arg is empty");
+            if (int.TryParse(str, out int res))
+            {
+                return res;
+            }
+
+            throw new ArgumentException($"{str} can't be number");
+        }
+        
         public static string Format(this string str, object a)
         {
             return string.Format(str, a);
         }
         public static string Format(this string str, object a,object b)
         {
-            return string.Format(str, a);
+            return string.Format(str, a,b);
         }
         public static string Format(this string str, object a,object b,object c)
         {
-            return string.Format(str, a);
+            return string.Format(str, a,b,c);
         }
         public static string Format(this string str,params object[] args)
         {
