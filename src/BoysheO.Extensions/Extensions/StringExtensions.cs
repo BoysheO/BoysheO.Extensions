@@ -575,7 +575,7 @@ namespace BoysheO.Extensions
         }
 
         /// <summary>
-        /// 等价于<see cref="Int32.Parse"/>
+        /// 等价于int.Parse(string str)
         /// </summary>
         public static int ToIntNumber(this string str)
         {
