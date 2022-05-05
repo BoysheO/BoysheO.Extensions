@@ -32,7 +32,7 @@ namespace BoysheO.Extensions
         /// </summary>
         public static IEnumerable<string> RemoveSpaces(this IEnumerable<string> strAry)
         {
-            var chars = new[] {' ', '\f', '\n', '\r', '\t', '\v'};
+            var chars = new[] { ' ', '\f', '\n', '\r', '\t', '\v' };
             foreach (var str in strAry)
             {
                 if (str == null) throw new NullReferenceException("null element was rejected");
@@ -59,7 +59,7 @@ namespace BoysheO.Extensions
         public static string RemoveSpaces(this string str)
         {
             if (str == null) throw new Exception("str can not be null");
-            return str.Replace(new[] {" ", "\f", "\n", "\r", "\t", "\v"}, "");
+            return str.Replace(new[] { " ", "\f", "\n", "\r", "\t", "\v" }, "");
         }
 
         /// <summary>
@@ -429,7 +429,7 @@ namespace BoysheO.Extensions
                         throw new InvalidCastException($"str={str} idx={len} char={c} is out of byte value range.");
                 }
 
-                result[len] = unchecked((byte) charSpan[len]);
+                result[len] = unchecked((byte)charSpan[len]);
             }
 
             return result;
@@ -444,7 +444,7 @@ namespace BoysheO.Extensions
             const int maxStackLimit = 1024;
             var len = source.Length;
             var buffer = len <= maxStackLimit ? stackalloc char[len] : new char[len];
-            for (len--; len >= 0; len--) buffer[len] = (char) source[len];
+            for (len--; len >= 0; len--) buffer[len] = (char)source[len];
 
             unsafe
             {
@@ -461,7 +461,7 @@ namespace BoysheO.Extensions
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string ToRawString(this byte[] bytes)
         {
-            return ToRawString((ReadOnlySpan<byte>) bytes);
+            return ToRawString((ReadOnlySpan<byte>)bytes);
         }
 
         /// <summary>
@@ -470,7 +470,7 @@ namespace BoysheO.Extensions
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string ToRawString(this ArraySegment<byte> bytes)
         {
-            return ToRawString((ReadOnlySpan<byte>) bytes);
+            return ToRawString((ReadOnlySpan<byte>)bytes);
         }
 
         /// <summary>
@@ -479,7 +479,7 @@ namespace BoysheO.Extensions
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string ToRawString(this Span<byte> bytes)
         {
-            return ToRawString((ReadOnlySpan<byte>) bytes);
+            return ToRawString((ReadOnlySpan<byte>)bytes);
         }
 
         /// <summary>
@@ -506,7 +506,7 @@ namespace BoysheO.Extensions
             {
                 fixed (byte* p = source)
                 {
-                    var sb = (char*) p;
+                    var sb = (char*)p;
                     return new string(sb);
                 }
             }
@@ -518,7 +518,7 @@ namespace BoysheO.Extensions
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string MemoryToString(this Span<byte> source)
         {
-            return MemoryToString((ReadOnlySpan<byte>) source);
+            return MemoryToString((ReadOnlySpan<byte>)source);
         }
 
         /// <summary>
@@ -539,7 +539,7 @@ namespace BoysheO.Extensions
         {
             return source.AsMemoryByteSpan().MemoryToString();
         }
-        
+
         /// <summary>
         /// 如果首字母不是字母则抛异常
         /// </summary>
@@ -551,12 +551,12 @@ namespace BoysheO.Extensions
             c = c.ToUpper();
             return c + str.Substring(1);
         }
-        
+
         public static string MakeFirstCharUpper2(this string str)
         {
-            return str.Length>1 && str[0].Isatoz() ? MakeFirstCharLower(str) : str;
+            return str.Length > 1 && str[0].Isatoz() ? MakeFirstCharLower(str) : str;
         }
-        
+
         /// <summary>
         /// 如果首字母不是字母则抛异常
         /// </summary>
@@ -564,14 +564,14 @@ namespace BoysheO.Extensions
         {
             if (str.Length == 0) return "";
             if (str.Length == 1) return str.ToLower();
-            var c = str[0]; 
+            var c = str[0];
             c = c.ToLower();
             return c + str.Substring(1);
         }
 
         public static string MakeFirstCharLower2(this string str)
         {
-            return str.Length>1 && str[0].IsAtoZ() ? MakeFirstCharLower(str) : str;
+            return str.Length > 1 && str[0].IsAtoZ() ? MakeFirstCharLower(str) : str;
         }
 
         /// <summary>
@@ -596,23 +596,29 @@ namespace BoysheO.Extensions
 
             throw new ArgumentException($"{str} can't be number");
         }
-        
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string Format(this string str, object a)
         {
             return string.Format(str, a);
         }
-        public static string Format(this string str, object a,object b)
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static string Format(this string str, object a, object b)
         {
-            return string.Format(str, a,b);
+            return string.Format(str, a, b);
         }
-        public static string Format(this string str, object a,object b,object c)
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static string Format(this string str, object a, object b, object c)
         {
-            return string.Format(str, a,b,c);
+            return string.Format(str, a, b, c);
         }
-        public static string Format(this string str,params object[] args)
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static string Format(this string str, params object[] args)
         {
             return string.Format(str, args);
         }
-        
     }
 }

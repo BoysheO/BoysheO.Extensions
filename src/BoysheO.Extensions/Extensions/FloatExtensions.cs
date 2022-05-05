@@ -42,5 +42,17 @@ namespace BoysheO.Extensions
         {
             return Clamp(value, 0, 1);
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float Max(this float value,float another)
+        {
+            return Math.Max(value,another);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float Min(this float value,float another)
+        {
+            return Math.Max(value,another);
+        }
     }
 }
