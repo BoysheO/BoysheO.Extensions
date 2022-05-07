@@ -33,10 +33,31 @@ namespace BoysheO.Extensions
         /// <param name="value"></param>
         /// <param name="zero">当value为0时，输出这个值，它应为"0"、"+0"、"-0"、" 0"之一</param>
         /// <returns></returns>
-        public static string ToStringWithSign(this int value,string zero="0")
+        public static string ToStringWithSign(this int value, string zero = "0")
         {
             if (value == 0) return zero;
             return value > 0 ? $"+{value}" : value.ToString();
+        }
+
+        /// <summary>
+        /// 等价于value &lt;= minInclusive &amp;&amp; value &gt; = maxInclusive
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsInRange(this int value, int minInclusive, int maxInclusive)
+        {
+            return value >= minInclusive && value <= maxInclusive;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int Min(this int value, int another)
+        {
+            return Math.Min(value, another);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int Max(this int value, int another)
+        {
+            return Math.Max(value, another);
         }
     }
 }
