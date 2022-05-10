@@ -1,0 +1,45 @@
+<#@ template language="C#" #>
+<#@ import namespace="System.Linq"#>
+<#@ import namespace="System"#>
+<#@ assembly name="System.Core" #> 
+<#@ assembly name="mscorlib.dll"#>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".Generated.cs" encoding="utf-8" #>
+<#
+    var lst = new List<Type>()
+    {
+        typeof(int),
+        typeof(long),
+        typeof(double),
+        typeof(float),
+        typeof(uint),
+        typeof(ushort),
+        typeof(short),
+        typeof(byte),
+        typeof(decimal),
+    };
+    var lst1 = lst.SelectMany(type1 => lst.Select(type2 => (type1,type2)));
+#>
+using System.Runtime.CompilerServices;
+namespace BoysheO.Extensions
+{
+    public static partial class IntExtensions
+    {
+<#
+    foreach (var (type1,type2) in lst1)
+    {
+#>
+        /// <summary>
+        /// 等价于value &lt;= minInclusive &amp;&amp; value &gt; = maxInclusive
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsInRange(this int value, <#=type1.FullName#> minInclusive, <#=type2.FullName#> maxInclusive)
+        {
+            return value >= minInclusive && value <= maxInclusive;
+        }
+<#
+    }
+#>
+    }
+}

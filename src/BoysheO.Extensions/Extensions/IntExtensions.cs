@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace BoysheO.Extensions
 {
-    public static class IntExtensions
+    public static partial class IntExtensions
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int Abs(this int i)
@@ -37,15 +37,6 @@ namespace BoysheO.Extensions
         {
             if (value == 0) return zero;
             return value > 0 ? $"+{value}" : value.ToString();
-        }
-
-        /// <summary>
-        /// 等价于value &lt;= minInclusive &amp;&amp; value &gt; = maxInclusive
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsInRange(this int value, int minInclusive, int maxInclusive)
-        {
-            return value >= minInclusive && value <= maxInclusive;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
