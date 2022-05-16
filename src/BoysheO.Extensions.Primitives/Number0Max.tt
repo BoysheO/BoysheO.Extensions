@@ -1,0 +1,51 @@
+<#@ template language="C#" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output encoding="utf-8"#>
+<#
+    var lst = new string[]
+    {
+        "Float",
+        "Double",
+        "Decimal",
+        "Sbyte",
+        "Short",
+        "Int",
+        "Long",
+    };
+#>
+using System;
+
+namespace BoysheO.Extensions.Primitives
+{
+<#
+    foreach (var type in lst)
+    {
+#>
+    /// <summary>
+    /// {v,v∈[0,<#=type.ToLower()#>.Max],v is <#=type.ToLower()#>}
+    /// </summary>
+    public readonly struct <#=type#>0Max
+    {
+        public readonly <#=type.ToLower()#> Value;
+
+        public <#=type#>0Max(<#=type.ToLower()#> value)
+        {
+#if PERFORMANCE
+            Value = value;
+            return;
+#endif
+            if (value >= 0 && value <= <#=type.ToLower()#>.MaxValue)
+            {
+                Value = value;
+                return;
+            }
+
+            throw new ArgumentOutOfRangeException(nameof(value), $"value={value} not be in [0,<#=type.ToLower()#>.Max]");
+        }
+    }
+<#
+    }
+#>
+
+}

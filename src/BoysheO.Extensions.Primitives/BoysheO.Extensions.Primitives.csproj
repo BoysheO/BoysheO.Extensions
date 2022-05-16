@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <None Update="Number01.tt">
+        <Generator>TextTemplatingFileGenerator</Generator>
+        <LastGenOutput>Number01.cs</LastGenOutput>
+      </None>
+      <None Update="Number0Max.tt">
+        <Generator>TextTemplatingFileGenerator</Generator>
+        <LastGenOutput>Number0Max.cs</LastGenOutput>
+      </None>
+      <None Update="Number0ExclusiveMaxInclusive.tt">
+        <Generator>TextTemplatingFileGenerator</Generator>
+        <LastGenOutput>Number0ExclusiveMaxInclusive.cs</LastGenOutput>
+      </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Number01.cs">
+        <AutoGen>True</AutoGen>
+        <DesignTime>True</DesignTime>
+        <DependentUpon>Number01.tt</DependentUpon>
+      </Compile>
+      <Compile Update="Number0Max.cs">
+        <DependentUpon>Number0Max.tt</DependentUpon>
+      </Compile>
+      <Compile Update="Number0ExclusiveMaxInclusive.cs">
+        <AutoGen>True</AutoGen>
+        <DesignTime>True</DesignTime>
+        <DependentUpon>Number0ExclusiveMaxInclusive.tt</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+</Project>

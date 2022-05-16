@@ -1,0 +1,46 @@
+<#@ template language="C#" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output encoding="utf-8"#>
+<#
+    var lst = new string[]
+    {
+        "Float",
+        "Double",
+        "Decimal"
+    };
+#>
+using System;
+
+namespace BoysheO.Extensions.Primitives
+{
+<#
+    foreach (var type in lst)
+    {
+#>
+    /// <summary>
+    /// {v,v∈[0,1],v is <#=type.ToLower()#>}
+    /// </summary>
+    public readonly struct <#=type#>01
+    {
+        public readonly <#=type.ToLower()#> Value;
+
+        public <#=type#>01(<#=type.ToLower()#> value)
+        {
+#if PERFORMANCE
+            Value = value;
+            return;
+#endif
+            if (value >= 0 && value <= 1)//float有可能是NaN值，不可用<0和>1判断
+            {
+                Value = value;
+                return;
+            }
+
+            throw new ArgumentOutOfRangeException(nameof(value), $"value={value} not be in [0,1]");
+        }
+    }
+<#
+    }
+#>
+}
