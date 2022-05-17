@@ -22,7 +22,7 @@ namespace BoysheO.Util
                 }
 
             Array.Resize(ref array, array.Length + 1);
-            array[^1] = item;
+            array[array.Length-1] = item;
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace BoysheO.Util
                 }
 
             Array.Resize(ref array, array.Length + 1);
-            array[^1] = item;
+            array[array.Length-1] = item;
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace BoysheO.Util
             }
 
             Array.Resize(ref array, array.Length + 1);
-            array[^1] = item;
+            array[array.Length-1] = item;
         }
 
         /// <summary>

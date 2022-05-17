@@ -113,7 +113,8 @@ namespace BoysheO.Extensions
                     if (start + 1 == i)
                         yield return "";
                     else
-                        yield return str[(start + 1).. i];
+                        yield return str.Substring((start + 1), i - (start + 1));
+                        // yield return str[(start + 1).. i];
 
                     start = i;
                 }
@@ -122,7 +123,7 @@ namespace BoysheO.Extensions
             if (start + 1 == len - 1)
                 yield return "";
             else
-                yield return str[(start + 1)..];
+                yield return str.Substring(start + 1);
         }
 
         /// <summary>

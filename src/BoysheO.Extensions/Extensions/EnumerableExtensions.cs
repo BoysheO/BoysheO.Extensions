@@ -94,7 +94,7 @@ namespace BoysheO.Extensions
         {
             return ToSortedList(sources, keySelector, valueSelector, new ComparerAdapter<TKey>(comparer));
         }
-
+        
         public static SortedList<TKey, TSource> ToSortedList<TKey, TSource>(this IEnumerable<TSource> sources,
             Func<TSource, TKey> keySelector)
         {

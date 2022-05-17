@@ -235,22 +235,22 @@ namespace BoysheO.Toolkit
             return buffer;
         }
 
-        public int NextRange(Range range)
-        {
-            return NextInteger(range.Start.Value, range.End.Value + 1);
-        }
-
-        public void NextRanges(Range range, int[] buffer)
-        {
-            for (var i = 0; i < buffer.Length; i++) buffer[i] = NextRange(range);
-        }
-
-        public int[] NextRanges(Range range, int quantity)
-        {
-            var buffer = new int[quantity];
-            NextRanges(range, buffer);
-            return buffer;
-        }
+        // public int NextRange(Range range)
+        // {
+        //     return NextInteger(range.Start.Value, range.End.Value + 1);
+        // }
+        //
+        // public void NextRanges(Range range, int[] buffer)
+        // {
+        //     for (var i = 0; i < buffer.Length; i++) buffer[i] = NextRange(range);
+        // }
+        //
+        // public int[] NextRanges(Range range, int quantity)
+        // {
+        //     var buffer = new int[quantity];
+        //     NextRanges(range, buffer);
+        //     return buffer;
+        // }
 
         public int NextRange(int minValue, int maxValue)
         {
