@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -9,6 +10,7 @@ namespace BoysheO.Extensions.Unity3DCore
         /// <summary>
         /// 如果没有指定组件，则抛异常
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [NotNull]
         public static T GetRequireComponent<T>(this Component component)
             where T:Component
@@ -21,6 +23,7 @@ namespace BoysheO.Extensions.Unity3DCore
         /// <summary>
         /// 如果没有指定组件，则抛异常
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [NotNull]
         public static T GetRequireComponentInChildren<T>(this Component o)
             where T : Component
@@ -32,10 +35,13 @@ namespace BoysheO.Extensions.Unity3DCore
         /// <summary>
         /// 判断是否具有指定组件（引用判空，非==null判定）
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+
         public static bool HasComponent<T>(this Component com) where T : Component
         {
             return !(com.GetComponent<T>() is null);
         }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
 
         public static bool IsDestroyed(this Component component)
         {

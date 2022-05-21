@@ -48,7 +48,7 @@ namespace BoysheO.Extensions.Unity3DCore
         {
             return !(go.GetComponent<T>() is null);
         }
-        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsDestroyed(this GameObject component)
         {
             return component == null;
