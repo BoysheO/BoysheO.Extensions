@@ -20,4 +20,12 @@ public class DateTimeOffsetExtensionsTests
         var v = dt.CurrentHour0Min();
         return v.ToString();
     }
+
+    [TestCase("5/23/2022 9:46:12 AM +08:00", ExpectedResult = "5/24/2022 12:00:00 AM +08:00")]
+    public string ToNextDay12Am(string dat)
+    {
+        var dt = DateTimeOffset.Parse(dat);
+        var v = dt.NextDay12Am();
+        return v.ToString();
+    }
 }

@@ -49,6 +49,15 @@ namespace BoysheO.Extensions
         }
 
         /// <summary>
+        /// 到下一天凌晨时间 （上午12点，也就是0点）
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTimeOffset NextDay12Am(this DateTimeOffset t)
+        {
+            return t.CurrentDay12Am() + TimeSpan.FromDays(1);
+        }
+
+        /// <summary>
         /// 到当小时0分
         /// </summary>
         public static DateTimeOffset CurrentHour0Min(this DateTimeOffset v)
