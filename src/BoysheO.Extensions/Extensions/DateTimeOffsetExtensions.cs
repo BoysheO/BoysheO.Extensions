@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
 
 namespace BoysheO.Extensions
 {
@@ -37,6 +38,22 @@ namespace BoysheO.Extensions
         public static DateTimeOffset MinNow(this DateTimeOffset value)
         {
             return value.Min(DateTimeOffset.Now);
+        }
+
+        /// <summary>
+        /// 到当天凌晨时间（上午12点，也就是0点）
+        /// </summary>
+        public static DateTimeOffset CurrentDay12Am(this DateTimeOffset v)
+        {
+            return new DateTimeOffset(v.Year, v.Month, v.Day, 0, 0, 0, v.Offset);
+        }
+
+        /// <summary>
+        /// 到当小时0分
+        /// </summary>
+        public static DateTimeOffset CurrentHour0Min(this DateTimeOffset v)
+        {
+            return new DateTimeOffset(v.Year, v.Month, v.Day, v.Hour, 0, 0, v.Offset);
         }
     }
 }
