@@ -15,5 +15,15 @@ namespace BoysheO.Util
         {
             return $"{sourceFilePath}@{memberName}:{sourceLineNumber}";
         }
+        
+        /// <summary>
+        ///     获取调用方信息
+        /// </summary>
+        public static string GetCallerFile(
+            [CallerFilePath] string sourceFilePath = ""
+        )
+        {
+            return sourceFilePath;
+        }
     }
 }
