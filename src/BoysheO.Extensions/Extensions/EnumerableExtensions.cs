@@ -94,7 +94,7 @@ namespace BoysheO.Extensions
         {
             return ToSortedList(sources, keySelector, valueSelector, new ComparerAdapter<TKey>(comparer));
         }
-        
+
         public static SortedList<TKey, TSource> ToSortedList<TKey, TSource>(this IEnumerable<TSource> sources,
             Func<TSource, TKey> keySelector)
         {
@@ -346,6 +346,26 @@ namespace BoysheO.Extensions
                 throw new ArgumentOutOfRangeException(nameof(count), "offset or count is out of source");
             var newOffset = source.Offset + offset;
             return new ArraySegment<T>(source.Array!, newOffset, count);
+        }
+
+        /// <summary>
+        /// 匹配这个元素并返回所在位置计数（对可数集合即为index)
+        /// 集合元素量不能大于int.Max
+        /// -1代表找不到
+        /// </summary>
+        public static (int index, T item) FirstOrDefaultWithIndex<T>(this IEnumerable<T> enumerable, Func<T, bool> pre)
+        {
+            var index = -1;
+            foreach (var ele in enumerable)
+            {
+                index++;
+                if (pre(ele))
+                {
+                    return (index, ele);
+                }
+            }
+
+            return (index, default)!;
         }
     }
 }
