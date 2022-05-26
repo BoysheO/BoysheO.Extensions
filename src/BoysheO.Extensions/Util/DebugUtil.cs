@@ -25,5 +25,15 @@ namespace BoysheO.Util
         {
             return sourceFilePath;
         }
+        
+        /// <summary>
+        ///     获取调用方信息
+        /// </summary>
+        public static string GetCallerMemberName(
+            [CallerFilePath] string memberName = ""
+        )
+        {
+            return memberName;
+        }
     }
 }

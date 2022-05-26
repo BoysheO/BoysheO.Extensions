@@ -19,7 +19,7 @@ public class CharSpanExtensionsTests
     public int ToIntNumber2(string raw)
     {
         var span = raw.AsSpan();
-        return span.ToIntNumber();
+        return span.ToPositiveInt();
     }
     
     // [Test]

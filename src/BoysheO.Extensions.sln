@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoysheO.Extensions.Primitiv
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoysheO.Extensions.Math", "BoysheO.Extensions.Math\BoysheO.Extensions.Math.csproj", "{DF017C25-E353-4D74-9EE8-33569B1A6A95}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniRxExtensions", "UniRxExtensions\UniRxExtensions.csproj", "{C5C8361E-53A1-488C-86EF-8974AB7DE0B5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +85,10 @@ Global
 		{DF017C25-E353-4D74-9EE8-33569B1A6A95}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DF017C25-E353-4D74-9EE8-33569B1A6A95}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DF017C25-E353-4D74-9EE8-33569B1A6A95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5C8361E-53A1-488C-86EF-8974AB7DE0B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5C8361E-53A1-488C-86EF-8974AB7DE0B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5C8361E-53A1-488C-86EF-8974AB7DE0B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5C8361E-53A1-488C-86EF-8974AB7DE0B5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
