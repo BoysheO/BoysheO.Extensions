@@ -9,7 +9,7 @@ using BoysheO.Util;
 
 namespace BoysheO.Extensions
 {
-    public static class StringExtensions
+    public static partial class StringExtensions
     {
         /// <summary>
         ///     对string数组中所有string运行trim并返回自己（会改变数组内的值）
@@ -114,7 +114,7 @@ namespace BoysheO.Extensions
                         yield return "";
                     else
                         yield return str.Substring((start + 1), i - (start + 1));
-                        // yield return str[(start + 1).. i];
+                    // yield return str[(start + 1).. i];
 
                     start = i;
                 }

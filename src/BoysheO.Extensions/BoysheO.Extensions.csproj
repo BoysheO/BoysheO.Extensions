@@ -12,7 +12,7 @@
         <Version>1.0.5</Version>
         <RepositoryUrl>https://github.com/BoysheO/BoysheO.Extensions</RepositoryUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <PackageVersion>2.0.5</PackageVersion>
+        <PackageVersion>2.0.6</PackageVersion>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -32,6 +32,10 @@
         <Generator>TextTemplatingFileGenerator</Generator>
         <LastGenOutput>IntExtensions.IsInRange.Generated.cs</LastGenOutput>
       </None>
+      <None Update="Extensions\StringExtensions.Format.tt">
+        <Generator>TextTemplatingFileGenerator</Generator>
+        <LastGenOutput>StringExtensions.Format.Generated.cs</LastGenOutput>
+      </None>
     </ItemGroup>
 
     <ItemGroup>
@@ -42,6 +46,11 @@
       </Compile>
       <Compile Update="BoysheO.Extensions.Benchmark\Class1.cs">
         <Link>BoysheO.ExtensionsBenchmark\Class1.cs</Link>
+      </Compile>
+      <Compile Update="Extensions\StringExtensions.Format.Generated.cs">
+        <AutoGen>True</AutoGen>
+        <DesignTime>True</DesignTime>
+        <DependentUpon>StringExtensions.Format.tt</DependentUpon>
       </Compile>
     </ItemGroup>
 
