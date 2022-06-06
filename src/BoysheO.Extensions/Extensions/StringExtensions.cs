@@ -555,7 +555,7 @@ namespace BoysheO.Extensions
 
         public static string MakeFirstCharUpper2(this string str)
         {
-            return str.Length > 1 && str[0].Isatoz() ? MakeFirstCharLower(str) : str;
+            return str.Length > 1 && str[0].Isatoz() ? MakeFirstCharUpper(str) : str;
         }
 
         /// <summary>
