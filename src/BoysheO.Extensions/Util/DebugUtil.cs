@@ -30,7 +30,7 @@ namespace BoysheO.Util
         ///     获取调用方信息
         /// </summary>
         public static string GetCallerMemberName(
-            [CallerFilePath] string memberName = ""
+            [CallerMemberName] string memberName = ""
         )
         {
             return memberName;
