@@ -11,10 +11,9 @@ public static class RxExtensions
             ReactiveCollection<T> t2s,
             Func<T, T, bool> eq)
         {
-            if (t2s.Count != 0) throw new Exception("need empty");
-            for (var index = 0; index < t1s.Count; index++)
+            if (t2s.Count != 0) throw new Exception("you need to make the second collection empty");
+            foreach (var t1 in t1s)
             {
-                var t1 = t1s[index];
                 t2s.Add(t1);
             }
 
@@ -76,6 +75,4 @@ public static class RxExtensions
                 un10.Dispose();
             });
         }
-        
-        
 }
