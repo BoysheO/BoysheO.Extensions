@@ -15,7 +15,7 @@ namespace BoysheO.Extensions.Primitives
             Value = value;
             return;
 #endif
-            if (value >= 0 && value <= 1)//float有可能是NaN值，不可用<0和>1判断
+            if (value >= 0 && value <= 1)//浮点数有可能是NaN值，不可用<0和>1判断
             {
                 Value = value;
                 return;
@@ -37,7 +37,7 @@ namespace BoysheO.Extensions.Primitives
             Value = value;
             return;
 #endif
-            if (value >= 0 && value <= 1)//float有可能是NaN值，不可用<0和>1判断
+            if (value >= 0 && value <= 1)//浮点数有可能是NaN值，不可用<0和>1判断
             {
                 Value = value;
                 return;
@@ -59,7 +59,7 @@ namespace BoysheO.Extensions.Primitives
             Value = value;
             return;
 #endif
-            if (value >= 0 && value <= 1)//float有可能是NaN值，不可用<0和>1判断
+            if (value >= 0 && value <= 1)//浮点数有可能是NaN值，不可用<0和>1判断
             {
                 Value = value;
                 return;
