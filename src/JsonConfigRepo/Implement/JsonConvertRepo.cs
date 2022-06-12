@@ -17,7 +17,7 @@ namespace JsonConfigRepo.Implement
             Converters = converters;
         }
 
-        /// <inheritdoc cref="IJsonConvertRepo.Converters"/>
+        /// <inheritdoc/>
         public ImmutableArray<JsonConverter> Converters { get; }
     }
 }

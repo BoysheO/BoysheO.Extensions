@@ -10,6 +10,9 @@ namespace JsonConfigRepo.Implement
     /// </summary>
     public sealed class JsonSerializerOptionsRepo : IJsonSerializerOptionsRepo
     {
+        /// <summary>
+        /// 默认的Json序列化配置库
+        /// </summary>
         public JsonSerializerOptionsRepo(IJsonConvertRepo convertRepo)
         {
             var enumConvert = new JsonStringEnumConverter();
@@ -43,18 +46,20 @@ namespace JsonConfigRepo.Implement
             };
         }
 
+        /// <inheritdoc />
         public JsonSerializerOptions UTF8Options { get; }
+
+        /// <inheritdoc />
         public JsonSerializerOptions UTF8PrettyOptions { get; }
+
+        /// <inheritdoc />
         public JsonSerializerOptions StandardOptions { get; }
 
-        /// <summary>
-        /// IncludeFields = true,
-        /// Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-        /// DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
-        /// DebugJsonOptions.Converters.Add(enumConvert);
-        /// </summary>
+
+        /// <inheritdoc />
         public JsonSerializerOptions DebugJsonOptions { get; }
 
+        /// <inheritdoc />
         public JsonSerializerOptions DebugJsonPrettyOptions { get; }
     }
 }
