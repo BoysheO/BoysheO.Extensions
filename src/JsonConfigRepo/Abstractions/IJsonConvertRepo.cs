@@ -1,4 +1,4 @@
-﻿using System.Collections.Immutable;
+﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace JsonConfigRepo.Abstractions
@@ -11,6 +11,6 @@ namespace JsonConfigRepo.Abstractions
         /// <summary>
         /// 所有需要注册到Json序列化器的Converter
         /// </summary>
-        ImmutableArray<JsonConverter> Converters { get; }
+        IReadOnlyCollection<JsonConverter> Converters { get; }
     }
 }

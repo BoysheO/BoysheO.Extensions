@@ -1,4 +1,4 @@
-﻿using System.Collections.Immutable;
+﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using JsonConfigRepo.Abstractions;
 
@@ -12,12 +12,12 @@ namespace JsonConfigRepo.Implement
         /// <summary>
         /// 提供用户自定义的JsonConverter
         /// </summary>
-        public JsonConvertRepo(ImmutableArray<JsonConverter> converters)
+        public JsonConvertRepo(IReadOnlyCollection<JsonConverter> converters)
         {
             Converters = converters;
         }
 
         /// <inheritdoc/>
-        public ImmutableArray<JsonConverter> Converters { get; }
+        public IReadOnlyCollection<JsonConverter> Converters { get; }
     }
 }
