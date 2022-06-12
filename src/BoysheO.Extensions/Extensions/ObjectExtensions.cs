@@ -21,6 +21,7 @@ namespace BoysheO.Extensions
         /// </summary>
         /// <param name="obj">拥有<see cref="DescriptionAttribute.Description" />属性的成员的宿主对象</param>
         /// <param name="memberName">拥有<see cref="DescriptionAttribute.Description" />属性的成员签名</param>
+        [Obsolete("I dont think it's useful in coding.I will remove it next version")]
         public static string? GetDescription(this object obj, string memberName)
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
