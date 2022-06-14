@@ -436,6 +436,30 @@ namespace BoysheO.Extensions
             return result;
         }
 
+        /// <summary>
+        ///     将字符串按char值忠实地转换成byte，对于ASCII编码以外的字符不会转换成问号
+        ///     <para>性能提示：与无buff的ToRawBytes各个性能指标相差不大，可以忽略</para>
+        /// </summary>
+        /// <exception cref="InvalidCastException">字符中包含超出byte范围的字符，超出语义，视作异常</exception>
+        public static void ToRawBytes(this string str, ArraySegment<byte> buff, bool check = true)
+        {
+            if (buff.Count != str.Length)
+                throw new ArgumentException($"buff len need to be str.len {str.Length},but {buff.Count}");
+            var len = str.Length;
+            var charSpan = str.AsSpan();
+            var result = buff.AsSpan();
+            for (len--; len >= 0; len--)
+            {
+                if (check)
+                {
+                    var c = charSpan[len];
+                    if (c < byte.MinValue || c > byte.MaxValue)
+                        throw new InvalidCastException($"str={str} idx={len} char={c} is out of byte value range.");
+                }
+
+                result[len] = unchecked((byte)charSpan[len]);
+            }
+        }
 
         /// <summary>
         ///     将byte忠实地按byte转换成char

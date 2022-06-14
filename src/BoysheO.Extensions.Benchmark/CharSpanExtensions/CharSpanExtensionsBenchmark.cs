@@ -1,12 +1,13 @@
 ﻿using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Jobs;
+using BoysheO.Extensions;
 
-namespace BoysheO.Extensions.Benchmark;
+namespace Benchmark.CharSpanExtensions;
 
 [SimpleJob(RuntimeMoniker.Net60)]
 [RPlotExporter]
 [MemoryDiagnoser]
-public class CharSpanToInt
+public class CharSpanExtensionsBenchmark
 {
     [Params("123", "2346728")] public string Source;
 

@@ -1,4 +1,4 @@
+using Benchmark.StringExtensions;
 using BenchmarkDotNet.Running;
-using BoysheO.Extensions.Benchmark;
 
-var summary = BenchmarkRunner.Run<CharSpanToInt>();
+var summary = BenchmarkRunner.Run<ToRawBytesBenchmark>();
