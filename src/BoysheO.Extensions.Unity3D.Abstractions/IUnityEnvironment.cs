@@ -15,6 +15,11 @@ namespace BoysheO.Extensions.Unity3D.Abstractions
         RuntimePlatform Platform { get; }
 
         /// <summary>
+        /// 根据IL2CPP运行环境的特点关闭一些Not-support特性，例如reload
+        /// </summary>
+        bool IsIL2CPP { get; }
+
+        /// <summary>
         ///     等价或等义<see cref="Application.version"/>，支持多线程访问
         /// </summary>
         string Version { get; }
