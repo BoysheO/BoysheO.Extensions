@@ -12,10 +12,19 @@ public class StringExtensionsTests
     }
 
     [TestCase("123", ExpectedResult = "31 32 33")]
-    public string ToRawBytesUsingBuff(string raw)
+    public string ToRawBytesUsingSeg(string raw)
     {
         var buff = new ArraySegment<byte>(new byte[raw.Length]);
         raw.ToRawBytes(buff);
+        return buff.AsSpan().ToHexText();
+    }
+    
+    
+    [TestCase("123", ExpectedResult = "31 32 33")]
+    public string ToRawBytesUsingBuff(string raw)
+    {
+        var buff = new byte[raw.Length];
+        raw.ToRawBytes(buff,0,raw.Length);
         return buff.AsSpan().ToHexText();
     }
 
@@ -28,12 +37,15 @@ public class StringExtensionsTests
     [TestCase("1233214565")]
     [TestCase("1233214562")]
     [TestCase("1233214562")]
-    public void EquivalenceBetweenToRawBytesAndToRawBytesUsingBuff(string source)
+    public void EquivalenceRawBytesAPIs(string source)
     {
         var raw1 = source.ToRawBytes();
         var raw2 = new ArraySegment<byte>(new byte[source.Length]);
         source.ToRawBytes(raw2);
+        var raw3 = new byte[source.Length];
+        source.ToRawBytes(raw3, 0, source.Length);
         Assert.AreEqual(raw1.ToHexText(), raw2.ToHexText());
+        Assert.AreEqual(raw2.ToHexText(), raw3.ToHexText());
     }
 
     [Test]

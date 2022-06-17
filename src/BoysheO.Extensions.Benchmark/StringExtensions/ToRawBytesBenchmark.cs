@@ -13,7 +13,7 @@ public class ToRawBytesBenchmark
     [Params("123", "2346728")] public string Source;
 
     [Benchmark]
-    public byte[] ToRawBytesWithBuffer()
+    public byte[] ToRawBytesWithBufferSeg()
     {
         var array = ArrayPool<byte>.Shared.Rent(Source.Length);
         var seg = new ArraySegment<byte>(array, 0, Source.Length);
@@ -23,6 +23,16 @@ public class ToRawBytesBenchmark
         return res;
     }
 
+    [Benchmark]
+    public byte[] ToRawBytesWithBuffer()
+    {
+        var array = ArrayPool<byte>.Shared.Rent(Source.Length);
+        Source.ToRawBytes(array,0,Source.Length);
+        var res = array.AsSpan(0,Source.Length).ToArray();
+        ArrayPool<byte>.Shared.Return(array);
+        return res;
+    }
+    
     [Benchmark]
     public byte[] ToRawBytes()
     {

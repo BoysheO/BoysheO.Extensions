@@ -44,11 +44,32 @@ namespace BoysheO.Extensions
         {
             return Math.Min(value, another);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int Max(this int value, int another)
         {
             return Math.Max(value, another);
+        }
+
+        /// <summary>
+        /// 123=>1,2,3
+        /// </summary>
+        /// <param name="value">source</param>
+        /// <param name="buffer"></param>
+        /// <returns>count of bytes write</returns>
+        public static int PositiveIntegerToEachDigit(this int value, Span<byte> buffer)
+        {
+            if (value < 0) throw new ArgumentOutOfRangeException(nameof(value), "need >0");
+            var p = buffer.Length - 1;
+            while (value > 0)
+            {
+                if (p < 0) return buffer.Length;
+                buffer[p] = (byte)(value % 10);
+                p--;
+                value /= 10;
+            }
+
+            return buffer.Length - p - 1;
         }
     }
 }
