@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers;
 using System.Runtime.CompilerServices;
 
 namespace BoysheO.Extensions
@@ -52,24 +53,29 @@ namespace BoysheO.Extensions
         }
 
         /// <summary>
-        /// 123=>1,2,3
+        /// split int 123=>0,0,0,0,0,0,0,1,2,3
         /// </summary>
         /// <param name="value">source</param>
-        /// <param name="buffer"></param>
+        /// <param name="buffer">buffer len must be 10</param>
         /// <returns>count of bytes write</returns>
-        public static int PositiveIntegerToEachDigit(this int value, Span<byte> buffer)
+        public static void PositiveIntegerToEachDigit(this int value, Span<int> buffer)
         {
             if (value < 0) throw new ArgumentOutOfRangeException(nameof(value), "need >0");
+            if (buffer.Length != 10) throw new ArgumentOutOfRangeException(nameof(buffer), "buffer len must be 10");
             var p = buffer.Length - 1;
             while (value > 0)
             {
-                if (p < 0) return buffer.Length;
-                buffer[p] = (byte)(value % 10);
+                if (p < 0) return;
+                buffer[p] = value % 10;
                 p--;
                 value /= 10;
             }
 
-            return buffer.Length - p - 1;
+            while (p >= 0)
+            {
+                buffer[p] = 0;
+                p--;
+            }
         }
     }
 }
