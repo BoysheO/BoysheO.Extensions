@@ -25,7 +25,11 @@ namespace BoysheO.Toolkit
 
         public void Add(T item)
         {
+#if NET46
+            _vs = _vs.Concat(new T[] { item });
+#else
             _vs = _vs.Append(item);
+#endif
         }
 
         public void Clear()

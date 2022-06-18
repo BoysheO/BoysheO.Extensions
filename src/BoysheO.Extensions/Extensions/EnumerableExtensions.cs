@@ -365,7 +365,7 @@ namespace BoysheO.Extensions
                 }
             }
 
-            return (index, default)!;
+            return (-1, default)!;
         }
     }
 }
