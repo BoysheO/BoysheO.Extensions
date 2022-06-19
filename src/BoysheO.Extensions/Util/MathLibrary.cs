@@ -89,7 +89,7 @@ namespace BoysheO.Util
         {
             if (source.Length == 0) throw new Exception("can not draw anything in empty pool");
             var rand = RandomUtil.MoreEqualMinLessMax(0, source.Length);
-            return ((ushort) rand, source[rand]);
+            return ((ushort)rand, source[rand]);
         }
 
         /// <summary>
@@ -99,14 +99,14 @@ namespace BoysheO.Util
         {
             Contract.Assert(source.Count > 0, "can not draw anything in empty pool");
             var rand = RandomUtil.MoreEqualMinLessMax(0, source.Count);
-            return ((ushort) rand, source[rand]);
+            return ((ushort)rand, source[rand]);
         }
 
         public static (ushort Idx, T Item) Draw<T>(this ICollection<T> source)
         {
             Contract.Assert(source.Count > 0, "can not draw anything in empty pool");
             var rand = RandomUtil.MoreEqualMinLessMax(0, source.Count);
-            return ((ushort) rand, source.ElementAt(rand));
+            return ((ushort)rand, source.ElementAt(rand));
         }
 
         /// <summary>
@@ -161,7 +161,7 @@ namespace BoysheO.Util
         public static (ushort Idx, T Item) Draw<T>(this T[] source)
         {
             Contract.Assert(source.Length > 0, "can not draw anything in empty pool");
-            return Draw((ReadOnlySpan<T>) source);
+            return Draw((ReadOnlySpan<T>)source);
         }
 
         /// <summary>
@@ -171,7 +171,7 @@ namespace BoysheO.Util
         public static (ushort Idx, T Item) Draw<T>(this Span<T> source)
         {
             Contract.Assert(source.Length > 0, "can not draw anything in empty pool");
-            return Draw((ReadOnlySpan<T>) source);
+            return Draw((ReadOnlySpan<T>)source);
         }
 
         /// <summary>
@@ -189,14 +189,14 @@ namespace BoysheO.Util
         public static (ushort Idx, T Item) Draw<T>(this Span<(T Item, uint Weight)> source)
         {
             Contract.Assert(source.Length > 0, "can not draw anything in empty pool");
-            return Draw((ReadOnlySpan<(T, uint)>) source);
+            return Draw((ReadOnlySpan<(T, uint)>)source);
         }
 
         #endregion
 
         #endregion
 
-        #region Permutation
+        #region Lottery Permutation
 
         /// <summary>
         ///     等概率抽取n个元素（排列）
@@ -312,7 +312,7 @@ namespace BoysheO.Util
 
         #endregion
 
-        #region Combination
+        #region Lottery Combination
 
         /// <summary>
         ///     等概率抽取抽取n个元素（组合）
@@ -389,5 +389,72 @@ namespace BoysheO.Util
         }
 
         #endregion
+
+        #region CombinationAndPermutaion
+
+        /// <summary>
+        /// 从n中组合k个元素组合的组合数
+        /// </summary>
+        public static int Combination(int n, int k)
+        {
+            // if (!n.IsInRange(1, 12)) throw new ArgumentOutOfRangeException(nameof(n), "n∈[1,12]");
+            // if (!k.IsInRange(1, n)) throw new ArgumentOutOfRangeException(nameof(n), "k∈[1,n]");
+            var a = Factorial1(n);
+            var b = Factorial1(n - k);
+            var c = Factorial1(k);
+            return checked(a / (b * c));
+        }
+
+        /// <summary>
+        /// 计算P(n,k)，从n个里面抽取k个排列的排列数
+        /// 只能算很小的值(n∈[1,12],k∈[1,n])
+        /// 很大的值考虑使用大数库
+        /// </summary>
+        public static int Permutation(int n, int k)
+        {
+            if (!n.IsInRange(1, 12)) throw new ArgumentOutOfRangeException(nameof(n), "n∈[1,12]");
+            if (!k.IsInRange(1, n)) throw new ArgumentOutOfRangeException(nameof(n), "k∈[1,n]");
+            var a = Factorial1(n);
+            var b = Factorial1(n - k);
+            return a / b;
+        }
+
+        #endregion
+
+        /// <summary>
+        /// 提供基本款阶乘(只能计算1-12）
+        /// 很大的值考虑使用大数库
+        /// </summary>
+        public static int Factorial1(int n)
+        {
+            if (n == 0) return 1;
+            if (!n.IsInRange(1, 12)) throw new Exception($"n={n} is too big,n∈[1,12]");
+            var res = 1;
+            while (n > 1)
+            {
+                res *= n;
+                n--;
+            }
+
+            return res;
+        }
+
+        /// <summary>
+        /// 提供基本款阶乘(只能计算1-20）
+        /// 很大的值考虑使用大数库
+        /// </summary>
+        public static long Factorial2(int n)
+        {
+            if (n == 0) return 1;
+            if (!n.IsInRange(1, 20)) throw new Exception($"n={n} is too big,n∈[1,20]");
+            long res = 1;
+            while (n > 1)
+            {
+                res *= n;
+                n--;
+            }
+
+            return res;
+        }
     }
 }
