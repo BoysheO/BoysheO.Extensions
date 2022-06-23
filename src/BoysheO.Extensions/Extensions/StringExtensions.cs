@@ -251,6 +251,68 @@ namespace BoysheO.Extensions
             return str;
         }
 
+        //实测效率与string.replace几乎一致，因此不用。注释以备忘
+        // /// <summary>
+        // /// 将文字中的“/n”替换成换行符'\n'
+        // /// </summary>
+        // /// <param name="source"></param>
+        // /// <returns></returns>
+        // public static string ReplaceNToLine(this string source)
+        // {
+        //     Span<char> buf = stackalloc char[source.Length];
+        //     int bufCount = 0;
+        //     var span = source.AsSpan();
+        //     int matchCount = 0; //0:no match 1:\ match 2:\n match 
+        //     var p = 0;
+        //     var len = source.Length;
+        //     while (p < len)
+        //     {
+        //         var c = span[p];
+        //         switch (matchCount)
+        //         {
+        //             case 0:
+        //                 if (c == '\\')
+        //                 {
+        //                     matchCount++;
+        //                 }
+        //                 else
+        //                 {
+        //                     buf[bufCount] = c;
+        //                     bufCount++;
+        //                 }
+        //
+        //                 break;
+        //             case 1:
+        //                 if (c == 'n')
+        //                 {
+        //                     buf[bufCount] = '\n';
+        //                     bufCount++;
+        //                 }
+        //                 else
+        //                 {
+        //                     buf[bufCount] = span[p - 1];
+        //                     bufCount++;
+        //                     buf[bufCount] = c;
+        //                     bufCount++;
+        //                 }
+        //
+        //                 matchCount = 0;
+        //
+        //                 break;
+        //         }
+        //
+        //         p++;
+        //     }
+        //
+        //     unsafe
+        //     {
+        //         fixed (char* p1 = buf)
+        //         {
+        //             return new string(p1, 0, bufCount);
+        //         }
+        //     }
+        // }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string ReplaceByRegex(this string str, string pattern, string value)
         {
@@ -460,19 +522,19 @@ namespace BoysheO.Extensions
                 result[len] = unchecked((byte)charSpan[len]);
             }
         }
-        
+
         /// <summary>
         ///     将字符串按char值忠实地转换成byte，对于ASCII编码以外的字符不会转换成问号
         ///     <para>性能提示：与无buff的ToRawBytes各个性能指标相差不大，可以忽略</para>
         /// </summary>
         /// <exception cref="InvalidCastException">字符中包含超出byte范围的字符，超出语义，视作异常</exception>
-        public static void ToRawBytes(this string str, byte[] buff,int offset,int count, bool check = true)
+        public static void ToRawBytes(this string str, byte[] buff, int offset, int count, bool check = true)
         {
             if (count != str.Length)
                 throw new ArgumentException($"buff len need to be str.len {str.Length},but {count}");
             var len = str.Length;
             var charSpan = str.AsSpan();
-            var result = buff.AsSpan(offset,count);
+            var result = buff.AsSpan(offset, count);
             for (len--; len >= 0; len--)
             {
                 if (check)

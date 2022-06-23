@@ -18,13 +18,13 @@ public class StringExtensionsTests
         raw.ToRawBytes(buff);
         return buff.AsSpan().ToHexText();
     }
-    
-    
+
+
     [TestCase("123", ExpectedResult = "31 32 33")]
     public string ToRawBytesUsingBuff(string raw)
     {
         var buff = new byte[raw.Length];
-        raw.ToRawBytes(buff,0,raw.Length);
+        raw.ToRawBytes(buff, 0, raw.Length);
         return buff.AsSpan().ToHexText();
     }
 
@@ -59,4 +59,18 @@ public class StringExtensionsTests
         var span = raw.AsSpan();
         return span.ToPositiveInt();
     }
+
+    // // [TestCase(@"12332\n14\\n562")]//暂不考虑转义
+    // [TestCase(@"123\n321\n4562")]
+    // [TestCase(@"123n321\4562")]
+    // public void ReplaceNToLine(string src)
+    // {
+    //     var src1 = src.Replace("\\n", "\n");
+    //     Console.WriteLine(src1);
+    //     var src2 = src.ReplaceNToLine();
+    //     Console.WriteLine(src2);
+    //     Assert.AreEqual(src1, src2);
+    // }
+
+
 }
