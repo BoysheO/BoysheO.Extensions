@@ -688,6 +688,7 @@ namespace BoysheO.Extensions
 
         /// <summary>
         /// 等价于int.Parse(string str)
+        /// 性能提示：如果能假定str是纯数字，使用ToPositiveInt快4倍
         /// </summary>
         public static int ToIntNumber(this string str)
         {
@@ -696,6 +697,7 @@ namespace BoysheO.Extensions
 
         /// <summary>
         /// 拥有更多异常信息
+        /// 性能提示：如果能假定str是纯数字，使用ToPositiveInt快4倍
         /// </summary>
         /// <exception cref="ArgumentException">空arg或不是number</exception>
         public static int ToIntNumber2(this string str)
@@ -707,6 +709,26 @@ namespace BoysheO.Extensions
             }
 
             throw new ArgumentException($"{str} can't be number");
+        }
+
+        /// <summary>
+        /// 纯数字字串转换成int
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static int ToPositiveInt(this string str)
+        {
+            return str.AsSpan().ToPositiveInt();
+        }
+        
+        /// <summary>
+        /// 纯数字字串转换成long
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static long ToPositiveLong(this string str)
+        {
+            return str.AsSpan().ToPositiveLong();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
