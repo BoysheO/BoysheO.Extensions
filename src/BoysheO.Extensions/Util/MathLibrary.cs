@@ -394,6 +394,8 @@ namespace BoysheO.Util
 
         /// <summary>
         /// 从n中组合k个元素组合的组合数
+        /// 只能算很小的值
+        /// 很大的值考虑使用大数库
         /// </summary>
         public static int Combination(int n, int k)
         {
