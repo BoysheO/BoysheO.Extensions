@@ -33,7 +33,7 @@ namespace BoysheO.Extensions
         {
             return value.Max(DateTimeOffset.Now);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DateTimeOffset MinNow(this DateTimeOffset value)
         {
@@ -63,6 +63,18 @@ namespace BoysheO.Extensions
         public static DateTimeOffset CurrentHour0Min(this DateTimeOffset v)
         {
             return new DateTimeOffset(v.Year, v.Month, v.Day, v.Hour, 0, 0, v.Offset);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsExpire(this DateTimeOffset expire, DateTimeOffset now)
+        {
+            return expire < now;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsExpire(this DateTimeOffset expire)
+        {
+            return IsExpire(expire,DateTimeOffset.Now);
         }
     }
 }
