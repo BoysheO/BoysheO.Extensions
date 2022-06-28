@@ -4,6 +4,7 @@ using BoysheO.Extensions;
 
 namespace Benchmark.ByteExtensions;
 
+[SimpleJob(RuntimeMoniker.Net48)]
 [SimpleJob(RuntimeMoniker.Net60)]
 [RPlotExporter]
 [MemoryDiagnoser]

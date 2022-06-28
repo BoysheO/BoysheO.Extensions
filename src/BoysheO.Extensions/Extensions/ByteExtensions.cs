@@ -330,7 +330,9 @@ namespace BoysheO.Extensions
 
         /// <summary>
         ///     耗时比System.MemoryExtensions 1.98，这个更快
+        ///     *性能提示：在benchmark中已败与System.MemoryExtensions和Array.Resver
         /// </summary>
+        [Obsolete]
         public static void Reverse(this Span<byte> span)
         {
             var len = span.Length;
