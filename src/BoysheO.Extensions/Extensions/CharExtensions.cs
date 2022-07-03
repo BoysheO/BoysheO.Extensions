@@ -24,6 +24,7 @@ namespace BoysheO.Extensions
         /// 是否小写a-z
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        // ReSharper disable once IdentifierTypo
         public static bool Isatoz(this char c)
         {
             return c >= 97 && c <= 122;
@@ -60,5 +61,16 @@ namespace BoysheO.Extensions
             throw new Exception($"{c} is not english letter");
         }
 
+        /// <summary>
+        /// 将A-Z a-z转换成1-26<br />
+        /// 常用于Excel列ABC转换为对应列数
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int CovertAZazTo26(this char c)
+        {
+            if (c.Isatoz()) return c - 96;
+            if (c.IsAtoZ()) return c - 64;
+            throw new ArgumentOutOfRangeException(nameof(c), $"c={c} not the EnglishLetter");
+        }
     }
 }
