@@ -84,7 +84,7 @@ namespace BoysheO.Extensions
         /// <param name="str">source</param>
         /// <param name="initBuffSize">初始大小，至少为1。函数内部不再检验，如果少于1会报错</param>
         /// <param name="buff">用于承载结果的列表</param>
-        public static void SplitAsIntPoolArray(this ReadOnlySpan<Char> str, int initBuffSize, IList<int> buff)
+        public static void SplitAsIntArray(this ReadOnlySpan<Char> str, int initBuffSize, IList<int> buff)
         {
             buff.Clear();
             var result = SplitAsIntPoolArray(str, initBuffSize);
