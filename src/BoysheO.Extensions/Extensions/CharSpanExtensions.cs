@@ -37,9 +37,9 @@ namespace BoysheO.Extensions
 
 
         /// <summary>
-        /// 将chars解析为int
-        /// *假设chars满足条件：纯数字，值在int正范围内
-        /// 比int.parse还要快，也适合应付从字串部分中获得int值的情况
+        /// 将chars解析为int<br />
+        /// *假设chars满足条件：纯数字，值在int正范围内<br />
+        /// 比int.parse还要快，也适合应付从字串部分中获得int值的情况<br />
         /// </summary>
         public static int ToPositiveInt(this ReadOnlySpan<char> chars)
         {

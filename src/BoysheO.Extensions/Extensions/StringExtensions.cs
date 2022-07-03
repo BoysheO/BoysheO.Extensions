@@ -43,6 +43,7 @@ namespace BoysheO.Extensions
 
         /// <summary>
         ///     将字符串连接成一句
+        ///     性能提示：系统自带的string.Join比ZString要快而且GC一样，并且string.Join性能在高版本CLR中有大幅提升，见Benchmark.StringExtensions.JoinAsOneString
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string JoinAsOneString(this IEnumerable<string> strings, string sp = ",")
@@ -687,7 +688,7 @@ namespace BoysheO.Extensions
         }
 
         /// <summary>
-        /// 等价于int.Parse(string str)
+        /// 等价于int.Parse(string str) <br />
         /// 性能提示：如果能假定str是纯数字，使用ToPositiveInt快4倍
         /// </summary>
         public static int ToIntNumber(this string str)

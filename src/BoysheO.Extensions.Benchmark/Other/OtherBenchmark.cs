@@ -8,7 +8,7 @@ namespace Benchmark.Other;
 [MemoryDiagnoser]
 public class OtherBenchmark
 {
-    [Params(1, 12, 123, 1234, 12345, 123456, 1234567, 12345678, 123456789, 1234567890)]
+    [Params(1, 1234567890)]
     public int Source;
 
     [Benchmark]
