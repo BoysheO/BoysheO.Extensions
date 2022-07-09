@@ -214,6 +214,7 @@ namespace BoysheO.Extensions
         /// <summary>
         ///     将该str类型转换成内存中的byte表示，无复制；注意修改返回值可能会导致其他代码里用的str发生改变
         /// </summary>
+        [Obsolete("Because the new version of MemoryExtensions already has AsSpan (string), the API is meaningless and will be removed in the future")]
         public static ReadOnlySpan<byte> AsMemoryByteSpan(this string str)
         {
             unsafe
@@ -332,7 +333,7 @@ namespace BoysheO.Extensions
         ///     耗时比System.MemoryExtensions 1.98，这个更快
         ///     *性能提示：在benchmark中已败与System.MemoryExtensions和Array.Resver
         /// </summary>
-        [Obsolete]
+        [Obsolete("this api was slowly than Array.Reverse and System.MemoryExtensions.Reverse in the new clr.")]
         public static void Reverse(this Span<byte> span)
         {
             var len = span.Length;

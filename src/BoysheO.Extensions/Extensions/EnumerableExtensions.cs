@@ -14,20 +14,25 @@ namespace BoysheO.Extensions
         ///     <para>另注意:ElementAt会调用索引器(例如IList)，此时有可能发生循环调用导致爆栈（当该集合继承了IList且index索引器是不被支持的不良集合），此时可用此API通过遍历器实现</para>
         ///     优先使用ElementAt
         /// </summary>
+        [Obsolete("Ambiguous or ambiguous semantics,use GetElementAt(int offset) instead")]
         public static T GetByIndex<T>(this IEnumerable<T> source, int idx)
         {
-            if (source == null) throw new ArgumentNullException(nameof(source));
-            var count = -1;
-            foreach (var item in source)
-            {
-                count++;
-                if (count == idx) return item;
-            }
+            return GetElementAt(source, idx);
+        }
 
+        /// <summary>
+        ///     非索引器使用见 <see cref="Enumerable.ElementAtOrDefault{TSource}" />条目
+        ///     <para>另注意:ElementAt会调用索引器(例如IList)，此时有可能发生循环调用导致爆栈（当该集合继承了IList且index索引器是不被支持的不良集合），此时可用此API通过遍历器实现</para>
+        ///     优先使用ElementAt
+        /// </summary>
+        /// <exception cref="IndexOutOfRangeException">offset out of source range</exception>
+        public static T GetElementAt<T>(this IEnumerable<T> source, int offset)
+        {
+            if (source.TryGetElementAt(offset, out var res)) return res;
             throw new IndexOutOfRangeException();
         }
 
-        public static bool TryGetByIndex<T>(this IEnumerable<T> source, int idx, out T value)
+        public static bool TryGetElementAt<T>(this IEnumerable<T> source, int offset, out T value)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
             switch (source)
@@ -35,14 +40,14 @@ namespace BoysheO.Extensions
                 case null:
                     throw new ArgumentNullException(nameof(source));
                 case T[] ary:
-                    return TryGetByIndex(ary, idx, out value);
+                    return TryGetElementAt(ary, offset, out value);
             }
 
             var count = -1;
             foreach (var item in source)
             {
                 count++;
-                if (count == idx)
+                if (count == offset)
                 {
                     value = item;
                     return true;
@@ -53,7 +58,7 @@ namespace BoysheO.Extensions
             return false;
         }
 
-        public static bool TryGetByIndex<T>(this T[] source, int idx, out T value)
+        public static bool TryGetElementAt<T>(this T[] source, int idx, out T value)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
             if (idx >= source.Length)
@@ -66,14 +71,22 @@ namespace BoysheO.Extensions
             return true;
         }
 
+        [Obsolete("Ambiguous or ambiguous semantics,use TryGetElementAt(int offset,T value) instead")]
+        public static bool TryGetByIndex<T>(this IEnumerable<T> source, int idx, out T value)
+        {
+            return TryGetElementAt(source, idx, out value);
+        }
+
+        [Obsolete("Ambiguous or ambiguous semantics,use TryGetElementAt(int offset,T value) instead")]
+        public static bool TryGetByIndex<T>(this T[] source, int idx, out T value)
+        {
+            return TryGetElementAt(source, idx, out value);
+        }
+
         public static SortedList<TKey, TRes> ToSortedList<TKey, TRes, TSource>(this IEnumerable<TSource> sources,
             Func<TSource, TKey> keySelector, Func<TSource, TRes> valueSelector)
         {
-            if (sources == null || keySelector == null || valueSelector == null) throw new ArgumentNullException();
-            var sortedList = new SortedList<TKey, TRes>();
-            foreach (var item in sources) sortedList.Add(keySelector(item), valueSelector(item));
-
-            return sortedList;
+            return ToSortedList(sources, keySelector, valueSelector, Comparer<TKey>.Default);
         }
 
         public static SortedList<TKey, TRes> ToSortedList<TKey, TRes, TSource>(this IEnumerable<TSource> sources,
@@ -108,7 +121,9 @@ namespace BoysheO.Extensions
         /// <summary>
         ///     将遍历体包装为<see cref="CollectionAdapter{T}" />，不触发遍历
         ///     与Select相比较，少一个委托调用和少一个类型依赖
+        ///     *最好还是ToArray，因为使用此返回值ICollection均调用linq操作，会造成性能问题。
         /// </summary>
+        [Obsolete("toArray may be better")]
         public static ICollection<T> WarpAsICollection<T>(this IEnumerable<T> source)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
@@ -144,16 +159,20 @@ namespace BoysheO.Extensions
             return false;
         }
 
-        public static void CopyTo<T>(this IEnumerable<T> ts, T[] buff, int buffIndex)
+        [Obsolete("this api design not good")]
+        public static void CopyTo<T>(this IEnumerable<T> ts, T[] buff, int offset)
         {
             if (ts == null || buff == null) throw new ArgumentNullException();
-            if (buffIndex >= buff.Length) throw new ArgumentOutOfRangeException();
+            if (offset >= buff.Length) throw new ArgumentOutOfRangeException();
             using var itor = ts.GetEnumerator();
             var len = buff.Length;
 
-            for (; buffIndex < len && itor.MoveNext(); buffIndex++) buff[buffIndex] = itor.Current;
+            for (; offset < len && itor.MoveNext(); offset++) buff[offset] = itor.Current;
         }
 
+        /// <summary>
+        /// 将source中的元素复制到span中，在source遍历完或者span完结就会终止数据复制
+        /// </summary>
         public static void CopyTo<T>(this IEnumerable<T> source, Span<T> span)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
@@ -165,7 +184,6 @@ namespace BoysheO.Extensions
         /// <summary>
         ///     比较集合大小是否比count大。相对于linq.count()来说这个API不会遍历全集，只数前几集
         ///     <para>null元素视为有效</para>
-        ///     <para>null参数会抛<see cref="ArgumentNullException" /></para>
         ///     <para>判断遍历体是否有值时应使用Any()替代</para>
         /// </summary>
         public static bool IsMoreThan<T>(this IEnumerable<T> source, int count)
@@ -191,7 +209,6 @@ namespace BoysheO.Extensions
         /// <summary>
         ///     比较集合大小是否比count大或等于。相对于linq.count()来说这个API不会遍历全集，只数前几集
         ///     <para>null元素视为有效</para>
-        ///     <para>null参数会抛<see cref="ArgumentNullException" /></para>
         ///     <para>判断遍历体是否有值时应使用Any()替代</para>
         /// </summary>
         public static bool IsMoreThanOrEqual<T>(this IEnumerable<T> source, int count)
@@ -219,7 +236,6 @@ namespace BoysheO.Extensions
         /// <summary>
         ///     比较集合大小是否比count小。相对于linq.count()来说这个API可能不会遍历全集，只数前几集
         ///     <para>null元素视为有效</para>
-        ///     <para>null参数会抛<see cref="ArgumentNullException" /></para>
         ///     <para>判断遍历体是否有值时应使用Any()替代</para>
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -231,7 +247,6 @@ namespace BoysheO.Extensions
         /// <summary>
         ///     比较集合大小是否比count小或等于。相对于linq.count()来说这个API可能不会遍历全集，只数前几集
         ///     <para>null元素视为有效</para>
-        ///     <para>null参数会抛<see cref="ArgumentNullException" /></para>
         ///     <para>判断遍历体是否有值时应使用Any()替代</para>
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -252,6 +267,11 @@ namespace BoysheO.Extensions
             return list.Count == 0;
         }
 
+        /// <summary>
+        /// 由于ICollection与ICollection{T}通常一起使用，这会导致API冲突从而降低API使用舒适度。因此这个API带有1尾缀
+        /// </summary>
+        /// <param name="collection"></param>
+        /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsEmpty1(this ICollection collection)
         {
@@ -267,7 +287,6 @@ namespace BoysheO.Extensions
         /// <summary>
         ///     比较集合大小是否比count小或等于。相对于linq.count()来说这个API可能不会遍历全集，只数前几集
         ///     <para>null元素视为有效</para>
-        ///     <para>null参数会抛<see cref="ArgumentNullException" /></para>
         ///     <para>判断遍历体是否有值时应使用Any()替代</para>
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -283,7 +302,7 @@ namespace BoysheO.Extensions
         public static IEnumerable<T> Except<T>(this IEnumerable<T> enumerable, T item)
         {
             if (item == null) throw new ArgumentNullException(nameof(item));
-            return enumerable.Where(v => v != null && !v.Equals(item));
+            return Except(enumerable, item, EqualityComparer<T>.Default);
         }
 
         /// <summary>
@@ -297,10 +316,10 @@ namespace BoysheO.Extensions
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IOrderedEnumerable<T> OrderBy<TK, T>(this IEnumerable<T> enumerable, Func<T, TK> keyselector,
+        public static IOrderedEnumerable<T> OrderBy<TK, T>(this IEnumerable<T> enumerable, Func<T, TK> keySelector,
             Func<TK, TK, int> comparer)
         {
-            return enumerable.OrderBy(keyselector, new ComparerAdapter<TK>(comparer));
+            return enumerable.OrderBy(keySelector, new ComparerAdapter<TK>(comparer));
         }
 
         /// <summary>
