@@ -36,13 +36,13 @@ namespace BoysheO.Extensions
             foreach (var str in strAry)
             {
                 if (str == null) throw new NullReferenceException("null element was rejected");
-                if (str == "") yield return "";
+                // if (str == "") yield return "";str为""是极低概率事件，没必要在这里if
                 yield return str.Replace(chars, "");
             }
         }
 
         /// <summary>
-        ///     将字符串连接成一句
+        ///     将字符串连接成一句，等价于string.Join<br />
         ///     性能提示：系统自带的string.Join比ZString要快而且GC一样，并且string.Join性能在高版本CLR中有大幅提升，见Benchmark.StringExtensions.JoinAsOneString
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

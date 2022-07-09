@@ -8,7 +8,8 @@ namespace BoysheO.Extensions
     public static class ObjectExtensions
     {
         /// <summary>
-        ///     将单个元素包装成拥有1个元素的数组
+        ///     将单个元素包装成拥有1个元素的数组<br />
+        ///     这是为了new []{obj}语句不打断链式API
         /// </summary>
         public static T[] WarpToArray<T>(this T obj)
         {
@@ -47,7 +48,8 @@ namespace BoysheO.Extensions
         }
 
         /// <summary>
-        ///     反射获取<see cref="DescriptionAttribute.Description" />，根据Enum获取
+        ///     反射获取<see cref="DescriptionAttribute.Description" />，根据Enum获取<br />
+        ///     *在Unity的IL2CPP中，已知GetCustomAttribute是NotSupport，因此此API不可在IL2CPP环境中使用
         /// </summary>
         public static string? GetDescription(this Enum @enum)
         {
@@ -58,7 +60,7 @@ namespace BoysheO.Extensions
         }
 
         /// <summary>
-        ///     等价于(T)obj强制类型转换。减少强转语法对代码可读性伤害
+        ///     等价于(T)obj强制类型转换。减少强转语法对代码可读性伤害<br />
         ///     不赶时间的话使用（T）更好，可以获得IDE支持，提前发现类型转换错误
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
