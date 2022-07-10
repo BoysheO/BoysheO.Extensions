@@ -35,6 +35,12 @@ public class JoinAsOneString
     {
         return Source.JoinAsOneString();
     }
+    
+    [Benchmark]
+    public string StringJoinExtensionsWithParma()
+    {
+        return Source.JoinAsOneString(Sp);
+    }
 
     [Benchmark]
     public string ZStringJoin() 

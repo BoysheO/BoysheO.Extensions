@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.Configuration;
@@ -13,6 +14,7 @@ namespace BoysheO.Extensions.Hosting
         ///     注入POCO配置对象
         ///     某些场合下使用
         /// </summary>
+        [Obsolete("use ServiceCollection.Config<TOption> instead")]
         public static IHostBuilder AddOptionInfo<T>(this IHostBuilder builder, T model) where T : class
         {
             builder.ConfigureAppConfiguration(configurationBuilder =>

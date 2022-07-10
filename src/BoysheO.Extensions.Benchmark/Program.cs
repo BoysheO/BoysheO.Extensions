@@ -4,5 +4,5 @@ using Benchmark.StringExtensions;
 using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Running;
 
-var summary = BenchmarkRunner.Run<ToIntNumber>();
+var summary = BenchmarkRunner.Run<JoinAsOneString>();
 Console.WriteLine("hello world!");
