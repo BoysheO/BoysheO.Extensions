@@ -15,6 +15,12 @@ namespace BoysheO.Extensions.Unity3D.Abstractions
         RuntimePlatform Platform { get; }
 
         /// <summary>
+        /// 是否播放中；此值应处处可用不抛异常，以解决Application.isPlaying在构造时抛异常的问题
+        /// </summary>
+        bool IsPlaying { get; }
+
+
+        /// <summary>
         /// 根据IL2CPP运行环境的特点关闭一些Not-support特性，例如reload
         /// </summary>
         bool IsIL2CPP { get; }
@@ -78,6 +84,7 @@ namespace BoysheO.Extensions.Unity3D.Abstractions
         /// 当前上下文是否在Unity主线程内
         /// </summary>
         bool IsInUnityThread();
+
 
         /// <summary>
         /// 等价<see cref="MonoBehaviour"/>.Update
