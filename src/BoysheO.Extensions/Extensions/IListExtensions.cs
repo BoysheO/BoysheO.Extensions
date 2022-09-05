@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Buffers;
 using System.Collections.Generic;
+using BoysheO.Toolkit;
 
 namespace BoysheO.Extensions
 {
@@ -68,6 +70,25 @@ namespace BoysheO.Extensions
             }
         }
 
+
+        [Obsolete("调试中")]
+        public static void QSortABC<T>(this IList<T> list, IList<int> compareValue, int start, int end)
+        {
+            if (list.Count < 2) return;
+            var count = list.Count;
+            var buff = ArrayPool<T>.Shared.Rent(count);
+            list.CopyTo(buff,0);
+            Array.Sort(buff, 0, count, new ComparerAdapter<T>((arg1, arg2) =>
+            {
+                var idx1 = list.IndexOf(arg1);
+                var v = compareValue[idx1];
+                var idx2 = list.IndexOf(arg2);
+                var v2 = compareValue[idx2];
+                return v - v2;
+            }));
+        }
+
+
         //自己写的方法
         [Obsolete("调试中")]
         public static void change(ref int a, ref int b)
@@ -129,7 +150,5 @@ namespace BoysheO.Extensions
 
             return a;
         }
-
-
     }
 }

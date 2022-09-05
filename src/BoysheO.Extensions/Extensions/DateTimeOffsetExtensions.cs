@@ -41,6 +41,48 @@ namespace BoysheO.Extensions
         }
 
         /// <summary>
+        /// 算出当周的星期1的0点时间
+        /// *按ISO 8601规范，一周以周一为开始
+        /// </summary>
+        public static DateTimeOffset CurrentWeekMonday0AM(this DateTimeOffset v)
+        {
+            var curDayOfWeek = v.DayOfWeek;
+            var curDay = v.CurrentDay12Am();
+            DateTimeOffset monDay = curDayOfWeek switch
+            {
+                DayOfWeek.Friday => curDay - TimeSpan.FromDays(4),
+                DayOfWeek.Monday => curDay,
+                DayOfWeek.Saturday => curDay - TimeSpan.FromDays(5),
+                DayOfWeek.Sunday => curDay - TimeSpan.FromDays(6),
+                DayOfWeek.Thursday => curDay - TimeSpan.FromDays(3),
+                DayOfWeek.Tuesday => curDay - TimeSpan.FromDays(1),
+                DayOfWeek.Wednesday => curDay - TimeSpan.FromDays(2),
+                _ => throw new ArgumentOutOfRangeException()
+            };
+
+            return monDay;
+        }
+
+        /// <summary>
+        /// 算出当周的星期n的0点时间
+        /// *按ISO 8601规范，一周以周一为开始
+        /// </summary>
+        public static DateTimeOffset CurrentWeekDay(this DateTimeOffset v, DayOfWeek dayOfWeek)
+        {
+            return dayOfWeek switch
+            {
+                DayOfWeek.Friday => v.CurrentWeekMonday0AM().AddDays(4),
+                DayOfWeek.Monday => v.CurrentWeekMonday0AM(),
+                DayOfWeek.Saturday => v.CurrentWeekMonday0AM().AddDays(5),
+                DayOfWeek.Sunday => v.CurrentWeekMonday0AM().AddDays(6),
+                DayOfWeek.Thursday => v.CurrentWeekMonday0AM().AddDays(3),
+                DayOfWeek.Tuesday => v.CurrentWeekMonday0AM().AddDays(1),
+                DayOfWeek.Wednesday => v.CurrentWeekMonday0AM().AddDays(2),
+                _ => throw new ArgumentOutOfRangeException(nameof(dayOfWeek), dayOfWeek, null)
+            };
+        }
+
+        /// <summary>
         /// 到当天凌晨时间（上午12点，也就是0点）
         /// </summary>
         public static DateTimeOffset CurrentDay12Am(this DateTimeOffset v)
@@ -74,7 +116,7 @@ namespace BoysheO.Extensions
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsExpire(this DateTimeOffset expire)
         {
-            return IsExpire(expire,DateTimeOffset.Now);
+            return IsExpire(expire, DateTimeOffset.Now);
         }
     }
 }
