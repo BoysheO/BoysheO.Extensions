@@ -35,8 +35,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonConfigRepo", "JsonConfi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonConfigRepo.Extensions.DependencyInjection", "JsonConfigRepo.Extensions.DependencyInjection\JsonConfigRepo.Extensions.DependencyInjection.csproj", "{27A937FC-3C71-43FB-8244-9C43077E3B32}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PooledLinq", "PooledLinq\PooledLinq.csproj", "{8B1EC2B8-9F65-4711-8018-2C464D48B7D5}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -103,10 +101,6 @@ Global
 		{27A937FC-3C71-43FB-8244-9C43077E3B32}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27A937FC-3C71-43FB-8244-9C43077E3B32}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27A937FC-3C71-43FB-8244-9C43077E3B32}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8B1EC2B8-9F65-4711-8018-2C464D48B7D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8B1EC2B8-9F65-4711-8018-2C464D48B7D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8B1EC2B8-9F65-4711-8018-2C464D48B7D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8B1EC2B8-9F65-4711-8018-2C464D48B7D5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
