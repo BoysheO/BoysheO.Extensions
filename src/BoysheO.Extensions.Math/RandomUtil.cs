@@ -12,5 +12,14 @@ namespace BoysheO.Extensions.Math
         {
             throw new NotImplementedException();
         }
+
+        /// <summary>
+        /// 组合
+        /// </summary>
+        public static void Combine(Random random, Span<int> buff, int minInclusive, int maxInclusive)
+        {
+            throw new NotImplementedException();
+
+        }
     }
 }

@@ -294,27 +294,6 @@ namespace BoysheO.Extensions
 
         #endregion
 
-        /// <summary>
-        ///     输出字节块的反转数组
-        ///     即时演绎，非延时
-        ///     *当不需要复制时，使用<see cref="System.Array.Reverse"/>更好
-        /// </summary>
-        public static byte[] ReverseAndToArray(this ReadOnlySpan<byte> byteSpan)
-        {
-            // ReSharper disable once UseArrayEmptyMethod
-            if (byteSpan.Length == 0) return new byte[0];
-            var len = byteSpan.Length;
-            var res = new byte[len];
-            var p = len - 1;
-            foreach (var item in byteSpan)
-            {
-                res[p] = item;
-                p--;
-            }
-
-            return res;
-        }
-
         //primitives
         /// <summary>
         ///     将该值类型转换成内存中byte表示，无复制

@@ -15,23 +15,10 @@ namespace BoysheO.Extensions
         public static int ToPositiveInt(this ReadOnlySpan<char> chars)
         {
             var res = ToPositiveLong(chars);
-            if (res < int.MinValue || res > int.MaxValue) throw new Exception($"arg {nameof(chars)}={chars.ToString()} is outOf int range[{int.MinValue},{int.MaxValue}]");
-            return unchecked((int)res);
-        }
-
-        /// <summary>
-        /// 识别字串中的数字。任意符号均视为分割符，会识别表示正负的+-符号。但是不支持四则运算 
-        /// </summary>
-        /// <param name="str">source</param>
-        /// <param name="initBuffSize">初始大小，至少为1。函数内部不再检验，如果少于1会报错</param>
-        /// <returns>结果 结果大小与initBuffSize无关</returns>
-        public static int[] SplitAsIntArray(this ReadOnlySpan<Char> str, int initBuffSize)
-        {
-            var buf = SplitAsIntPoolArray(str, initBuffSize);
-            // ReSharper disable once InvokeAsExtensionMethod
-            var ary = BoysheO.Extensions.EnumerableExtensions.ToArray(buf);
-            ArrayPool<int>.Shared.Return(buf.Array);
-            return ary;
+            if (res < int.MinValue || res > int.MaxValue)
+                throw new Exception(
+                    $"arg {nameof(chars)}={chars.ToString()} is out of int range[{int.MinValue},{int.MaxValue}]");
+            return unchecked((int) res);
         }
 
         /// <summary>
@@ -43,24 +30,26 @@ namespace BoysheO.Extensions
         public static void SplitAsIntArray(this ReadOnlySpan<Char> str, int initBuffSize, IList<int> buff)
         {
             buff.Clear();
-            var result = SplitAsIntPoolArray(str, initBuffSize);
-            var span = result.AsSpan();
+            var result = SplitAsIntPoolArray(str, initBuffSize,out var resultCount);
+            var span = result.AsSpan(0,resultCount);
             foreach (var i in span)
             {
                 buff.Add(i);
             }
 
-            ArrayPool<int>.Shared.Return(result.Array);
+            ArrayPool<int>.Shared.Return(result);
         }
 
         /// <summary>
-        /// 识别字串中的数字。任意符号均视为分割符，会识别表示正负的+-符号。不支持四则运算 
+        /// 识别字串中的数字。任意符号均视为分割符，会识别表示正负的+-符号。不支持四则运算
+        /// !返回的数组是来自ArrayPool的数组，应保证归还
         /// </summary>
         /// <param name="str">source</param>
         /// <param name="initBuffSize">初始大小，至少为1。函数内部不再检验，如果少于1会报错</param>
+        /// <param name="resultCount">结果数组的有效元素数量</param>
         /// <returns>返回结果，此结果在使用完毕后需要归还到ArrayPool</returns>
         /// <exception cref="Exception"></exception>
-        private static ArraySegment<int> SplitAsIntPoolArray(ReadOnlySpan<char> str, int initBuffSize)
+        private static int[] SplitAsIntPoolArray(ReadOnlySpan<char> str, int initBuffSize, out int resultCount)
         {
             const int mm = int.MaxValue / 10;
             var buffer = ArrayPool<int>.Shared.Rent(initBuffSize);
@@ -134,11 +123,11 @@ namespace BoysheO.Extensions
                                 break;
                         }
 
-                    return new ArraySegment<int>(buffer, 0, bufPointer);
+                    resultCount = bufPointer;
+                    return buffer;
                 }
             }
         }
-
 
         /// <summary>
         /// 将chars解析为long

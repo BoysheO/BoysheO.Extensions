@@ -26,18 +26,18 @@ namespace Extensions
         /// <param name="buff">原始buff</param>
         /// <param name="elementCount">有效元素个数。须确保所有有效元素位于数组前端并连续</param>
         /// <param name="addValue">需要添加的值</param>
-        /// <param name="outBuff">新的buff</param>
+        /// <param name="count"></param>
         /// <returns>添加后的元素个数</returns>
-        public static int Add<T>(T[] buff, int elementCount, T addValue, out T[] outBuff)
+        public static T[] Add<T>(T[] buff, int elementCount, T addValue, out int count)
         {
             if (elementCount >= buff.Length)
             {
-                buff = Resize(buff, (int)(elementCount * 1.2));
+                buff = Resize(buff, (int) (elementCount * 1.2));
             }
 
             buff[elementCount] = addValue;
-            outBuff = buff;
-            return elementCount + 1;
+            count = elementCount + 1;
+            return buff;
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace Extensions
             }
 
             var buffSpan = buff.AsSpan(elementCount, addValueAryCount);
-            addValueAry.AsSpan(addValueAryOffset,addValueAryCount).CopyTo(buffSpan);
+            addValueAry.AsSpan(addValueAryOffset, addValueAryCount).CopyTo(buffSpan);
             outBuff = buff;
             return elementCount + addValueAryCount;
         }

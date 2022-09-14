@@ -14,20 +14,10 @@ namespace BoysheO.Extensions
         ///     <para>另注意:ElementAt会调用索引器(例如IList)，此时有可能发生循环调用导致爆栈（当该集合继承了IList且index索引器是不被支持的不良集合），此时可用此API通过遍历器实现</para>
         ///     优先使用ElementAt
         /// </summary>
-        [Obsolete("Ambiguous or ambiguous semantics,use GetElementAt(int offset) instead")]
-        public static T GetByIndex<T>(this IEnumerable<T> source, int idx)
-        {
-            return GetElementAt(source, idx);
-        }
-
-        /// <summary>
-        ///     非索引器使用见 <see cref="Enumerable.ElementAtOrDefault{TSource}" />条目
-        ///     <para>另注意:ElementAt会调用索引器(例如IList)，此时有可能发生循环调用导致爆栈（当该集合继承了IList且index索引器是不被支持的不良集合），此时可用此API通过遍历器实现</para>
-        ///     优先使用ElementAt
-        /// </summary>
         /// <exception cref="IndexOutOfRangeException">offset out of source range</exception>
         public static T GetElementAt<T>(this IEnumerable<T> source, int offset)
         {
+            if (source == null) throw new ArgumentNullException(nameof(source));
             if (source.TryGetElementAt(offset, out var res)) return res;
             throw new IndexOutOfRangeException();
         }
@@ -71,21 +61,12 @@ namespace BoysheO.Extensions
             return true;
         }
 
-        [Obsolete("Ambiguous or ambiguous semantics,use TryGetElementAt(int offset,T value) instead")]
-        public static bool TryGetByIndex<T>(this IEnumerable<T> source, int idx, out T value)
-        {
-            return TryGetElementAt(source, idx, out value);
-        }
-
-        [Obsolete("Ambiguous or ambiguous semantics,use TryGetElementAt(int offset,T value) instead")]
-        public static bool TryGetByIndex<T>(this T[] source, int idx, out T value)
-        {
-            return TryGetElementAt(source, idx, out value);
-        }
-
         public static SortedList<TKey, TRes> ToSortedList<TKey, TRes, TSource>(this IEnumerable<TSource> sources,
             Func<TSource, TKey> keySelector, Func<TSource, TRes> valueSelector)
         {
+            if (sources == null) throw new ArgumentNullException(nameof(sources));
+            if (keySelector == null) throw new ArgumentNullException(nameof(keySelector));
+            if (valueSelector == null) throw new ArgumentNullException(nameof(valueSelector));
             return ToSortedList(sources, keySelector, valueSelector, Comparer<TKey>.Default);
         }
 
@@ -105,6 +86,10 @@ namespace BoysheO.Extensions
             Func<TSource, TKey> keySelector, Func<TSource, TRes> valueSelector,
             Func<TKey, TKey, int> comparer)
         {
+            if (sources == null) throw new ArgumentNullException(nameof(sources));
+            if (keySelector == null) throw new ArgumentNullException(nameof(keySelector));
+            if (valueSelector == null) throw new ArgumentNullException(nameof(valueSelector));
+            if (comparer == null) throw new ArgumentNullException(nameof(comparer));
             return ToSortedList(sources, keySelector, valueSelector, new ComparerAdapter<TKey>(comparer));
         }
 
@@ -119,21 +104,10 @@ namespace BoysheO.Extensions
         }
 
         /// <summary>
-        ///     将遍历体包装为<see cref="CollectionAdapter{T}" />，不触发遍历
-        ///     与Select相比较，少一个委托调用和少一个类型依赖
-        ///     *最好还是ToArray，因为使用此返回值ICollection均调用linq操作，会造成性能问题。
-        /// </summary>
-        [Obsolete("toArray may be better")]
-        public static ICollection<T> WarpAsICollection<T>(this IEnumerable<T> source)
-        {
-            if (source == null) throw new ArgumentNullException(nameof(source));
-            return new CollectionAdapter<T>(source);
-        }
-
-        /// <summary>
-        ///     A集合是否完全包含B集合
-        ///     集合相等的情况也返回true
-        ///     <para>根据Except的实现，会立即遍历源集合source。source如果是列表，会坍缩成集合。another不会坍缩，仍会全部遍历</para>
+        ///     A集合是否完全包含B集合<br />
+        ///     ！集合相等的情况也返回true<br />
+        ///     ！根据Except的实现，会立即遍历source构建一个集合，然后遍历another查找相同元素<br />
+        ///     *性能提示：本质上是linq的封装
         /// </summary>
         public static bool IsContainsSet<T>(this IEnumerable<T> source, IEnumerable<T> another)
         {
@@ -142,10 +116,10 @@ namespace BoysheO.Extensions
         }
 
         /// <summary>
-        ///     A集合是否完全包含B集合
-        ///     集合相等的情况也返回true
-        ///     会移除littleSetBuff元素,setBuff的剩余元素就是A集合中没有的元素
-        ///     适合setBuff较小、大几率在遍历完大集合前就获得结果的情况
+        ///     A集合是否完全包含B集合<br />
+        ///     ！集合相等的情况也返回true<br />
+        ///     ！如果source包含buff的元素，则从buff移除这个元素，最后buff的剩余元素就是source中没有的元素
+        ///     ！适合buff较小、大几率在遍历完source前就获得结果的情况。低gc
         /// </summary>
         public static bool IsContainsSetBuff<T>(this IEnumerable<T> source, ISet<T> setBuff)
         {
@@ -157,17 +131,6 @@ namespace BoysheO.Extensions
             }
 
             return false;
-        }
-
-        [Obsolete("this api design not good")]
-        public static void CopyTo<T>(this IEnumerable<T> ts, T[] buff, int offset)
-        {
-            if (ts == null || buff == null) throw new ArgumentNullException();
-            if (offset >= buff.Length) throw new ArgumentOutOfRangeException();
-            using var itor = ts.GetEnumerator();
-            var len = buff.Length;
-
-            for (; offset < len && itor.MoveNext(); offset++) buff[offset] = itor.Current;
         }
 
         /// <summary>
@@ -182,9 +145,10 @@ namespace BoysheO.Extensions
         }
 
         /// <summary>
-        ///     比较集合大小是否比count大。相对于linq.count()来说这个API不会遍历全集，只数前几集
-        ///     <para>null元素视为有效</para>
-        ///     <para>判断遍历体是否有值时应使用Any()替代</para>
+        ///     比较集合大小是否比count大<br />
+        ///     ！相对于linq.count()来说这个API不会遍历全集，只数前几个元素<br />
+        ///     ！null元素视为有效元素<br />
+        ///     ！判断遍历体是否有值时应使用Any()、IsEmpty、Count==0等替代而不是使用这个API<br />
         /// </summary>
         public static bool IsMoreThan<T>(this IEnumerable<T> source, int count)
         {
@@ -207,9 +171,10 @@ namespace BoysheO.Extensions
         }
 
         /// <summary>
-        ///     比较集合大小是否比count大或等于。相对于linq.count()来说这个API不会遍历全集，只数前几集
-        ///     <para>null元素视为有效</para>
-        ///     <para>判断遍历体是否有值时应使用Any()替代</para>
+        ///     比较集合大小是否比count大或等于<br />
+        ///     ！相对于linq.count()来说这个API不会遍历全集，只数前几个元素<br />
+        ///     ！null元素视为有效元素<br />
+        ///     ！判断遍历体是否有值时应使用Any()、IsEmpty、Count==0等替代而不是使用这个API<br />
         /// </summary>
         public static bool IsMoreThanOrEqual<T>(this IEnumerable<T> source, int count)
         {
@@ -234,9 +199,10 @@ namespace BoysheO.Extensions
         }
 
         /// <summary>
-        ///     比较集合大小是否比count小。相对于linq.count()来说这个API可能不会遍历全集，只数前几集
-        ///     <para>null元素视为有效</para>
-        ///     <para>判断遍历体是否有值时应使用Any()替代</para>
+        ///     比较集合大小是否比count小<br />
+        ///     ！相对于linq.count()来说这个API不会遍历全集，只数前几个元素<br />
+        ///     ！null元素视为有效元素<br />
+        ///     ！判断遍历体是否有值时应使用Any()、IsEmpty、Count==0等替代而不是使用这个API<br />
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsLessThan<T>(this IEnumerable<T> source, int count)
@@ -245,9 +211,10 @@ namespace BoysheO.Extensions
         }
 
         /// <summary>
-        ///     比较集合大小是否比count小或等于。相对于linq.count()来说这个API可能不会遍历全集，只数前几集
-        ///     <para>null元素视为有效</para>
-        ///     <para>判断遍历体是否有值时应使用Any()替代</para>
+        ///     比较集合大小是否比count小或等于<br />
+        ///     ！相对于linq.count()来说这个API不会遍历全集，只数前几个元素<br />
+        ///     ！null元素视为有效元素<br />
+        ///     ！判断遍历体是否有值时应使用Any()、IsEmpty、Count==0等替代而不是使用这个API<br />
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsLessThanOrEqual<T>(this IEnumerable<T> source, int count)
@@ -259,12 +226,6 @@ namespace BoysheO.Extensions
         public static bool IsEmpty<T>(this IEnumerable<T> enumerable)
         {
             return !IsMoreThan(enumerable, 0);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsEmpty<T>(this ICollection<T> list)
-        {
-            return list.Count == 0;
         }
 
         /// <summary>
@@ -285,36 +246,8 @@ namespace BoysheO.Extensions
         }
 
         /// <summary>
-        ///     比较集合大小是否比count小或等于。相对于linq.count()来说这个API可能不会遍历全集，只数前几集
-        ///     <para>null元素视为有效</para>
-        ///     <para>判断遍历体是否有值时应使用Any()替代</para>
+        /// linq增补
         /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsLessThanOrEqual<T>(this T[] source, int count)
-        {
-            return source.Length <= count;
-        }
-
-        /// <summary>
-        ///     增补ExceptAPI
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<T> Except<T>(this IEnumerable<T> enumerable, T item)
-        {
-            if (item == null) throw new ArgumentNullException(nameof(item));
-            return Except(enumerable, item, EqualityComparer<T>.Default);
-        }
-
-        /// <summary>
-        ///     增补ExceptAPI
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<T> Except<T>(this IEnumerable<T> enumerable, T item, IEqualityComparer<T> equality)
-        {
-            if (item == null) throw new ArgumentNullException(nameof(item));
-            return enumerable.Where(v => equality.Equals(v, item));
-        }
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IOrderedEnumerable<T> OrderBy<TK, T>(this IEnumerable<T> enumerable, Func<T, TK> keySelector,
             Func<TK, TK, int> comparer)
@@ -323,7 +256,7 @@ namespace BoysheO.Extensions
         }
 
         /// <summary>
-        ///     通过指定key进行排序
+        ///     linq增补,通过指定key进行排序
         /// </summary>
         public static IOrderedEnumerable<TSource> OrderBy
             <TSource, TCompareKey>(this IEnumerable<TSource> sources, Func<TSource, TCompareKey> keySelector)
@@ -372,7 +305,9 @@ namespace BoysheO.Extensions
         /// 集合元素量不能大于int.Max
         /// -1代表找不到
         /// </summary>
-        public static (int index, T item) FirstOrDefaultWithIndex<T>(this IEnumerable<T> enumerable, Func<T, bool> pre)
+        public static int Find<T>(this IEnumerable<T> enumerable,
+            Func<T, bool> pre,
+            out T elementFound)
         {
             var index = -1;
             foreach (var ele in enumerable)
@@ -380,11 +315,13 @@ namespace BoysheO.Extensions
                 index++;
                 if (pre(ele))
                 {
-                    return (index, ele);
+                    elementFound = ele;
+                    return index;
                 }
             }
 
-            return (-1, default)!;
+            elementFound = default!;
+            return -1;
         }
     }
 }
