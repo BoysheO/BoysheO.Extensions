@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Buffers;
+using System.Linq;
 using NUnit.Framework;
 
 namespace BoysheO.Extensions.Test;
@@ -72,5 +74,15 @@ public class StringExtensionsTests
     //     Assert.AreEqual(src1, src2);
     // }
 
-
+    [TestCase("1233214565", "1")]
+    [TestCase("1233214562", "2")]
+    [TestCase("1233214562", "4")]
+    public void SplitAsPooledChars(string str,string sp)
+    {
+        var sys = str.Split(sp);
+        var charsCount = str.AsSpan().SplitAsPooledChars(sp,out (int start, int count)[] chars);
+        var mySplit = chars.Take(charsCount).Select(v => str.Substring(v.start, v.count)).ToArray();
+        ArrayPool<(int start, int count)>.Shared.Return(chars);
+        Assert.IsTrue(sys.SequenceEqual(mySplit));
+    }
 }

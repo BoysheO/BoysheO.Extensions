@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -6,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using BoysheO.Util;
+using Extensions;
 
 namespace BoysheO.Extensions
 {
@@ -721,7 +723,7 @@ namespace BoysheO.Extensions
         {
             return str.AsSpan().ToPositiveInt();
         }
-        
+
         /// <summary>
         /// 纯数字字串转换成long
         /// </summary>
@@ -754,6 +756,42 @@ namespace BoysheO.Extensions
         public static string Format(this string str, params object[] args)
         {
             return string.Format(str, args);
+        }
+
+        public static int SplitAsPooledChars(this ReadOnlySpan<char> str,
+            ReadOnlySpan<char> chars,
+            out (int start, int count)[] pooledResult)
+        {
+            if (chars.Length == 0) throw new ArgumentException("can not 0 len", nameof(chars));
+            pooledResult = ArrayPool<(int, int)>.Shared.Rent(1);
+            int pooledResultCount = 0;
+            int lp = 0;
+            int p = 0;
+            var strLen = str.Length;
+            var charsLen = chars.Length;
+            while (p < strLen - 1)
+            {
+                var slice = str.Slice(p, charsLen);
+                if (slice.SequenceEqual(chars))
+                {
+                    var count = p - lp;
+                    if (count > 0)
+                    {
+                        pooledResultCount =
+                            ArrayPoolUtil.Add(pooledResult, pooledResultCount, (lp, count), out pooledResult);
+                    }
+
+                    p += charsLen;
+                    lp = p;
+                    continue;
+                }
+
+                p++;
+            }
+
+            pooledResultCount =
+                ArrayPoolUtil.Add(pooledResult, pooledResultCount, (lp, p - lp), out pooledResult);
+            return pooledResultCount;
         }
     }
 }
