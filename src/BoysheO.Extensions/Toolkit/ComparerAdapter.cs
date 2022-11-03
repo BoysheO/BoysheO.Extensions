@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace BoysheO.Toolkit
 {
+    [Obsolete("use Comparer.Creat instead")]
     public class ComparerAdapter<T> : Comparer<T>
     {
         private readonly Func<T, T, int> _comparator;

@@ -47,6 +47,8 @@ namespace Extensions
         /// <param name="buff">原始buff</param>
         /// <param name="elementCount">有效元素个数。须确保所有有效元素位于数组前端并连续</param>
         /// <param name="addValueAry">需要添加的值</param>
+        /// <param name="addValueAryOffset"></param>
+        /// <param name="addValueAryCount"></param>
         /// <param name="outBuff">新的buff</param>
         /// <returns>添加后的元素个数</returns>
         public static int AddRange<T>(T[] buff, int elementCount,
@@ -61,7 +63,7 @@ namespace Extensions
             }
 
             var buffSpan = buff.AsSpan(elementCount, addValueAryCount);
-            addValueAry.AsSpan(addValueAryOffset,addValueAryCount).CopyTo(buffSpan);
+            addValueAry.AsSpan(addValueAryOffset, addValueAryCount).CopyTo(buffSpan);
             outBuff = buff;
             return elementCount + addValueAryCount;
         }

@@ -19,7 +19,6 @@ namespace BoysheO.Toolkit
         public GroupingAdapter(TKey key, IEnumerable<TElement> element)
         {
             _elements = element ?? throw new ArgumentNullException(nameof(element));
-
             _key = () => key;
         }
 
