@@ -769,19 +769,26 @@ namespace BoysheO.Extensions
             int p = 0;
             var strLen = str.Length;
             var charsLen = chars.Length;
-            while (p < strLen - 1)
+            while (p < strLen)
             {
-                var slice = str.Slice(p, charsLen);
-                if (slice.SequenceEqual(chars))
+                bool hasSub;
+                if (p + charsLen > strLen)
+                {
+                    hasSub = false;
+                }
+                else
+                {
+                    var slice = str.Slice(p, charsLen);
+                    hasSub = slice.SequenceEqual(chars);
+                }
+
+                if (hasSub)
                 {
                     var count = p - lp;
-                    if (count > 0)
-                    {
-                        pooledResultCount =
-                            ArrayPoolUtil.Add(pooledResult, pooledResultCount, (lp, count), out pooledResult);
-                    }
-
+                    pooledResultCount =
+                        ArrayPoolUtil.Add(pooledResult, pooledResultCount, (lp, count), out pooledResult);
                     p += charsLen;
+                    if (p > strLen) p = strLen;
                     lp = p;
                     continue;
                 }
@@ -790,7 +797,7 @@ namespace BoysheO.Extensions
             }
 
             pooledResultCount =
-                ArrayPoolUtil.Add(pooledResult, pooledResultCount, (lp, p - lp), out pooledResult);
+                ArrayPoolUtil.Add(pooledResult, pooledResultCount, (lp, str.Length - lp), out pooledResult);
             return pooledResultCount;
         }
     }
