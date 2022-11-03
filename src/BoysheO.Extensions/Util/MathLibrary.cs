@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Buffers;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using BoysheO.Extensions;
+using BoysheO.Toolkit;
 
 namespace BoysheO.Util
 {
@@ -199,43 +202,70 @@ namespace BoysheO.Util
         #region Lottery Permutation
 
         /// <summary>
-        ///     等概率抽取n个元素（排列）
+        ///     等概率抽取n个元素（排列）<br/>
+        ///     蓄水池算法<br/>
+        ///     *蓄水池算法最终输出结果的顺序不可信赖，只许诺满足每个元素都拥有相同机率从池中抽出,例如，从123中抽取3个元素一定会抽到123顺序
         /// </summary>
-        public static IEnumerable<(ushort Index, T Item)> Permutation<T>(this T[] source, uint count)
+        /// <param name="count">抽取多少个元素</param>
+        /// <param name="poolSize">奖池大小</param>
+        /// <returns>池化数组，用完记得归还<see cref="ArrayPool{T}"/></returns>
+        /// <exception cref="ArgumentOutOfRangeException">参数不正确</exception>
+        public static int[] DrawAsPooledArray(int poolSize, int count)
         {
-            if (source.Length == 0) throw new Exception("can not draw anything in empty pool");
-            if (!(count > 0 && count < source.Length))
-                throw new Exception($"count need belong to [1,{nameof(source)}.{nameof(source.Length)}]");
-            if (count == 1) yield return source.Draw();
-            var len = source.Length;
-            // ReSharper disable once SuspiciousTypeConversion.Global
-            var indexlst = Enumerable.Range(0, len).Cast<ushort>().ToList();
-            for (; count > 0; count--)
+            if (poolSize < 0)
+                throw new ArgumentOutOfRangeException(nameof(poolSize), $"{nameof(poolSize)}={poolSize} should >0");
+            if (!count.IsInRange(0, poolSize))
+                throw new ArgumentOutOfRangeException(nameof(count),
+                    $"{nameof(count)}={count} should belong [0,{nameof(poolSize)}={poolSize}]");
+            var buff = ArrayPool<int>.Shared.Rent(count);
+            var span = buff.AsSpan(0, count);
+            for (int i = 0; i < count; i++)
             {
-                var draw = indexlst.Draw();
-                yield return (draw.Item, source[draw.Item]);
-                indexlst.RemoveAt(draw.Idx);
+                span[i] = i;
             }
+
+            for (int i = count; i < poolSize; i++)
+            {
+                var rand = RandomUtil.Random.Next() % (i + 1);
+                if (rand < count)
+                {
+                    span[rand] = i;
+                }
+            }
+
+            return buff;
         }
 
         /// <summary>
-        ///     等概率抽取n个元素（排列）
+        ///     等概率抽取n个元素（排列）<br/>
+        ///     蓄水池有序改良算法<br/>
+        ///     最终结果保持增序排列<br />
         /// </summary>
-        public static IEnumerable<(ushort Index, T Item)> Permutation<T>(this IList<T> source, uint count)
+        /// <param name="count">抽取多少个元素</param>
+        /// <param name="poolSize">奖池大小</param>
+        /// <returns>池化数组，用完记得归还<see cref="ArrayPool{T}"/></returns>
+        /// <exception cref="ArgumentOutOfRangeException">参数不正确</exception>
+        public static int[] DrawAsPooledArraySorted(int poolSize, int count)
         {
-            if (source.Count == 0) throw new Exception("can not draw anything in empty pool");
-            if (!(count > 0 && count < source.Count))
-                throw new Exception($"count need belong to [1,{nameof(source)}.{nameof(source.Count)}]");
-            if (count == 1) yield return source.Draw();
-            var len = source.Count;
-            // ReSharper disable once SuspiciousTypeConversion.Global
-            var indexlst = Enumerable.Range(0, len).Cast<ushort>().ToList();
-            for (; count > 0; count--)
+            if (poolSize < 0)
+                throw new ArgumentOutOfRangeException(nameof(poolSize), $"{nameof(poolSize)}={poolSize} should >0");
+            if (!count.IsInRange(0, poolSize))
+                throw new ArgumentOutOfRangeException(nameof(count),
+                    $"{nameof(count)}={count} should belong [0,{nameof(poolSize)}={poolSize}]");
+            var buff = ArrayPool<int>.Shared.Rent(count);
+            var span = buff.AsSpan(0, count);
+            var spanCount = 0;
+            for (int i = 0; i < poolSize; i++)
             {
-                var draw = indexlst.Draw();
-                yield return (draw.Item, source[draw.Item]);
-                indexlst.RemoveAt(draw.Idx);
+                var chance = (count - spanCount) * 1f / (poolSize - i);
+                var rand = RandomUtil.Random.NextDouble();
+                if (!(rand <= chance)) continue;
+                span[spanCount] = i;
+                spanCount++;
+                if (spanCount == count) break;
             }
+
+            return buff;
         }
 
         /// <summary>

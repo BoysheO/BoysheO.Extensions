@@ -5,6 +5,7 @@ namespace BoysheO.Util
     /// <summary>
     ///     能用list优先用list
     /// </summary>
+    [Obsolete("not useful enough,it will be removed in future")]
     public static class ArrayUtil
     {
         /// <summary>

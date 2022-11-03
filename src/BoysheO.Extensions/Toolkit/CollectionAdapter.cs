@@ -10,6 +10,7 @@ namespace BoysheO.Toolkit
     ///     一个只读集合，包装了一个IEnumerable{T}元素
     ///     <para>所有方法都是通过Linq实现的</para>
     /// </summary>
+    [Obsolete("use list or array may be better")]
     public class CollectionAdapter<T> : ICollection<T>
     {
         private IEnumerable<T> _vs;
