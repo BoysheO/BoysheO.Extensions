@@ -14,7 +14,7 @@ namespace BoysheO.Extensions
         /// <typeparam name="T"></typeparam>
         /// <exception cref="ArgumentException"></exception>
         public static void Panning<T>(this Span<T> span, int count = 1, Func<int, T>? defaultT = null)
-            where T : notnull
+            // where T : notnull
         {
             var len = span.Length;
             if (count == 0) throw new ArgumentException(nameof(count));

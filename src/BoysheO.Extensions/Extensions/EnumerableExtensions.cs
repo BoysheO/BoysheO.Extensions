@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Buffers;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using BoysheO.Toolkit;
+using Extensions;
 
 namespace BoysheO.Extensions
 {
@@ -385,6 +387,67 @@ namespace BoysheO.Extensions
             }
 
             return (-1, default)!;
+        }
+
+        /// <summary>
+        /// <code>
+        /// |keys|valueIndex|value|
+        /// |____|__________|_____|
+        /// | a  |     0    | a1  |
+        /// |    |          | a2  |
+        /// |____|__________|_____|
+        /// | b  |     2    | b1  |
+        /// |    |          | b2  |
+        /// |    |          | b3  |
+        /// |____|__________|_____|
+        /// | c  |     5    | c1  |
+        /// </code>
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="keys"></param>
+        /// <param name="valueIndex"></param>
+        /// <param name="values"></param>
+        /// <typeparam name="TK"></typeparam>
+        /// <typeparam name="TValue"></typeparam>
+        public static void PooledGroupBy<TK, TValue>(
+            IEnumerable<TValue> source,
+            Func<TValue, TK> keySelector,
+            out TK[] keys, out int keysCount,
+            out int[] valueIndex, out int valueIndexCount,
+            out TValue[] values, out int valuesCount)
+        {
+            keys = ArrayPool<TK>.Shared.Rent(1);
+            keysCount = 0;
+            valueIndex = ArrayPool<int>.Shared.Rent(1);
+            valueIndexCount = 0;
+            values = ArrayPool<TValue>.Shared.Rent(1);
+            valuesCount = 0;
+            foreach (var value in source)
+            {
+                var key = keySelector(value);
+                var keyIdx = Array.IndexOf(keys, key, 0, keysCount);
+                if (keyIdx < 0)
+                {
+                    keyIdx = keysCount;
+                    keysCount = ArrayPoolUtil.Add(keys, keysCount, key, out keys);
+                }
+
+                int curValueIdx;
+                if (keyIdx >= valueIndexCount)
+                {
+                    curValueIdx = valuesCount;
+                    valueIndexCount = ArrayPoolUtil.Add(valueIndex, valueIndexCount, curValueIdx, out valueIndex);
+                    // valueIndex = ArrayPoolUtil.Resize(valueIndex, valueIndex.Length + 1);
+                } 
+                else curValueIdx = valueIndex[keyIdx];
+
+                valuesCount = ArrayPoolUtil.Insert(values, valuesCount, value, curValueIdx, out values);
+                var valueIndexSpan = valueIndex.AsSpan();
+                for (int i = keyIdx + 1; i < valueIndexCount; i++)
+                {
+                    valueIndexSpan[i]++;
+                }
+            }
         }
     }
 }

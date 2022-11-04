@@ -30,14 +30,65 @@ namespace Extensions
         /// <returns>添加后的元素个数</returns>
         public static int Add<T>(T[] buff, int elementCount, T addValue, out T[] outBuff)
         {
-            if (elementCount >= buff.Length)
+            return Insert(buff, elementCount, addValue, elementCount, out outBuff);
+        }
+
+        /// <summary>
+        /// 给从ArrayPool中借出的Buff添加元素
+        /// ！不可以保留原buff的引用
+        /// </summary>
+        /// <param name="buff">原始buff</param>
+        /// <param name="elementCount">有效元素个数。须确保所有有效元素位于数组前端并连续</param>
+        /// <param name="insertValue">需要添加的值</param>
+        /// <param name="index">插入位置</param>
+        /// <param name="outBuff">新的buff</param>
+        /// <param name="resizeStep">发生resize时容量的期望增加值，实际值大于等于期望值</param>
+        /// <returns>添加后的元素个数</returns>
+        public static int Insert<T>(T[] buff, int elementCount, T insertValue, int index, out T[] outBuff,
+            int resizeStep = 1)
+        {
+            var locBuf = ArrayPool<T>.Shared.Rent(1);
+            locBuf[0] = insertValue;
+            var count = InsertRange(buff, elementCount, new ReadOnlySpan<T>(locBuf,0,1), index, out outBuff,resizeStep);
+            ArrayPool<T>.Shared.Return(locBuf);
+            return count;
+        }
+        
+        /// <summary>
+        /// 给从ArrayPool中借出的Buff添加元素
+        /// ！不可以保留原buff的引用
+        /// </summary>
+        /// <param name="buff">原始buff</param>
+        /// <param name="elementCount">有效元素个数。须确保所有有效元素位于数组前端并连续</param>
+        /// <param name="insertValue">需要添加的值</param>
+        /// <param name="index">插入位置</param>
+        /// <param name="outBuff">新的buff</param>
+        /// <param name="resizeStep">发生resize时容量的期望增加值，实际值大于等于期望值</param>
+        /// <returns>添加后的元素个数</returns>
+        public static int InsertRange<T>(T[] buff, int elementCount, ReadOnlySpan<T> insertValue, int index, out T[] outBuff,
+            int resizeStep = 1)
+        {
+            if (index > elementCount)
             {
-                buff = Resize(buff, (int)(elementCount * 1.2));
+                throw new ArgumentOutOfRangeException(nameof(index),
+                    $"index={index} should belong [0,{nameof(elementCount)}]");
             }
 
-            buff[elementCount] = addValue;
+            var sizeNeed = elementCount + insertValue.Length;
+            if (sizeNeed > buff.Length)
+            {
+                buff = Resize(buff, sizeNeed + resizeStep);
+            }
+
+            var seqCount = elementCount - index + 1;
+            if (seqCount > 0)
+            {
+                buff.AsSpan(index, seqCount).Panning(-insertValue.Length);
+            }
+
+            insertValue.CopyTo(buff.AsSpan(index,insertValue.Length));
             outBuff = buff;
-            return elementCount + 1;
+            return sizeNeed;
         }
 
         /// <summary>
@@ -57,15 +108,7 @@ namespace Extensions
             int addValueAryCount,
             out T[] outBuff)
         {
-            if (elementCount + addValueAryCount > buff.Length)
-            {
-                buff = Resize(buff, elementCount + addValueAryCount);
-            }
-
-            var buffSpan = buff.AsSpan(elementCount, addValueAryCount);
-            addValueAry.AsSpan(addValueAryOffset, addValueAryCount).CopyTo(buffSpan);
-            outBuff = buff;
-            return elementCount + addValueAryCount;
+            return InsertRange(buff, elementCount, addValueAry.AsSpan(addValueAryOffset, addValueAryCount),elementCount, out outBuff);
         }
     }
 }
