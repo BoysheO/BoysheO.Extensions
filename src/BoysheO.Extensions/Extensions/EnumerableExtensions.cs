@@ -409,6 +409,7 @@ namespace BoysheO.Extensions
         /// <param name="values"></param>
         /// <typeparam name="TK"></typeparam>
         /// <typeparam name="TValue"></typeparam>
+        [Obsolete("未完工")]
         public static void PooledGroupBy<TK, TValue>(
             IEnumerable<TValue> source,
             Func<TValue, TK> keySelector,
