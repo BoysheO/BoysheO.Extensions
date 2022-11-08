@@ -35,7 +35,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonConfigRepo", "JsonConfi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonConfigRepo.Extensions.DependencyInjection", "JsonConfigRepo.Extensions.DependencyInjection\JsonConfigRepo.Extensions.DependencyInjection.csproj", "{27A937FC-3C71-43FB-8244-9C43077E3B32}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpanCollection", "SpanCollection\SpanCollection.csproj", "{44C42C80-B961-41C7-B76F-7AC01A44F9F7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PooledReactiveCollection", "PooledReactiveCollection\PooledReactiveCollection.csproj", "{2CA50171-5432-4A2B-AA37-797547BF17B7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -103,10 +103,10 @@ Global
 		{27A937FC-3C71-43FB-8244-9C43077E3B32}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27A937FC-3C71-43FB-8244-9C43077E3B32}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27A937FC-3C71-43FB-8244-9C43077E3B32}.Release|Any CPU.Build.0 = Release|Any CPU
-		{44C42C80-B961-41C7-B76F-7AC01A44F9F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{44C42C80-B961-41C7-B76F-7AC01A44F9F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{44C42C80-B961-41C7-B76F-7AC01A44F9F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{44C42C80-B961-41C7-B76F-7AC01A44F9F7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2CA50171-5432-4A2B-AA37-797547BF17B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2CA50171-5432-4A2B-AA37-797547BF17B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2CA50171-5432-4A2B-AA37-797547BF17B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2CA50171-5432-4A2B-AA37-797547BF17B7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
