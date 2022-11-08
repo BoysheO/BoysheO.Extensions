@@ -6,3 +6,6 @@ using BenchmarkDotNet.Running;
 
 var summary = BenchmarkRunner.Run<SplitAsPooledChars>();
 Console.WriteLine("hello world!");
+// var ins = new SplitAsPooledChars();
+// ins.Setup();
+// ins.StringSplit();

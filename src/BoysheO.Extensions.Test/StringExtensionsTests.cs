@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Buffers;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using BoysheO.Util;
@@ -106,7 +107,7 @@ public class StringExtensionsTests
     [TestCase]
     public void SplitAsPooledCharsRandomTest()
     {
-        var digitCount = RandomUtil.Int % 2  + 1;
+        var digitCount = RandomUtil.Int % 2 + 1;
         var rand = Enumerable.Range(0, digitCount).Select(v => (RandomUtil.Int % 10).ToString()).JoinAsOneString("");
         var sb = new StringBuilder();
         for (int i = 0; i < 10; i++) sb.Append(RandomUtil.Long);

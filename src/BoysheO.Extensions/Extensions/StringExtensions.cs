@@ -758,6 +758,11 @@ namespace BoysheO.Extensions
             return string.Format(str, args);
         }
 
+        /// <summary>
+        /// 虽然正确性可以得到确认，但是比string.Split慢4倍,相差一个数量级
+        /// 测试中gc也失败于string.Split,多4倍gc，此API不再使用
+        /// </summary>
+        [Obsolete]
         public static int SplitAsPooledChars(this ReadOnlySpan<char> str,
             ReadOnlySpan<char> chars,
             out (int start, int count)[] pooledResult)

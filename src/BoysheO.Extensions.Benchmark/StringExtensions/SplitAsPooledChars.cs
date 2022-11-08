@@ -8,27 +8,27 @@ namespace Benchmark.StringExtensions;
 
 // [SimpleJob(RuntimeMoniker.Net461)]
 // [SimpleJob(RuntimeMoniker.Net60)]
+[MemoryDiagnoser]
 public class SplitAsPooledChars
 {
     public string Source;
 
     public char Sp;
 
-    private const int loop = 10000;
+    private const int loop = 100_0000;
 
     [Benchmark]
-    public List<int> StringSplit()
+    public List<string> StringSplit()
     {
-        List<int> res = new List<int>();
+        List<string> res = new List<string>();
         for (int j = 0; j < loop; j++)
         {
-            var sp = Source.Split();
+            var sp = Source.Split(Sp);
             var count = sp.Length;
             for (int i = 0; i < count; i++)
             {
-                var s = sp[i];
-                var num = s.AsSpan().ToPositiveInt();
-                res.Add(num);
+                string s = sp[i];
+                res.Add(s);
             }
         }
 
@@ -36,9 +36,9 @@ public class SplitAsPooledChars
     }
 
     [Benchmark]
-    public List<int> SplitAsPooledChars1()
+    public List<string> SplitAsPooledChars1()
     {
-        List<int> res = new List<int>();
+        List<string> res = new List<string>();
         Span<char> span = stackalloc char[1];
         for (int j = 0; j < loop; j++)
         {
@@ -46,9 +46,8 @@ public class SplitAsPooledChars
             var count = Source.AsSpan().SplitAsPooledChars(span, out var result);
             for (int i = 0; i < count; i++)
             {
-                var r = result[i];
-                var num = Source.AsSpan(r.start, r.count).ToPositiveInt();
-                res.Add(num);
+                (int start, int count) r = result[i];
+                res.Add(Source.Substring(r.start, r.count));
             }
 
             ArrayPool<(int, int)>.Shared.Return(result);
@@ -57,8 +56,33 @@ public class SplitAsPooledChars
         return res;
     }
 
+    [Benchmark]
+    public List<string> SplitIndex()
+    {
+        List<string> res = new List<string>();
+        for (int j = 0; j < loop; j++)
+        {
+            for (int idx = 0, len = Source.Length; idx < len;)
+            {
+                var afterIdx = Source.IndexOf(Sp, idx);
+                if (afterIdx > 0)
+                {
+                    res.Add(Source.Substring(idx, afterIdx));
+                    idx = afterIdx + len;
+                }
+                else
+                {
+                    res.Add(Source.Substring(idx, len - (idx + 1)));
+                    break;
+                }
+            }
+        }
+
+        return res;
+    }
+
     [GlobalSetup]
-    void Setup()
+    public void Setup()
     {
         var digitCount = RandomUtil.Int % 2 + 1;
         // Sp = Enumerable.Range(0, digitCount).Select(v => (RandomUtil.Int % 10).ToString()).JoinAsOneString("");
