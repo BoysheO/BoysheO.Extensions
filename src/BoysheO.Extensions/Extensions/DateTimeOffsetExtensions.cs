@@ -118,5 +118,11 @@ namespace BoysheO.Extensions
         {
             return IsExpire(expire, DateTimeOffset.Now);
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsInRange(this DateTimeOffset now, DateTimeOffset start, DateTimeOffset end)
+        {
+            return now > start && now < end;
+        }
     }
 }
