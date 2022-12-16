@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace BoysheO.Extensions.Unity3DCore
 {
-    public static class VectorExtensions
+    public static partial class VectorExtensions
     {
         public static float SqrDistance(this Vector2 a, Vector2 b)
         {
@@ -91,9 +91,8 @@ namespace BoysheO.Extensions.Unity3DCore
             a = v.a;
         }
 
-
         #endregion
-        
+
 
         public static float Dot(this Vector2 lhs, Vector2 rhs)
         {
