@@ -1,0 +1,54 @@
+<#@ template language="C#" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@template language="C#"#>
+<#@import namespace="System.Linq"#>
+<#@import namespace="System"#>
+<#@assembly name="System.Core"#>
+<#@assembly name="mscorlib.dll"#>
+<#@import namespace="System.Text"#>
+<#@import namespace="System.Collections.Generic"#>
+<#@output extension=".Generated.cs"encoding="utf-8"#>
+<#
+    var types = new Dictionary<string, string[]>
+    {
+        ["Vector2"] = new[] { "float x", "float y" },
+        ["Vector3"] = new[] { "float x", "float y", "float z" },
+        ["Vector4"] = new[] { "float x", "float y", "float z", "float w" },
+        // ["Color"] = new[] { "float r", "float g", "float b", "float a" },
+        // ["Color32"] = new[] { "int r", "int g", "int b", "int a" },
+        ["Vector2Int"] = new[] { "int x", "int y", },
+        ["Vector3Int"] = new[] { "int x", "int y", "int z" },
+        // ["Vector4Int"] = new[] { "int x", "int y", "int z", "int w" },
+    };
+#>
+//auto generate,don't edit
+using System;
+using UnityEngine;
+
+namespace BoysheO.Extensions.Unity3DCore
+{
+    public static partial class VectorExtensions
+    {
+<#
+    foreach (var kvp in types)
+    {
+        var Type = kvp.Key;
+        var type = kvp.Key.ToLower();
+        var members = kvp.Value;
+#>
+<#
+        var mem = members
+            .Select(v => v.Split(' ')[1])
+            .Select(v=>$"src.{v} + {v}")
+            .ToArray();
+#>
+        public static <#= Type #> Plus(this <#= Type #> src, <#= string.Join(",", members) #>)
+        {
+            return new <#= Type #>(<#= string.Join(",", mem) #>);
+        }
+<#
+    }
+#>
+    }
+}
