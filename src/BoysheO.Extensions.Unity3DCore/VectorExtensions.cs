@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace BoysheO.Extensions.Unity3DCore
 {
@@ -14,15 +15,23 @@ namespace BoysheO.Extensions.Unity3DCore
             return Vector3.SqrMagnitude(b - a);
         }
 
-        public static float ApplyAsLinerFuncArgs(this Vector2 v, float x)
+        /// <summary>
+        /// v视作区间，求线性插值结果
+        /// </summary>
+        public static float Lerp(this Vector2 v, float t)
         {
-            return v.x + v.y * x;
+            return v.x + v.y * t;
         }
 
-        public static float ApplyAsLinerFuncArgs(this Vector2Int v, float x)
+        /// <summary>
+        /// v视作区间，求线性插值结果
+        /// </summary>
+        public static float Lerp(this Vector2Int v, float t)
         {
-            return v.x + v.y * x;
+            return v.x + v.y * t;
         }
+
+        #region 解构函数
 
         // ReSharper disable once UseDeconstructionOnParameter
         public static void Deconstruct(this Vector3 v, out float x, out float y, out float z)
@@ -81,6 +90,10 @@ namespace BoysheO.Extensions.Unity3DCore
             b = v.b;
             a = v.a;
         }
+
+
+        #endregion
+        
 
         public static float Dot(this Vector2 lhs, Vector2 rhs)
         {
