@@ -3,7 +3,7 @@
     /// <summary>
     /// it means nothing
     /// </summary>
-    public enum Unit
+    public enum Unit : byte
     {
     }
 }
