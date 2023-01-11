@@ -29,15 +29,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoysheO.Extensions.Primitiv
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoysheO.Extensions.Math", "BoysheO.Extensions.Math\BoysheO.Extensions.Math.csproj", "{DF017C25-E353-4D74-9EE8-33569B1A6A95}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniRxExtensions", "UniRxExtensions\UniRxExtensions.csproj", "{C5C8361E-53A1-488C-86EF-8974AB7DE0B5}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonConfigRepo", "JsonConfigRepo\JsonConfigRepo.csproj", "{41FF60DC-5E63-4942-A268-4A6650D07077}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonConfigRepo.Extensions.DependencyInjection", "JsonConfigRepo.Extensions.DependencyInjection\JsonConfigRepo.Extensions.DependencyInjection.csproj", "{27A937FC-3C71-43FB-8244-9C43077E3B32}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PooledReactiveCollection", "PooledReactiveCollection\PooledReactiveCollection.csproj", "{2CA50171-5432-4A2B-AA37-797547BF17B7}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PooledCollection", "PooledCollection\PooledCollection.csproj", "{DB5EA681-3DDB-4970-8BBB-BBC4373082B9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hrx", "Hrx\Hrx.csproj", "{27D209D5-2178-4795-9244-96B39E2EEAAB}"
 EndProject
@@ -97,10 +93,6 @@ Global
 		{DF017C25-E353-4D74-9EE8-33569B1A6A95}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DF017C25-E353-4D74-9EE8-33569B1A6A95}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DF017C25-E353-4D74-9EE8-33569B1A6A95}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C5C8361E-53A1-488C-86EF-8974AB7DE0B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C5C8361E-53A1-488C-86EF-8974AB7DE0B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C5C8361E-53A1-488C-86EF-8974AB7DE0B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C5C8361E-53A1-488C-86EF-8974AB7DE0B5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{41FF60DC-5E63-4942-A268-4A6650D07077}.Debug|Any CPU.ActiveCfg = Release|Any CPU
 		{41FF60DC-5E63-4942-A268-4A6650D07077}.Debug|Any CPU.Build.0 = Release|Any CPU
 		{41FF60DC-5E63-4942-A268-4A6650D07077}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -113,10 +105,6 @@ Global
 		{2CA50171-5432-4A2B-AA37-797547BF17B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2CA50171-5432-4A2B-AA37-797547BF17B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2CA50171-5432-4A2B-AA37-797547BF17B7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DB5EA681-3DDB-4970-8BBB-BBC4373082B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DB5EA681-3DDB-4970-8BBB-BBC4373082B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DB5EA681-3DDB-4970-8BBB-BBC4373082B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DB5EA681-3DDB-4970-8BBB-BBC4373082B9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{27D209D5-2178-4795-9244-96B39E2EEAAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{27D209D5-2178-4795-9244-96B39E2EEAAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27D209D5-2178-4795-9244-96B39E2EEAAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
