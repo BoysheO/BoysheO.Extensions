@@ -28,18 +28,12 @@ namespace Hrx
             _onNext?.Invoke(value, null);
         }
 
-        public void OnCompeted()
-        {
-            if (_exception != null) return;
-            _exception = CompetedException.Instance;
-            _onNext?.Invoke(default, _exception);
-        }
-
-        public void OnError(Exception ex)
+        public void OnDead(Exception? ex)
         {
             if (_exception != null) return;
             _exception = ex;
             _onNext?.Invoke(default, _exception);
+            _onNext = null;
         }
     }
 }
