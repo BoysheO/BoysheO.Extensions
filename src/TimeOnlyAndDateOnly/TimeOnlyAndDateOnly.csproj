@@ -9,6 +9,7 @@
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Authors>BoysheO</Authors>
         <Description>provide a part of TimeOnly and DateOnly for netstandard2.0</Description>
+        <PackageVersion>1.0.1</PackageVersion>
     </PropertyGroup>
 
     <ItemGroup>

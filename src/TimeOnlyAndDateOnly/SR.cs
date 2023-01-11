@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace DateAndTime
+﻿namespace DateAndTime
 {
-    public static class SR
+    internal static class SR
     {
         public static string ArgumentOutOfRange_TimeOnlyBadTicks = "ArgumentOutOfRange_TimeOnlyBadTicks.{0}";
         public static string Arg_MustBeTimeOnly = "Arg_MustBeTimeOnly.{0}";

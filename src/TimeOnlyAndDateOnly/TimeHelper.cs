@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
 
@@ -40,7 +41,7 @@ namespace DateAndTime
         // Return the tick count corresponding to the given hour, minute, second.
         // Will check the if the parameters are valid.
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static ulong TimeToTicks(int hour, int minute, int second)
+        public static ulong TimeToTicks(int hour, int minute, int second)
         {
             if ((uint)hour >= 24 || (uint)minute >= 60 || (uint)second >= 60)
             {
