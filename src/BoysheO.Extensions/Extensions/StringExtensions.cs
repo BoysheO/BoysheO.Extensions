@@ -11,21 +11,12 @@ using Extensions;
 
 namespace BoysheO.Extensions
 {
-    public static partial class StringExtensions
+    public static class StringExtensions
     {
-        /// <summary>
-        ///     对string数组中所有string运行trim并返回自己（会改变数组内的值）
-        /// </summary>
-        public static void TrimAllElements(this string[] strAry)
+        public static readonly char[] WhiteSpaceChars =
         {
-            for (var i = 0; i < strAry.Length; i++) strAry[i] = strAry[i].Trim();
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<string> SelectWithoutNullAndWhiteSpace(this IEnumerable<string> strAry)
-        {
-            return strAry.Where(v => !v.IsNullOrWhiteSpace());
-        }
+            ' ', '\f', '\n', '\r', '\t', '\v'
+        };
 
         /// <summary>
         ///     对string数组中所有string删除空白并返回新值
@@ -34,11 +25,10 @@ namespace BoysheO.Extensions
         /// </summary>
         public static IEnumerable<string> RemoveSpaces(this IEnumerable<string> strAry)
         {
-            var chars = new[] { ' ', '\f', '\n', '\r', '\t', '\v' };
+            var chars = WhiteSpaceChars;
             foreach (var str in strAry)
             {
-                if (str == null) throw new NullReferenceException("null element was rejected");
-                // if (str == "") yield return "";str为""是极低概率事件，没必要在这里if
+                if (str == null) continue;
                 yield return str.Replace(chars, "");
             }
         }
@@ -61,90 +51,79 @@ namespace BoysheO.Extensions
         /// </summary>
         public static string RemoveSpaces(this string str)
         {
-            if (str == null) throw new Exception("str can not be null");
-            return str.Replace(new[] { " ", "\f", "\n", "\r", "\t", "\v" }, "");
+            if (str == null) throw new ArgumentNullException(nameof(str));
+            return str.Replace(WhiteSpaceChars, "");
         }
 
-        /// <summary>
-        ///     将字符串视作int列表，此函数包含了忽略非数字字符、以中英文逗号为分割点的功能
-        /// </summary>
-        public static IEnumerable<int> AsIntEnumerable(this string? str)
-        {
-            if (str == null) yield break;
-
-            int? num = null;
-            foreach (var curChar in str)
-                if (curChar.Is0to9())
-                {
-                    var n = curChar.To0To9();
-                    if (num != null)
-                    {
-                        num = num.Value * 10;
-                        num = num.Value + n;
-                    }
-                    else
-                    {
-                        num = n;
-                    }
-                }
-                else if (curChar == ',' || curChar == '，')
-                {
-                    if (num != null)
-                    {
-                        yield return num.Value;
-                        num = null;
-                    }
-                }
-        }
+        //性能不佳
+        // /// <summary>
+        // ///     将字符串视作int列表，此函数包含了忽略非数字字符、以中英文逗号为分割点的功能
+        // /// </summary>
+        // public static IEnumerable<int> AsIntEnumerable(this string? str)
+        // {
+        //     if (str == null) yield break;
+        //
+        //     int? num = null;
+        //     foreach (var curChar in str)
+        //         if (curChar.Is0to9())
+        //         {
+        //             var n = curChar.To0To9();
+        //             if (num != null)
+        //             {
+        //                 num = num.Value * 10;
+        //                 num = num.Value + n;
+        //             }
+        //             else
+        //             {
+        //                 num = n;
+        //             }
+        //         }
+        //         else if (curChar == ',' || curChar == '，')
+        //         {
+        //             if (num != null)
+        //             {
+        //                 yield return num.Value;
+        //                 num = null;
+        //             }
+        //         }
+        // }
 
         /// <summary>
         ///     将字符串视作string列表，此函数包含了忽略元素两端空白字符、以中英文逗号为分割点的功能;不忽略双逗号时的""字符串
         ///     实测效率不如replace+split
         /// </summary>
-        [Obsolete("use replace+split instead")]
-        public static IEnumerable<string> AsStringEnumerable(this string? str)
-        {
-            if (str == null) yield break;
-
-            var start = -1;
-            var len = str.Length;
-            for (var i = 0; i < len; i++)
-            {
-                var c = str[i];
-                if (c == ',' || c == '，')
-                {
-                    if (start + 1 == i)
-                        yield return "";
-                    else
-                        yield return str.Substring((start + 1), i - (start + 1));
-                    // yield return str[(start + 1).. i];
-
-                    start = i;
-                }
-            }
-
-            if (start + 1 == len - 1)
-                yield return "";
-            else
-                yield return str.Substring(start + 1);
-        }
-
-        /// <summary>
-        ///     等价
-        ///     str.ReplaceAllChineseDouHaoToEnglish()
-        ///     .ReplaceAllSpace0()
-        ///     .Split(',')
-        /// </summary>
-        public static string[] SplitByDouHao(this string str)
-        {
-            if (str == null) throw new ArgumentNullException(nameof(str));
-            return str.ReplaceAllChineseDouHaoToEnglish()
-                .RemoveSpaces()
-                .Split(',');
-        }
+        // [Obsolete("use replace+split instead")]
+        // public static IEnumerable<string> AsStringEnumerable(this string? str)
+        // {
+        //     if (str == null) yield break;
+        //
+        //     var start = -1;
+        //     var len = str.Length;
+        //     for (var i = 0; i < len; i++)
+        //     {
+        //         var c = str[i];
+        //         if (c == ',' || c == '，')
+        //         {
+        //             if (start + 1 == i)
+        //                 yield return "";
+        //             else
+        //                 yield return str.Substring((start + 1), i - (start + 1));
+        //             // yield return str[(start + 1).. i];
+        //
+        //             start = i;
+        //         }
+        //     }
+        //
+        //     if (start + 1 == len - 1)
+        //         yield return "";
+        //     else
+        //         yield return str.Substring(start + 1);
+        // }
 
         /// <summary>
         ///     对形如(1,2),(4,6)的字串解析。自动替换中英文、忽略杂词
+        ///     读取坐标常用
+        ///     一般性能
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
@@ -152,7 +131,7 @@ namespace BoysheO.Extensions
         {
             var standard = str
                 .RemoveSpaces()
-                .ReplaceAllChineseDouHaoToEnglish()
+                .Replace('，', ',')
                 .Replace("（", "(")
                 .Replace("）", ")");
             var regex = new Regex(@"(?<=\()-?[0-9]+,-?[-0-9]+(?=\))", RegexOptions.Singleline);
@@ -166,54 +145,45 @@ namespace BoysheO.Extensions
             }
         }
 
-        /// <summary>
-        ///     替换中文逗号为英文逗号
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string ReplaceAllChineseDouHaoToEnglish(this string str)
-        {
-            return str.Replace("，", ",");
-        }
+        // /// <summary>
+        // ///     遍历替换oldstr，结果可能包含""，null(str是null的情况下)，如果参数集合中包含null则会从replace中引发异常
+        // ///     <para>old值和new值应一一对应</para>
+        // ///     <para>TODO 优化GC</para>
+        // /// </summary>
+        // public static string Replace(this string str, IEnumerable<string> oldstr, IEnumerable<string> newstr)
+        // {
+        //     if (str.IsNullOrEmpty()) return str;
+        //     var itor = oldstr.GetEnumerator();
+        //     var newitor = newstr.GetEnumerator();
+        //     while (itor.MoveNext())
+        //     {
+        //         var newerstr = newitor.MoveNext() ? newitor.Current : "";
+        //         str = str.Replace(itor.Current, newerstr);
+        //     }
+        //
+        //     itor.Dispose();
+        //     newitor.Dispose();
+        //     return str;
+        // }
 
-        /// <summary>
-        ///     遍历替换oldstr，结果可能包含""，null(str是null的情况下)，如果参数集合中包含null则会从replace中引发异常
-        ///     <para>old值和new值应一一对应</para>
-        ///     <para>TODO 优化GC</para>
-        /// </summary>
-        public static string Replace(this string str, IEnumerable<string> oldstr, IEnumerable<string> newstr)
-        {
-            if (str.IsNullOrEmpty()) return str;
-            var itor = oldstr.GetEnumerator();
-            var newitor = newstr.GetEnumerator();
-            while (itor.MoveNext())
-            {
-                var newerstr = newitor.MoveNext() ? newitor.Current : "";
-                str = str.Replace(itor.Current, newerstr);
-            }
-
-            itor.Dispose();
-            newitor.Dispose();
-            return str;
-        }
-
-        /// <summary>
-        ///     遍历替换oldchar，结果可能包含""，null(str是null的情况下)，如果参数集合中包含null则会从replace中引发异常
-        ///     <para>old值和new值应一一对应</para>
-        ///     <para>TODO 优化GC</para>
-        /// </summary>
-        public static string Replace(this string str, IEnumerable<char> oldchar, IEnumerable<char> newchar)
-        {
-            if (str.IsNullOrEmpty()) return str;
-            var itor = oldchar.GetEnumerator();
-            var newitor = newchar.GetEnumerator();
-            while (itor.MoveNext())
-                if (newitor.MoveNext())
-                    str = str.Replace(itor.Current, newitor.Current);
-                else str = str.Remove(itor.Current);
-            itor.Dispose();
-            newitor.Dispose();
-            return str;
-        }
+        // /// <summary>
+        // ///     遍历替换oldchar，结果可能包含""，null(str是null的情况下)，如果参数集合中包含null则会从replace中引发异常
+        // ///     <para>old值和new值应一一对应</para>
+        // ///     <para>TODO 优化GC</para>
+        // /// </summary>
+        // public static string Replace(this string str, IEnumerable<char> oldchar, IEnumerable<char> newchar)
+        // {
+        //     if (str.IsNullOrEmpty()) return str;
+        //     var itor = oldchar.GetEnumerator();
+        //     var newitor = newchar.GetEnumerator();
+        //     while (itor.MoveNext())
+        //         if (newitor.MoveNext())
+        //             str = str.Replace(itor.Current, newitor.Current);
+        //         else str = str.Remove(itor.Current);
+        //     itor.Dispose();
+        //     newitor.Dispose();
+        //     return str;
+        // }
 
         /// <summary>
         ///     遍历替换oldchar，结果可能包含""，null(str是null的情况下)，如果参数集合中包含null则会从replace中引发异常

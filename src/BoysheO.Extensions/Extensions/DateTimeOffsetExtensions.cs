@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
-using System.Runtime.Serialization;
 
 namespace BoysheO.Extensions
 {
@@ -28,26 +27,23 @@ namespace BoysheO.Extensions
             return value;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DateTimeOffset MaxNow(this DateTimeOffset value)
+        /// <summary>
+        /// 算出当周的星期1的起点时间
+        /// *按ISO 8601规范，一周以周一为开始
+        /// </summary>
+        public static DateTimeOffset GetCurWeekStart(this DateTimeOffset v)
         {
-            return value.Max(DateTimeOffset.Now);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DateTimeOffset MinNow(this DateTimeOffset value)
-        {
-            return value.Min(DateTimeOffset.Now);
+            return GetCurWeekDayStart(v, DayOfWeek.Monday);
         }
 
         /// <summary>
-        /// 算出当周的星期1的0点时间
+        /// 算出当周的星期n的开始时间
         /// *按ISO 8601规范，一周以周一为开始
         /// </summary>
-        public static DateTimeOffset CurrentWeekMonday0AM(this DateTimeOffset v)
+        public static DateTimeOffset GetCurWeekDayStart(this DateTimeOffset v, DayOfWeek dayOfWeek)
         {
             var curDayOfWeek = v.DayOfWeek;
-            var curDay = v.CurrentDay12Am();
+            var curDay = v.GetCurDayStart();
             DateTimeOffset monDay = curDayOfWeek switch
             {
                 DayOfWeek.Friday => curDay - TimeSpan.FromDays(4),
@@ -60,24 +56,15 @@ namespace BoysheO.Extensions
                 _ => throw new ArgumentOutOfRangeException()
             };
 
-            return monDay;
-        }
-
-        /// <summary>
-        /// 算出当周的星期n的0点时间
-        /// *按ISO 8601规范，一周以周一为开始
-        /// </summary>
-        public static DateTimeOffset CurrentWeekDay(this DateTimeOffset v, DayOfWeek dayOfWeek)
-        {
             return dayOfWeek switch
             {
-                DayOfWeek.Friday => v.CurrentWeekMonday0AM().AddDays(4),
-                DayOfWeek.Monday => v.CurrentWeekMonday0AM(),
-                DayOfWeek.Saturday => v.CurrentWeekMonday0AM().AddDays(5),
-                DayOfWeek.Sunday => v.CurrentWeekMonday0AM().AddDays(6),
-                DayOfWeek.Thursday => v.CurrentWeekMonday0AM().AddDays(3),
-                DayOfWeek.Tuesday => v.CurrentWeekMonday0AM().AddDays(1),
-                DayOfWeek.Wednesday => v.CurrentWeekMonday0AM().AddDays(2),
+                DayOfWeek.Friday => monDay.AddDays(4),
+                DayOfWeek.Monday => monDay,
+                DayOfWeek.Saturday => monDay.AddDays(5),
+                DayOfWeek.Sunday => monDay.AddDays(6),
+                DayOfWeek.Thursday => monDay.AddDays(3),
+                DayOfWeek.Tuesday => monDay.AddDays(1),
+                DayOfWeek.Wednesday => monDay.AddDays(2),
                 _ => throw new ArgumentOutOfRangeException(nameof(dayOfWeek), dayOfWeek, null)
             };
         }
@@ -85,7 +72,7 @@ namespace BoysheO.Extensions
         /// <summary>
         /// 到当天凌晨时间（上午12点，也就是0点）
         /// </summary>
-        public static DateTimeOffset CurrentDay12Am(this DateTimeOffset v)
+        public static DateTimeOffset GetCurDayStart(this DateTimeOffset v)
         {
             return new DateTimeOffset(v.Year, v.Month, v.Day, 0, 0, 0, v.Offset);
         }
@@ -94,15 +81,15 @@ namespace BoysheO.Extensions
         /// 到下一天凌晨时间 （上午12点，也就是0点）
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DateTimeOffset NextDay12Am(this DateTimeOffset t)
+        public static DateTimeOffset GetNextDayStart(this DateTimeOffset t)
         {
-            return t.CurrentDay12Am() + TimeSpan.FromDays(1);
+            return t.GetCurDayStart() + TimeSpan.FromDays(1);
         }
 
         /// <summary>
         /// 到当小时0分
         /// </summary>
-        public static DateTimeOffset CurrentHour0Min(this DateTimeOffset v)
+        public static DateTimeOffset GetCurHourStart(this DateTimeOffset v)
         {
             return new DateTimeOffset(v.Year, v.Month, v.Day, v.Hour, 0, 0, v.Offset);
         }

@@ -12,7 +12,7 @@ public class DateTimeOffsetExtensionsTests
     public string ToCurrentDay12Am(string dateTimeOffset)
     {
         var dt = DateTimeOffset.Parse(dateTimeOffset);
-        var v = dt.CurrentDay12Am();
+        var v = dt.GetCurDayStart();
         return v.ToString(CultureInfo.InvariantCulture);
     }
 
@@ -21,7 +21,7 @@ public class DateTimeOffsetExtensionsTests
     public string ToCurrentHour(string dat)
     {
         var dt = DateTimeOffset.Parse(dat);
-        var v = dt.CurrentHour0Min();
+        var v = dt.GetCurHourStart();
         return v.ToString(CultureInfo.InvariantCulture);
     }
 
@@ -31,7 +31,7 @@ public class DateTimeOffsetExtensionsTests
     public string ToNextDay12Am(string dat)
     {
         var dt = DateTimeOffset.Parse(dat);
-        var v = dt.NextDay12Am();
+        var v = dt.GetNextDayStart();
         return v.ToString(CultureInfo.InvariantCulture);
     }
 }

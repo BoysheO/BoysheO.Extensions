@@ -34,14 +34,14 @@ namespace BoysheO.Extensions
                 }
         }
 
-        /// <summary>
-        ///     返回mem中的0-Position部分
-        /// </summary>
-        public static ArraySegment<byte> AsSegment(this MemoryStream mem)
-        {
-            if (!mem.TryGetBuffer(out var buffer)) throw new Exception("MemoryStream must can be read and write.");
-
-            return buffer.Slice(0, checked((int) mem.Position));
-        }
+        // /// <summary>
+        // ///     返回mem中的0-Position部分
+        // /// </summary>
+        // public static ArraySegment<byte> AsSegment(this MemoryStream mem)
+        // {
+        //     if (!mem.TryGetBuffer(out var buffer)) throw new Exception("MemoryStream must can be read and write.");
+        //
+        //     return buffer.Slice(0, checked((int) mem.Position));
+        // }
     }
 }
