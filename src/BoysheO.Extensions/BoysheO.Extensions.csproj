@@ -6,7 +6,6 @@
         <RootNamespace>BoysheO</RootNamespace>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
         <Nullable>enable</Nullable>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Authors>BoysheO</Authors>
         <Version>1.0.5</Version>
         <RepositoryUrl>https://github.com/BoysheO/BoysheO.Extensions</RepositoryUrl>

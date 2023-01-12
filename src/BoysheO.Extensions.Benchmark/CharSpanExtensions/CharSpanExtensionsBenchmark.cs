@@ -12,10 +12,10 @@ public class CharSpanExtensionsBenchmark
     [Params("123", "2346728")] public string Source;
 
     [Benchmark]
-    public int AsSpanToIntNumber() => Source.AsSpan().ToPositiveInt();
+    public int AsSpanToIntNumber() => Source.AsSpan().ParserToPositiveInt();
 
     [Benchmark]
-    public int ToIntNumber() => Source.ToIntNumber();
+    public int ToIntNumber() => Source.ParserToInt();
 
     [Benchmark]
     public int IntParse() => int.Parse(Source);

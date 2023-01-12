@@ -108,7 +108,7 @@ namespace BoysheO.Extensions
                 return GetTypeCode(type.GetElementType()!) + (type.GetArrayRank() == 1 ? "[]" : "[,]");
             }
 
-            if (type.InheritsFrom(typeof(Nullable<>)))
+            if (type.IsInheritsFrom(typeof(Nullable<>)))
                 return GetTypeCode(type.GetGenericArguments()[0]) + "?";
             if (type.IsByRef)
                 return "ref " + GetTypeCode(type.GetElementType()!);
@@ -139,7 +139,7 @@ namespace BoysheO.Extensions
                 : GenTypeCode(type);
         }
 
-        public static bool InheritsFrom(this Type type, Type baseType)
+        public static bool IsInheritsFrom(this Type type, Type baseType)
         {
             if (baseType.IsAssignableFrom(type)) return true;
             if (type.IsInterface && !baseType.IsInterface) return false;

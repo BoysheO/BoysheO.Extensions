@@ -5,6 +5,9 @@ namespace BoysheO.Extensions
 {
     public static class CharExtensions
     {
+        /// <summary>
+        /// 不考虑文化差异
+        /// </summary>
         //48－57 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         // ReSharper disable once InconsistentNaming
@@ -21,7 +24,7 @@ namespace BoysheO.Extensions
         }
 
         /// <summary>
-        /// 是否小写a-z
+        /// 是否小写a-z,不考虑文化差异
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         // ReSharper disable once IdentifierTypo
@@ -31,7 +34,7 @@ namespace BoysheO.Extensions
         }
 
         /// <summary>
-        /// 是否大写A-Z
+        /// 是否大写A-Z,不考虑文化差异
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsAtoZ(this char c)
@@ -45,6 +48,9 @@ namespace BoysheO.Extensions
             return c.Isatoz() || c.IsAtoZ();
         }
 
+        /// <summary>
+        /// 对a-z转换成A-Z，不考虑文化差异
+        /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static char ToUpper(this char c)
         {
@@ -53,6 +59,9 @@ namespace BoysheO.Extensions
             throw new Exception($"{c} is not english letter");
         } 
         
+        /// <summary>
+        /// 对A-Z转换成a-z，不考虑文化差异
+        /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static char ToLower(this char c)
         {

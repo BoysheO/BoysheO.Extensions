@@ -21,12 +21,12 @@ public class ToIntNumber
     [Benchmark]
     public int IntParser()
     {
-        return Source.ToIntNumber();
+        return Source.ParserToInt();
     }
 
     [Benchmark]
     public int AsSpanToNumber()
     {
-        return Source.AsSpan().ToPositiveInt();
+        return Source.AsSpan().ParserToPositiveInt();
     }
 }

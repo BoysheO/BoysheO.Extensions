@@ -43,5 +43,7 @@ namespace BoysheO.Extensions
         //
         //     return buffer.Slice(0, checked((int) mem.Position));
         // }
+
+        public static ReadOnlySpan<T> AsReadOnly<T>(this Span<T> span) => (ReadOnlySpan<T>)span;
     }
 }

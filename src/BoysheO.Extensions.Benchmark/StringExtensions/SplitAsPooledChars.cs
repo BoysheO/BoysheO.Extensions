@@ -34,27 +34,27 @@ public class SplitAsPooledChars
 
         return res;
     }
-
-    [Benchmark]
-    public List<string> SplitAsPooledChars1()
-    {
-        List<string> res = new List<string>();
-        Span<char> span = stackalloc char[1];
-        for (int j = 0; j < loop; j++)
-        {
-            span[0] = Sp;
-            var count = Source.AsSpan().SplitAsPooledChars(span, out var result);
-            for (int i = 0; i < count; i++)
-            {
-                (int start, int count) r = result[i];
-                res.Add(Source.Substring(r.start, r.count));
-            }
-
-            ArrayPool<(int, int)>.Shared.Return(result);
-        }
-
-        return res;
-    }
+    //
+    // [Benchmark]
+    // public List<string> SplitAsPooledChars1()
+    // {
+    //     List<string> res = new List<string>();
+    //     Span<char> span = stackalloc char[1];
+    //     for (int j = 0; j < loop; j++)
+    //     {
+    //         span[0] = Sp;
+    //         var count = Source.AsSpan().SplitAsPooledChars(span, out var result);
+    //         for (int i = 0; i < count; i++)
+    //         {
+    //             (int start, int count) r = result[i];
+    //             res.Add(Source.Substring(r.start, r.count));
+    //         }
+    //
+    //         ArrayPool<(int, int)>.Shared.Return(result);
+    //     }
+    //
+    //     return res;
+    // }
 
     [Benchmark]
     public List<string> SplitIndex()
