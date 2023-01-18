@@ -6,7 +6,7 @@ namespace DateAndTime
 {
     public static class TimeUtil
     {
-        const int ONE_DAY_IN_MILLISECONDS = 86400000;
+        public const int MillSecsADay = 86400000;
 
         /// <summary>
         /// 计算一个每日时刻在一段时间中的出现次数<br />
@@ -21,21 +21,21 @@ namespace DateAndTime
         {
             if (startMs > endMs)
                 throw new ArgumentOutOfRangeException(nameof(startMs), "startMs should be less than endMs");
-            if (!(timeMsOfDay >= 0 && timeMsOfDay < ONE_DAY_IN_MILLISECONDS))
+            if (!(timeMsOfDay >= 0 && timeMsOfDay < MillSecsADay))
                 throw new ArgumentOutOfRangeException(nameof(timeMsOfDay), "timeMsOfDay should be in [0,86400000)");
-            if (!(timeOffset >= -ONE_DAY_IN_MILLISECONDS / 2 && timeOffset <= ONE_DAY_IN_MILLISECONDS / 2))
+            if (!(timeOffset >= -MillSecsADay / 2 && timeOffset <= MillSecsADay / 2))
                 throw new ArgumentOutOfRangeException(nameof(timeOffset));
             timeMsOfDay -= timeOffset;
             while (timeMsOfDay < 0)
             {
-                timeMsOfDay += ONE_DAY_IN_MILLISECONDS;
+                timeMsOfDay += MillSecsADay;
             }
 
-            var startDays = startMs / ONE_DAY_IN_MILLISECONDS;
-            var endDays = endMs / ONE_DAY_IN_MILLISECONDS;
+            var startDays = startMs / MillSecsADay;
+            var endDays = endMs / MillSecsADay;
             var isSameDay = endDays == startDays;
-            var timeMsOfStartDay = startMs % ONE_DAY_IN_MILLISECONDS;
-            var timeMsOfEndDay = endMs % ONE_DAY_IN_MILLISECONDS;
+            var timeMsOfStartDay = startMs % MillSecsADay;
+            var timeMsOfEndDay = endMs % MillSecsADay;
             if (isSameDay)
             {
                 return timeMsOfStartDay >= timeMsOfDay && timeMsOfEndDay < timeMsOfDay ? 1 : 0;
