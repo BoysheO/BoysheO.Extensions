@@ -10,12 +10,25 @@ namespace DateAndTime
 
         /// <summary>
         /// 计算一个每日时刻在一段时间中的出现次数<br />
-        /// calculate the count of the time of day between start to end 
+        /// *起始时刻与timeMsOfDay重叠时算入出现次数，终止时刻与timeMsOfDay重叠时不算入出现次数<br />
+        /// calculate the count of the time of day between start to end <br />
+        /// *Result increase while starMs same as timeMsOfDay but endMs do not<br />
         /// </summary>
-        /// <param name="startMs">起始时间戳，需要保证起点为0点</param>
-        /// <param name="endMs">终止时间戳，需要保证0时刻与startMs语义一致</param>
-        /// <param name="timeMsOfDay">每日时刻</param>
-        /// <param name="timeOffset">时区，指明timeMsOfDay所表达的时区</param>
+        /// <param name="startMs">
+        /// 起始时间戳，需要保证起点为0点<br/>
+        /// Start timestamp.The standards it use must start from 0am</param>
+        /// <param name="endMs">
+        /// 终止时间戳，需要保证0时刻与startMs语义一致<br />
+        /// End timestamp.The standards it use should be same as start timestamp. <br />
+        /// </param>
+        /// <param name="timeMsOfDay">
+        /// 每日时刻<br />
+        /// Time in day<br />
+        /// </param>
+        /// <param name="timeOffset">
+        /// 时区，指明timeMsOfDay所表达的时区。毫秒<br />
+        /// Timezone's timeoffset.Millsec.<br/>
+        /// </param>
         /// <returns></returns>
         public static long GetCountOfTheTimeBetween(long startMs, long endMs, int timeMsOfDay, int timeOffset)
         {
@@ -38,7 +51,9 @@ namespace DateAndTime
             var timeMsOfEndDay = endMs % MillSecsADay;
             if (isSameDay)
             {
-                return timeMsOfStartDay >= timeMsOfDay && timeMsOfEndDay < timeMsOfDay ? 1 : 0;
+                if (timeMsOfStartDay == timeMsOfDay) return 1;
+                if (timeMsOfStartDay > timeMsOfDay && timeMsOfEndDay < timeMsOfDay) return 1;
+                return 0;
             }
 
             var times = 0L;

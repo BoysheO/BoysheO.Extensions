@@ -36,6 +36,7 @@ public class TimeUtilTest
         var startMs = DateTimeOffset.Parse(start).ToUnixTimeMilliseconds();
         var endMs = DateTimeOffset.Parse(end).ToUnixTimeMilliseconds();
         var time = TimeSpan.Parse(timeOfDay);
+        Console.WriteLine(new {startMs,endMs,time=time.TotalMilliseconds,offset=(int)TimeSpan.FromHours(8).TotalMilliseconds});
         return TimeUtil.GetCountOfTheTimeBetween(startMs, endMs, (int)time.TotalMilliseconds,
             (int)TimeSpan.FromHours(8).TotalMilliseconds);
     }
