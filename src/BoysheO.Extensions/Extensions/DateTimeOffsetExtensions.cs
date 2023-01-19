@@ -28,19 +28,19 @@ namespace BoysheO.Extensions
         }
 
         /// <summary>
-        /// 算出当周的星期1的起点时间
-        /// *按ISO 8601规范，一周以周一为开始
+        /// 算出当周的星期1的起点时间<br />
+        /// *按ISO 8601规范，一周以周一为开始<br />
         /// </summary>
-        public static DateTimeOffset GetCurWeekStart(this DateTimeOffset v)
+        public static DateTimeOffset GetLastMonday0AM(this DateTimeOffset v)
         {
-            return GetCurWeekDayStart(v, DayOfWeek.Monday);
+            return GetCurWeekDay0AM(v, DayOfWeek.Monday);
         }
 
         /// <summary>
         /// 算出当周的星期n的开始时间
         /// *按ISO 8601规范，一周以周一为开始
         /// </summary>
-        public static DateTimeOffset GetCurWeekDayStart(this DateTimeOffset v, DayOfWeek dayOfWeek)
+        public static DateTimeOffset GetCurWeekDay0AM(this DateTimeOffset v, DayOfWeek dayOfWeek)
         {
             var curDayOfWeek = v.DayOfWeek;
             var curDay = v.GetCurDayStart();

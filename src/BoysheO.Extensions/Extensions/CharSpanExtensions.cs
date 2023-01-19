@@ -150,7 +150,7 @@ namespace BoysheO.Extensions
         /// </summary>
         /// <param name="chars"></param>
         /// <returns></returns>
-        public static string CreatString(this ReadOnlySpan<char> chars)
+        public static string ToNewString(this ReadOnlySpan<char> chars)
         {
             unsafe
             {

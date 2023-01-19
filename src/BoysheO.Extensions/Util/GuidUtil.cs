@@ -1,12 +1,11 @@
 ﻿using System;
 
-namespace BoysheO.Extensions
+namespace BoysheO.Util
 {
-    public static class GuidExtensions
+    public class GuidUtil
     {
         /// <summary>
-        /// 输出Guid值的前几位
-        /// 常用于调试打印
+        /// 输出Guid值的前几位,常用于调试打印
         /// </summary>
         public static string ToShortString(Guid guid, int keep = 8)
         {

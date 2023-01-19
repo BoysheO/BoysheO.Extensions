@@ -65,6 +65,16 @@ public class StringExtensionsTests
         return span.ParserToPositiveInt();
     }
 
+    [Test]
+    public void ToHexString()
+    {
+        var rand = Random.Shared.Next();
+        var bytes = rand.AsMemoryByteSpan().ToArray().ToList();
+        var expert = bytes.AsEnumerable().ToHexText();
+        var res = bytes.ToHexText();
+        Assert.AreEqual(expert, res);
+    }
+
     // // [TestCase(@"12332\n14\\n562")]//暂不考虑转义
     // [TestCase(@"123\n321\n4562")]
     // [TestCase(@"123n321\4562")]

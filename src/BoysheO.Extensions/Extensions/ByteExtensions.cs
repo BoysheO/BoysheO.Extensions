@@ -1,63 +1,20 @@
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
+using BoysheO.Util;
 
 namespace BoysheO.Extensions
 {
-    /// <summary>
-    /// 与byte相关的扩展
-    /// </summary>
     public static class ByteExtensions
     {
-        #region IsGZipHeader
-
-        /// <summary>
-        ///     判断前2个字节是否符合gzip标准1f8b
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsGZipHeader(this ReadOnlySpan<byte> bytes)
-        {
-            return bytes.Length >= 2 && bytes[0] == 0x1f && bytes[1] == 0x8b;
-        }
-
-        /// <summary>
-        ///     判断前2个字节是否符合gzip标准1f8b
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsGZipHeader(this Span<byte> bytes)
-        {
-            return ((ReadOnlySpan<byte>) bytes).IsGZipHeader();
-        }
-
-        /// <summary>
-        ///     判断前2个字节是否符合gzip标准1f8b
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsGZipHeader(this byte[] bytes)
-        {
-            return ((ReadOnlySpan<byte>) bytes).IsGZipHeader();
-        }
-
-        /// <summary>
-        ///     判断前2个字节是否符合gzip标准1f8b
-        /// </summary>
-        public static bool IsGZipHeader(this IEnumerable<byte> bytes)
-        {
-            using var enumerator = bytes.GetEnumerator();
-            if (!enumerator.MoveNext()) return false;
-            if (enumerator.Current != 0x1f) return false;
-            if (!enumerator.MoveNext()) return false;
-            if (enumerator.Current != 0x8b) return false;
-            return true;
-        }
-
-        #endregion
-
         #region ToHexText
 
         /// <summary>
-        ///     根据集合元素，输出集合的hex字符串表达，形如“A1 BE C1”
+        ///     根据集合元素，输出集合的hex字符串表达，形如“A1 BE C1”<br />
+        ///     Get Hex string from bytes like "A1 BE C1".<br />
+        ///     *Performance tips:this method use stringBuilder,and not very fast.
         /// </summary>
         public static string ToHexText(this IEnumerable<byte> bytes, StringBuilder? usingStringBuilder = null)
         {
@@ -86,28 +43,46 @@ namespace BoysheO.Extensions
         }
 
         /// <summary>
-        ///     根据集合元素，输出集合的hex字符串表达，形如“A1 BE C1”
+        ///     根据集合元素，输出集合的hex字符串表达，形如“A1 BE C1”<br />
+        ///     Get Hex string from bytes like "A1 BE C1".
         /// </summary>
-        public static string ToHexText(this IList<byte> bytes, StringBuilder? usingStringBuilder = null)
+        private static string ToHexText(this IList<byte> bytes)
         {
+            const int stackSize = 1024;
             if (bytes.Count == 0) return "";
-            //4=hex:2 blank:1
-            var sb = usingStringBuilder ?? new StringBuilder(bytes.Count * 3);
-            usingStringBuilder?.Clear();
-            foreach (var byte1 in bytes)
+            var len = bytes.Count * 3;
+            char[]? ary = null;
+            Span<char> buff = len > stackSize ? ary = ArrayPool<char>.Shared.Rent(len) : stackalloc char[len];
+            int buffCount = 0;
+            Span<char> charBuff = stackalloc char[2];
+            for (int i = 0, count = bytes.Count; i < count; i++)
             {
-                sb.Append(byte1.ToHexText());
-                sb.Append(' ');
+                var b = bytes[i];
+                ByteUtil.ByteToHexChar(b, charBuff);
+                buff[buffCount] = charBuff[1];
+                buffCount++;
+                buff[buffCount] = charBuff[0];
+                buffCount++;
+                buff[buffCount] = ' ';
+                buffCount++;
             }
 
-            sb.Remove(sb.Length - 1, 1);
-            var res = sb.ToString();
-            usingStringBuilder?.Clear();
+            //slice to ignore the last empty char
+            string res = buff.Slice(0, buffCount - 1).AsReadOnly().ToNewString();
+
+            if (ary != null)
+            {
+                ArrayPool<char>.Shared.Return(ary);
+            }
+
             return res;
         }
 
         /// <summary>
-        ///     输出byte的hex字符串表达，形如"A1","01"
+        ///     输出byte的hex字符串表达，形如"A1","01"<br />
+        ///     Get Hex string from byte like "A1".<br />
+        ///     *Performance tips:it's same to call ToString("X2").
+        ///     If call in loop,suggestion is use <see cref="ByteUtil.ByteToHexChar"/> instead 
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string ToHexText(this byte byte1)
@@ -115,101 +90,60 @@ namespace BoysheO.Extensions
             return byte1.ToString("X2");
         }
 
-        //primitive
         /// <summary>
-        ///     根据byte块，输出hex字符串表达，形如“A1 BE C1”
+        ///     根据集合元素，输出集合的hex字符串表达，形如“A1 BE C1”<br />
+        ///     Get Hex string from bytes like "A1 BE C1".
         /// </summary>
-        public static string ToHexText(this ReadOnlySpan<byte> bytes, Span<char> charBuffer = default,
-            int maxByteCount = 500)
+        public static string ToHexText(this ReadOnlySpan<byte> bytes)
         {
+            const int stackSize = 1024;
             if (bytes.Length == 0) return "";
-
-            //可设置的最高.net上限应为min(4e9, 2147483648/sizeof(char))，但是要考虑运行环境的内存限制和外部API对超大字串的支持问题，再考虑本API主要是DEBUG使用，很小的限制就够了
-            var cut = bytes.Length > maxByteCount; //avoid System.OverflowException OutOfMemoryException
-            var charCount = cut ? maxByteCount * 3 : bytes.Length * 3;
-
-            if (charBuffer.IsEmpty)
-                charBuffer = new char[charCount];
-            else if (charBuffer.Length < charCount)
-                throw new OutOfMemoryException($"{nameof(charBuffer)} has not enough space to restore string.");
-
-            unsafe
+            var len = bytes.Length * 3;
+            char[]? ary = null;
+            Span<char> buff = len > stackSize ? ary = ArrayPool<char>.Shared.Rent(len) : stackalloc char[len];
+            int buffCount = 0;
+            Span<char> charBuff = stackalloc char[2];
+            for (int i = 0, count = bytes.Length; i < count; i++)
             {
-                fixed (char* c = charBuffer)
-                {
-                    var curC = c;
-                    fixed (byte* b = bytes)
-                    {
-                        var curB = b;
-                        while (curC - c < charCount) //test pass;it was right
-                        {
-                            *curC = ' ';
-                            curC++;
-                            var h = *curB >> 4;
-                            *curC = (char) (h < 0x0A ? 48 + h : 55 + h);
-                            curC++;
-                            var l = *curB & 0x0F;
-                            *curC = (char) (l < 0x0A ? 48 + l : 55 + l);
-                            curC++;
-                            curB++;
-                        }
-                    }
-
-                    if (cut)
-                    {
-                        c[charCount - 1] = '.';
-                        c[charCount - 2] = '.';
-                        c[charCount - 3] = '.';
-                    }
-
-                    return new string(c, 1, charCount - 1);
-                }
+                var b = bytes[i];
+                ByteUtil.ByteToHexChar(b, charBuff);
+                buff[buffCount] = charBuff[1];
+                buffCount++;
+                buff[buffCount] = charBuff[0];
+                buffCount++;
+                buff[buffCount] = ' ';
+                buffCount++;
             }
+
+            //slice to ignore the last empty char
+            string res = buff.Slice(0, buffCount - 1).AsReadOnly().ToNewString();
+
+            if (ary != null)
+            {
+                ArrayPool<char>.Shared.Return(ary);
+            }
+
+            return res;
         }
 
         /// <summary>
-        /// 使用Hex文本表达字节块内容
+        ///     根据集合元素，输出集合的hex字符串表达，形如“A1 BE C1”<br />
+        ///     Get Hex string from bytes like "A1 BE C1".
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string ToHexText(this byte[] bytes, Span<char> charBuffer = default)
+        public static string ToHexText(this byte[] bytes)
         {
-            return new ReadOnlySpan<byte>(bytes).ToHexText(charBuffer);
+            return bytes.AsSpan().AsReadOnly().ToHexText();
         }
 
         /// <summary>
-        /// 使用Hex文本表达字节块内容
+        ///     根据集合元素，输出集合的hex字符串表达，形如“A1 BE C1”<br />
+        ///     Get Hex string from bytes like "A1 BE C1".
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string ToHexText(this Span<byte> bytes, Span<char> charBuffer = default)
+        public static string ToHexText(this ArraySegment<byte> bytes)
         {
-            return ((ReadOnlySpan<byte>) bytes).ToHexText(charBuffer);
-        }
-
-        /// <summary>
-        /// 使用Hex文本表达字节块内容
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string ToHexText(this Memory<byte> bytes, Span<char> charBuffer = default)
-        {
-            return ((ReadOnlySpan<byte>) bytes.Span).ToHexText(charBuffer);
-        }
-
-        /// <summary>
-        /// 使用Hex文本表达字节块内容
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string ToHexText(this ReadOnlyMemory<byte> bytes, Span<char> charBuffer = default)
-        {
-            return ToHexText(bytes.Span, charBuffer);
-        }
-
-        /// <summary>
-        /// 使用Hex文本表达字节块内容
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string ToHexText(this ArraySegment<byte> bytes, Span<char> charBuffer = default)
-        {
-            return ((ReadOnlySpan<byte>) bytes.AsSpan()).ToHexText(charBuffer);
+            return bytes.AsSpan().AsReadOnly().ToHexText();
         }
 
         #endregion
@@ -242,7 +176,7 @@ namespace BoysheO.Extensions
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string ToBinText(this Span<byte> span, StringBuilder? usingStringBuilder = null)
         {
-            return ((ReadOnlySpan<byte>) span).ToBinText(usingStringBuilder);
+            return ((ReadOnlySpan<byte>)span).ToBinText(usingStringBuilder);
         }
 
         /// <summary>
@@ -342,7 +276,7 @@ namespace BoysheO.Extensions
         public static string ToMemoryHexText<T>(this T value, Span<char> charBuffer = default)
             where T : unmanaged
         {
-            return ((ReadOnlySpan<byte>) value.AsMemoryByteSpan()).ToHexText(charBuffer);
+            return ((ReadOnlySpan<byte>)value.AsMemoryByteSpan()).ToHexText(charBuffer);
         }
     }
 }
