@@ -8,8 +8,8 @@ namespace BoysheO.Extensions
     public static class ObjectExtensions
     {
         /// <summary>
-        ///     将单个元素包装成拥有1个元素的数组<br />
-        ///     这是为了new []{obj}语句不打断链式API
+        ///     Warp a element to an array.<br />
+        ///     The method is designed not to break the chained API
         /// </summary>
         public static T[] WarpToArray<T>(this T obj)
         {
@@ -48,8 +48,8 @@ namespace BoysheO.Extensions
         // }
 
         /// <summary>
-        ///     反射获取<see cref="DescriptionAttribute.Description" />，根据Enum获取<br />
-        ///     *在Unity的IL2CPP中，已知GetCustomAttribute是NotSupport，因此此API不可在IL2CPP环境中使用
+        ///     Get <see cref="DescriptionAttribute.Description" /> by reflection.<br />
+        ///     * GetCustomAttribute is not support in Unity IL2CPP,so don't use this in IL2CPP
         /// </summary>
         public static string? GetDescription(this Enum @enum)
         {

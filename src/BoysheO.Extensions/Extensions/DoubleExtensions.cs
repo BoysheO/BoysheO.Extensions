@@ -6,7 +6,7 @@ namespace BoysheO.Extensions
     public static class DoubleExtension
     {
         /// <summary>
-        ///     Returns the smallest integer greater to or equal to f.
+        ///     Returns the smallest integer greater to or equal to f.<br />
         ///     ex. 1.2f=>2
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

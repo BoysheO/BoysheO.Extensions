@@ -30,8 +30,7 @@ namespace BoysheO.Extensions
         }
 
         /// <summary>
-        ///     检查该类型是否继承目标接口、类
-        ///     <br>自动排除自身和要求被检查类是Class</br>
+        ///     Determine the type is implement the another type (interface or class) and is class.<br />
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsClassAndImplement(this Type type, Type base1)
@@ -40,7 +39,7 @@ namespace BoysheO.Extensions
         }
 
         /// <summary>
-        ///     检查该struct类型是否继承目标接口
+        ///     Determine the type is implement the another type (interface or class) and is struct.<br />
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsStructAndImplement(this Type type, Type base1)
@@ -48,30 +47,36 @@ namespace BoysheO.Extensions
             return type.IsValueType && base1.IsAssignableFrom(type);
         }
 
+        /// <summary>
+        ///     Determine the type is implement the another type (interface or class) and is sealed.<br />
+        /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsSealedAndImplement(this Type type, Type base1)
         {
             return type.IsSealed && base1.IsAssignableFrom(type);
         }
 
-        public static IEnumerable<string> GetAllMembersName(this Type type, MemberTypes flags)
-        {
-            var members = type.GetMembers();
-            var targets = members.Where(member => (flags & member.MemberType) == 0).Select(member => member.Name);
-            return targets;
-        }
+        //不太普适
+        // public static IEnumerable<string> GetAllMembersName(this Type type, MemberTypes flags)
+        // {
+        //     var members = type.GetMembers();
+        //     var targets = members.Where(member => (flags & member.MemberType) == 0).Select(member => member.Name);
+        //     return targets;
+        // }
 
-        public static IEnumerable<string> GetFieldOrPropertyNames(this Type type)
-        {
-            var members = type.GetMembers();
-            var targets = members
-                .Where(member => (MemberTypes.Field | MemberTypes.Property).HasFlag(member.MemberType))
-                .Select(member => member.Name);
-            return targets;
-        }
+        //不太普适
+        // public static IEnumerable<string> GetFieldOrPropertyNames(this Type type)
+        // {
+        //     var members = type.GetMembers();
+        //     var targets = members
+        //         .Where(member => (MemberTypes.Field | MemberTypes.Property).HasFlag(member.MemberType))
+        //         .Select(member => member.Name);
+        //     return targets;
+        // }
 
         /// <summary>
-        ///     判断是否数值类型
+        ///     Determine the type is int,double,long .. or other math type.
+        ///     No nullable type.
         /// </summary>
         public static bool IsNumericType(this Type type)
         {
@@ -93,7 +98,7 @@ namespace BoysheO.Extensions
         }
 
         /// <summary>
-        ///     判断类型是否为<see cref="Nullable{T}" />类型
+        ///     Determine the type is <see cref="Nullable{T}" />
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsNullableType(this Type type)
@@ -132,6 +137,10 @@ namespace BoysheO.Extensions
             return stringBuilder.ToString();
         }
 
+        /// <summary>
+        /// Get code string<br />
+        /// ex.typeof(List&lt;int&gt;) => "List&lt;int&gt;"
+        /// </summary>
         public static string GetTypeCode(this Type type)
         {
             return type.IsNested && !type.IsGenericParameter

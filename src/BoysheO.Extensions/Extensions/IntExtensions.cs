@@ -23,12 +23,6 @@ namespace BoysheO.Extensions
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static int Clamp01(this int value)
-        {
-            return Clamp(value, 0, 1);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int Min(this int value, int another)
         {
             return Math.Min(value, another);
@@ -41,7 +35,7 @@ namespace BoysheO.Extensions
         }
 
         /// <summary>
-        /// split int 123=>0,0,0,0,0,0,0,1,2,3
+        /// Split int 123=>0,0,0,0,0,0,0,1,2,3
         /// </summary>
         /// <param name="value">source</param>
         /// <param name="buffer">buffer len must be 10</param>

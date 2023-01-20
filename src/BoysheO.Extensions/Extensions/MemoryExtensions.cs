@@ -6,15 +6,12 @@ namespace BoysheO.Extensions
     public static class MemoryExtensions
     {
         /// <summary>
-        ///     正数代表左移，负数代表右移；即当count=1时，the last在数组末端
+        ///     Move every elements in arg:span to left side.<br />
+        ///     ex.int{1,2,3,4,5}.Panning(1) => int{2,3,4,5,0}<br />
+        ///     ex.int{1,2,3,4,5}.Panning(-1) => int{0,1,2,3,4}<br />
         /// </summary>
-        /// <param name="span"></param>
-        /// <param name="defaultT">从offset的位置左移1位-1，右移1位+1</param>
-        /// <param name="count">正数代表左移，负数代表右移</param>
-        /// <typeparam name="T"></typeparam>
-        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="ArgumentException">count not be 0</exception>
         public static void Panning<T>(this Span<T> span, int count = 1, Func<int, T>? defaultT = null)
-            // where T : notnull
         {
             var len = span.Length;
             if (count == 0) throw new ArgumentException(nameof(count));

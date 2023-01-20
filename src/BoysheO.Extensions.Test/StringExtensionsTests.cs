@@ -3,6 +3,7 @@ using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Base62;
 using BoysheO.Util;
 using NUnit.Framework;
 
@@ -10,6 +11,24 @@ namespace BoysheO.Extensions.Test;
 
 public class StringExtensionsTests
 {
+    /// <summary>
+    /// 确认结果等价
+    /// </summary>
+    [Test]
+    public void ToRawBytes2()
+    {
+        var raw = RandomUtil.Int.ToString();
+        var bytes = new byte[raw.Length];
+        for (int i = 0; i < raw.Length; i++)
+        {
+            bytes[i] = (byte)raw[i];
+        }
+
+        var result = raw.ToRawBytes();
+
+        Assert.AreEqual(bytes, result);
+    }
+
     [TestCase("123", ExpectedResult = "31 32 33")]
     public string ToRawBytes(string raw)
     {
@@ -21,7 +40,7 @@ public class StringExtensionsTests
     {
         var buff = new ArraySegment<byte>(new byte[raw.Length]);
         raw.ToRawBytes(buff);
-        return buff.AsSpan().ToHexText();
+        return buff.AsSpan().AsReadOnly().ToHexText();
     }
 
 
@@ -30,7 +49,7 @@ public class StringExtensionsTests
     {
         var buff = new byte[raw.Length];
         raw.ToRawBytes(buff, 0, raw.Length);
-        return buff.AsSpan().ToHexText();
+        return buff.AsSpan().AsReadOnly().ToHexText();
     }
 
     /// <summary>
@@ -62,7 +81,7 @@ public class StringExtensionsTests
     public int ToIntNumber2(string raw)
     {
         var span = raw.AsSpan();
-        return span.ParserToPositiveInt();
+        return span.ParseToPositiveInt();
     }
 
     [Test]
@@ -73,6 +92,18 @@ public class StringExtensionsTests
         var expert = bytes.AsEnumerable().ToHexText();
         var res = bytes.ToHexText();
         Assert.AreEqual(expert, res);
+    }
+
+    [Test]
+    public void MemoryToString()
+    {
+        var bytes = new byte[32];
+        new Random().NextBytes(bytes);
+        var str = Convert.ToBase64String(bytes);
+        var srcBytes = Encoding.Unicode.GetBytes(str);
+        Console.WriteLine(srcBytes.ToHexText());
+        var raw = srcBytes.AsSpan().AsReadOnly().MemoryToString();
+        Assert.AreEqual(str, raw);
     }
 
     // // [TestCase(@"12332\n14\\n562")]//暂不考虑转义

@@ -12,7 +12,6 @@ namespace BoysheO.Extensions
         #region ToHexText
 
         /// <summary>
-        ///     根据集合元素，输出集合的hex字符串表达，形如“A1 BE C1”<br />
         ///     Get Hex string from bytes like "A1 BE C1".<br />
         ///     *Performance tips:this method use stringBuilder,and not very fast.
         /// </summary>
@@ -43,7 +42,6 @@ namespace BoysheO.Extensions
         }
 
         /// <summary>
-        ///     根据集合元素，输出集合的hex字符串表达，形如“A1 BE C1”<br />
         ///     Get Hex string from bytes like "A1 BE C1".
         /// </summary>
         private static string ToHexText(this IList<byte> bytes)
@@ -79,8 +77,7 @@ namespace BoysheO.Extensions
         }
 
         /// <summary>
-        ///     输出byte的hex字符串表达，形如"A1","01"<br />
-        ///     Get Hex string from byte like "A1".<br />
+        ///     Get Hex string from byte like "A1","0F".<br />
         ///     *Performance tips:it's same to call ToString("X2").
         ///     If call in loop,suggestion is use <see cref="ByteUtil.ByteToHexChar"/> instead 
         /// </summary>
@@ -91,7 +88,6 @@ namespace BoysheO.Extensions
         }
 
         /// <summary>
-        ///     根据集合元素，输出集合的hex字符串表达，形如“A1 BE C1”<br />
         ///     Get Hex string from bytes like "A1 BE C1".
         /// </summary>
         public static string ToHexText(this ReadOnlySpan<byte> bytes)
@@ -107,9 +103,9 @@ namespace BoysheO.Extensions
             {
                 var b = bytes[i];
                 ByteUtil.ByteToHexChar(b, charBuff);
-                buff[buffCount] = charBuff[1];
-                buffCount++;
                 buff[buffCount] = charBuff[0];
+                buffCount++;
+                buff[buffCount] = charBuff[1];
                 buffCount++;
                 buff[buffCount] = ' ';
                 buffCount++;
@@ -127,7 +123,6 @@ namespace BoysheO.Extensions
         }
 
         /// <summary>
-        ///     根据集合元素，输出集合的hex字符串表达，形如“A1 BE C1”<br />
         ///     Get Hex string from bytes like "A1 BE C1".
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -137,7 +132,6 @@ namespace BoysheO.Extensions
         }
 
         /// <summary>
-        ///     根据集合元素，输出集合的hex字符串表达，形如“A1 BE C1”<br />
         ///     Get Hex string from bytes like "A1 BE C1".
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -150,90 +144,65 @@ namespace BoysheO.Extensions
 
         #region ToBinText
 
-        //primitives
         /// <summary>
-        ///     输出字节块的二进制字符串表达，形如"01001"
+        ///     Get binText from byteSpan.ex."01001"
         /// </summary>
-        public static string ToBinText(this ReadOnlySpan<byte> byteSpan, StringBuilder? usingStringBuilder = null)
+        public static string ToBinText(this ReadOnlySpan<byte> byteSpan)
         {
+            const int stackSize = 1024;
             if (byteSpan.Length == 0) return "";
-            var sb = usingStringBuilder ?? new StringBuilder(byteSpan.Length * 9); //9=8 bit and 1 blank
-            usingStringBuilder?.Clear();
+            var charBuffCapacity = checked(byteSpan.Length * 8);
+            char[] pooledBuff = null;
+            Span<char> charBuff = charBuffCapacity > stackSize
+                ? (pooledBuff = ArrayPool<char>.Shared.Rent(charBuffCapacity))
+                : stackalloc char[charBuffCapacity];
+            var charBuffCount = 0;
+
+
+            Span<bool> bBuff = stackalloc bool[8];
             foreach (var byte2 in byteSpan)
             {
-                sb.Append(byte2.ToBinText());
-                sb.Append(' ');
+                ByteUtil.ByteToBinDigits(byte2, bBuff);
+                //len of bBufff is immutable.It's algorithm complexity is O(1)
+                foreach (var b in bBuff)
+                {
+                    charBuff[charBuffCount] = b ? '1' : '0';
+                    charBuffCount++;
+                }
             }
 
-            sb.Remove(sb.Length - 1, 1);
-            usingStringBuilder?.Clear();
-            return sb.ToString();
-        }
-
-        /// <summary>
-        ///     输出字节块的二进制字符串表达，形如"01001"
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string ToBinText(this Span<byte> span, StringBuilder? usingStringBuilder = null)
-        {
-            return ((ReadOnlySpan<byte>)span).ToBinText(usingStringBuilder);
-        }
-
-        /// <summary>
-        ///     输出字节块的二进制字符串表达，形如"01001"
-        /// </summary>
-        public static string ToBinText(this byte[] bytes, StringBuilder? usingStringBuilder = null)
-        {
-            if (bytes.Length == 0) return "";
-            var sb = usingStringBuilder ?? new StringBuilder(bytes.Length * 9); //9=8 bit and 1 blank
-            usingStringBuilder?.Clear();
-            foreach (var byte2 in bytes)
+            if (pooledBuff != null)
             {
-                sb.Append(byte2.ToBinText());
-                sb.Append(' ');
+                ArrayPool<char>.Shared.Return(pooledBuff);
             }
 
-            sb.Remove(sb.Length - 1, 1);
-            usingStringBuilder?.Clear();
-            return sb.ToString();
+            return charBuff.Slice(0, charBuffCount).AsReadOnly().ToNewString();
         }
 
-        //primitives
         /// <summary>
-        ///     输出byte的bin字符串表达，形如"00010000","11001000"
+        ///     Get binText from a byte.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string ToBinText(this byte byte1)
         {
-            return Convert.ToString(byte1, 2).PadLeft(8, '0');
-        }
+            Span<bool> buff = stackalloc bool[8];
+            ByteUtil.ByteToBinDigits(byte1, buff);
+            Span<char> charBuff = stackalloc char[8];
+            for (int i = 0; i < 8; i++)
+            {
+                charBuff[i] = buff[i] ? '1' : '0';
+            }
 
-        /// <summary>
-        ///     输出字节块的二进制字符串表达，形如"01001"
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string ToBinText(this ReadOnlyMemory<byte> memory, StringBuilder? usingStringBuilder = null)
-        {
-            return ToBinText(memory.Span, usingStringBuilder);
-        }
-
-        /// <summary>
-        ///     输出字节块的二进制字符串表达，形如"01001"
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string ToBinText(this Memory<byte> memory, StringBuilder? usingStringBuilder = null)
-        {
-            return ToBinText(memory.Span, usingStringBuilder);
+            return charBuff.AsReadOnly().ToNewString();
         }
 
         #endregion
 
         /// <summary>
-        ///     输出字节块的反转数组
-        ///     即时演绎，非延时
-        ///     *当不需要复制时，使用<see cref="System.Array.Reverse"/>更好
+        ///     Copy the span to a new Array reversed.<br />
+        ///     *Performance tips:If you don't need to get a new ary,use <see cref="Array.Reverse(System.Array)"/> better.
         /// </summary>
-        public static byte[] ReverseAndToArray(this ReadOnlySpan<byte> byteSpan)
+        public static byte[] ToReverseArray(this ReadOnlySpan<byte> byteSpan)
         {
             // ReSharper disable once UseArrayEmptyMethod
             if (byteSpan.Length == 0) return new byte[0];
@@ -249,11 +218,15 @@ namespace BoysheO.Extensions
             return res;
         }
 
-        //primitives
         /// <summary>
-        ///     将该值类型转换成内存中byte表示，无复制
-        ///     仅限基础类型，否则会异常
-        ///     *修改返回的span数组会修改初始值
+        ///     Look through the value as bytes in memory.<br />
+        ///     *<b>UNSAFE</b>:Changing the return value causes the parameter value changed.
+        ///     If you change the string,the program maybe crash.The suggestion
+        ///     is use this for debug only.And,I don't promise the return value
+        ///     is same in different hardware environment.Only the base value
+        ///     can be the parameters.<br />
+        ///     将该值类型转换成内存中byte表示，无复制,仅限基础类型，否则会异常.
+        ///     *不安全：修改返回的span数组会修改初始值.在不清楚自己在做什么的时候不要修改返回值
         /// </summary>
         public static Span<byte> AsMemoryByteSpan<T>(this ref T value) where T : unmanaged
         {
@@ -266,17 +239,6 @@ namespace BoysheO.Extensions
                     return span;
                 }
             }
-        }
-
-
-        /// <summary>
-        ///     将值视作二进制输出hexString
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string ToMemoryHexText<T>(this T value, Span<char> charBuffer = default)
-            where T : unmanaged
-        {
-            return ((ReadOnlySpan<byte>)value.AsMemoryByteSpan()).ToHexText(charBuffer);
         }
     }
 }

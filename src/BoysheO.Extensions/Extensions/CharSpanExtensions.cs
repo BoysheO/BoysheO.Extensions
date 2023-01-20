@@ -9,13 +9,13 @@ namespace BoysheO.Extensions
     public static class CharSpanExtensions
     {
         /// <summary>
-        /// 将chars解析为int<br />
-        /// *假设chars满足条件：纯数字，值在int正范围内<br />
-        /// 比int.parse还要快，也适合应付从字串部分中获得int值的情况<br />
+        /// Convert chars '123' to int 123.<br />
+        /// <b>*UNSAFE</b>:make sure chars is all digit char.Not '-123' '12.3'<br />
+        /// This method is more faster than <see cref="int.Parse(string)"/> 
         /// </summary>
-        public static int ParserToPositiveInt(this ReadOnlySpan<char> chars)
+        public static int ParseToPositiveInt(this ReadOnlySpan<char> chars)
         {
-            var res = ToPositiveLong(chars);
+            var res = ParseToPositiveLong(chars);
             if (res < int.MinValue || res > int.MaxValue)
                 throw new ArgumentOutOfRangeException(nameof(chars),
                     $"arg {nameof(chars)}={chars.ToString()} is outOf int range[{int.MinValue},{int.MaxValue}]");
@@ -26,14 +26,13 @@ namespace BoysheO.Extensions
         /// Identifies numbers in string.<br />
         /// The char not number and + - will be dealt as separator<br />
         /// NOT SUPPORT any calculations in string<br />
-        /// 识别字串中的数字。任意符号均视为分割符，会识别表示正负的+-符号。不支持运算 <br />
+        /// ex."a123b46.21+45-87"=>{123,46,21,45,-87}
         /// </summary>
         /// <param name="chars">source</param>
-        /// <param name="initBuffSize"></param>
-        /// <param name="ints"></param>
+        /// <param name="initBuffSize">any value in [1,+).</param>
+        /// <param name="ints">result</param>
         /// <returns></returns>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        /// <exception cref="Exception"></exception>
+        /// <exception cref="ArgumentOutOfRangeException">initBuffSize not in [1,+) or any math value in chars too big</exception>
         public static int SplitAsIntPoolArray(this ReadOnlySpan<char> chars, int initBuffSize, out int[] ints)
         {
             if (initBuffSize <= 0) throw new ArgumentOutOfRangeException(nameof(initBuffSize));
@@ -46,7 +45,7 @@ namespace BoysheO.Extensions
             var charsLength = chars.Length;
             var charOrder = 0;
             var state = 0; //0-findNumberAndSign 1:readingNumber 
-            var isNegative  = false; //是否负数
+            var isNegative = false; //是否负数
             unsafe
             {
                 fixed (char* p1 = chars)
@@ -58,19 +57,19 @@ namespace BoysheO.Extensions
                             case 0:
                                 if (*charPointer >= '0' && *charPointer <= '9')
                                 {
-                                    isNegative  = false;
+                                    isNegative = false;
                                     state = 1;
                                 }
                                 else if (*charPointer == '-')
                                 {
-                                    isNegative  = true;
+                                    isNegative = true;
                                     charPointer++;
                                     charOrder++;
                                     state = 1;
                                 }
                                 else if (*charPointer == '+')
                                 {
-                                    isNegative  = false;
+                                    isNegative = false;
                                     charPointer++;
                                     charOrder++;
                                     state = 1;
@@ -88,15 +87,16 @@ namespace BoysheO.Extensions
                                     if (buffer[buffCount] > mm)
                                     {
                                         ArrayPool<int>.Shared.Return(buffer);
-                                        throw new Exception($"至少一个数字超过int.Max大小");
+                                        throw new ArgumentOutOfRangeException(nameof(chars),"one more math value inside chars is over than int.Max");
                                     }
+
                                     buffer[buffCount] *= 10;
                                     buffer[buffCount] += *charPointer - 48;
                                     charPointer++;
                                     charOrder++;
                                 }
 
-                                if (isNegative ) buffer[buffCount] = -buffer[buffCount];
+                                if (isNegative) buffer[buffCount] = -buffer[buffCount];
 
                                 buffCount++;
                                 if (buffCount >= bufferLen)
@@ -119,11 +119,11 @@ namespace BoysheO.Extensions
         }
 
         /// <summary>
-        /// 将chars解析为long
-        /// *假设chars满足条件：纯数字，值在long正范围内
-        /// 比long.parse还要快，也适合应付从字串部分中获得int值的情况
+        /// Convert chars "123" to long 123<br />
+        /// <b>*UNSAFE</b>:make sure chars is all digit char.Not '-123' '12.3'<br />
+        /// This method is more faster than <see cref="long.Parse(string)"/> 
         /// </summary>
-        public static long ToPositiveLong(this ReadOnlySpan<char> chars)
+        public static long ParseToPositiveLong(this ReadOnlySpan<char> chars)
         {
             long result = 0;
             int count = chars.Length;
@@ -148,32 +148,31 @@ namespace BoysheO.Extensions
         /// <summary>
         /// creat string from chars
         /// </summary>
-        /// <param name="chars"></param>
-        /// <returns></returns>
         public static string ToNewString(this ReadOnlySpan<char> chars)
         {
             unsafe
             {
                 fixed (char* c = chars)
                 {
-                    return new string(c);
+                    return new string(c, 0, chars.Length);
                 }
             }
         }
-        
+
         /// <summary>
-        /// 在头部截去对应数量的字符
+        /// Slice the source.
+        /// ex."HelloWorld".WithoutHeadCount("Hello") => "World"
         /// </summary>
-        /// <param name="content"></param>
-        /// <param name="count"></param>
-        /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlySpan<char> WithoutHeadCount(this ReadOnlySpan<char> content, string count)
         {
             return content.Slice(count.Length);
         }
 
-        
+        /// <summary>
+        /// Slice the source.
+        /// ex."HelloWorld".WithoutHeadCount("World") => "Hello"
+        /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlySpan<char> WithoutTailCount(this ReadOnlySpan<char> content, string count)
         {

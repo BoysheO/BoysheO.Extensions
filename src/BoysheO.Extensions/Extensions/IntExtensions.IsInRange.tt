@@ -31,7 +31,7 @@ namespace BoysheO.Extensions
     {
 #>
         /// <summary>
-        /// 等价于value &lt;= minInclusive &amp;&amp; value &gt; = maxInclusive
+        /// Is same to value &lt;= minInclusive &amp;&amp; value &gt; = maxInclusive
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsInRange(this int value, <#=type1.FullName#> minInclusive, <#=type2.FullName#> maxInclusive)

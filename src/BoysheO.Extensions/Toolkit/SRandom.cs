@@ -6,9 +6,6 @@ using System.Numerics;
 
 namespace BoysheO.Toolkit
 {
-    /// <summary>
-    ///     可序列化的Random
-    /// </summary>
     public sealed class SRandom
     {
         public SRandom()

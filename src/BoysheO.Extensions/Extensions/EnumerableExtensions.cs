@@ -10,42 +10,44 @@ namespace BoysheO.Extensions
 {
     public static class EnumerableExtensions
     {
-        public static bool TryGetElementAt<T>(this IEnumerable<T> source, int offset, out T value)
-        {
-            if (source == null) throw new ArgumentNullException(nameof(source));
-            switch (source)
-            {
-                case T[] ary:
-                    return TryGetElementAt(ary, offset, out value);
-            }
+        //useless
+        // public static bool TryGetElementAt<T>(this IEnumerable<T> source, int offset, out T value)
+        // {
+        //     if (source == null) throw new ArgumentNullException(nameof(source));
+        //     switch (source)
+        //     {
+        //         case T[] ary:
+        //             return TryGetElementAt(ary, offset, out value);
+        //     }
+        //
+        //     var count = -1;
+        //     foreach (var item in source)
+        //     {
+        //         count++;
+        //         if (count == offset)
+        //         {
+        //             value = item;
+        //             return true;
+        //         }
+        //     }
+        //
+        //     value = default!;
+        //     return false;
+        // }
 
-            var count = -1;
-            foreach (var item in source)
-            {
-                count++;
-                if (count == offset)
-                {
-                    value = item;
-                    return true;
-                }
-            }
-
-            value = default!;
-            return false;
-        }
-
-        public static bool TryGetElementAt<T>(this T[] source, int idx, out T value)
-        {
-            if (source == null) throw new ArgumentNullException(nameof(source));
-            if (idx >= source.Length)
-            {
-                value = default!;
-                return false;
-            }
-
-            value = source[idx];
-            return true;
-        }
+        //useless
+        // public static bool TryGetElementAt<T>(this T[] source, int idx, out T value)
+        // {
+        //     if (source == null) throw new ArgumentNullException(nameof(source));
+        //     if (idx >= source.Length)
+        //     {
+        //         value = default!;
+        //         return false;
+        //     }
+        //
+        //     value = source[idx];
+        //     return true;
+        // }
 
         public static SortedList<TKey, TRes> ToSortedList<TKey, TRes, TSource>(
             this IEnumerable<TSource> sources,
@@ -61,9 +63,9 @@ namespace BoysheO.Extensions
         }
 
         /// <summary>
-        ///     A集合是否完全包含B集合
-        ///     集合相等的情况也返回true
-        ///     <para>根据Except的实现，会立即遍历源集合source。source如果是列表，会坍缩成集合。another不会坍缩，仍会全部遍历</para>
+        ///     Is A include B or A equals B.<br />
+        ///     *Performance tips:This method implements by linq.Arg:source will collect to a set immediately.
+        ///     Arg:another maybe traversed all once.
         /// </summary>
         public static bool IsInclude<T>(this IEnumerable<T> source, IEnumerable<T> another)
         {
@@ -75,7 +77,7 @@ namespace BoysheO.Extensions
         }
 
         /// <summary>
-        /// 将source中的元素复制到span中，在source遍历完或者span完结就会终止数据复制
+        /// Read elements in arg:source and write to arg:span until arg:span or arg:source end.
         /// </summary>
         public static void CopyTo<T>(this IEnumerable<T> source, Span<T> span)
         {
@@ -99,7 +101,7 @@ namespace BoysheO.Extensions
         }
 
         /// <summary>
-        ///     通过指定key进行排序
+        ///     Order by key.
         /// </summary>
         public static IOrderedEnumerable<TSource> OrderBy<TSource, TCompareKey>
         (this IEnumerable<TSource> sources,
@@ -117,8 +119,7 @@ namespace BoysheO.Extensions
 
 
         /// <summary>
-        ///     选取所有里表元素，等同SelectMany(v => v)
-        ///     这个是增补版，节约一个委托
+        ///     Same as SelectMany(v=>v).
         /// </summary>
         public static IEnumerable<T> SelectMany<T>(this IEnumerable<IEnumerable<T>> source)
         {
@@ -144,9 +145,8 @@ namespace BoysheO.Extensions
         }
 
         /// <summary>
-        /// 匹配这个元素并返回所在位置计数（对可数集合即为index)
-        /// 集合元素量不能大于int.Max
-        /// -1代表找不到
+        /// Find the element and return index.<br />
+        /// return -1 if not found.
         /// </summary>
         public static int FirstOrDefault<T>(this IEnumerable<T> enumerable, Func<T, bool> pre, out T item)
         {
