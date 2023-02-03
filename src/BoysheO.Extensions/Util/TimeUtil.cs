@@ -16,10 +16,10 @@ namespace DateAndTime
         /// </summary>
         /// <param name="startMs">
         /// 起始时间戳，需要保证起点为0点<br/>
-        /// Start timestamp.The standards it use must start from 0am</param>
+        /// Start timestamp.The standards it used must start from 0am</param>
         /// <param name="endMs">
         /// 终止时间戳，需要保证0时刻与startMs语义一致<br />
-        /// End timestamp.The standards it use should be same as start timestamp. <br />
+        /// End timestamp.The standards it used should be same as startMs. <br />
         /// </param>
         /// <param name="timeMsOfDay">
         /// 每日时刻<br />

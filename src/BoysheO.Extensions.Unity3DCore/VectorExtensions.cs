@@ -125,5 +125,56 @@ namespace BoysheO.Extensions.Unity3DCore
         {
             return vector2;
         }
+
+        #region rect isInRange
+
+        public static bool IsInRange(this Vector2 position, Rect rect)
+        {
+            return rect.Contains(position);
+        }
+
+        public static bool IsInRange(this Vector2Int position, RectInt rect)
+        {
+            return rect.Contains(position);
+        }
+
+        public static bool IsInRange(this Vector2 position, RectInt rect)
+        {
+            return position.x >= rect.xMin && position.y >= rect.yMin && position.x < rect.xMax &&
+                   position.y < rect.yMax;
+        }
+
+        public static bool IsInRange(this Vector2Int position, Rect rect)
+        {
+            return position.x >= rect.xMin && position.y >= rect.yMin && position.x < rect.xMax &&
+                   position.y < rect.yMax;
+        }
+
+        #endregion
+
+        #region bounds isInRange
+
+        public static bool IsInRange(this Vector3 position, Bounds bounds)
+        {
+            return bounds.Contains(position);
+        }
+
+        public static bool IsInRange(this Vector3Int position, Bounds bounds)
+        {
+            return bounds.Contains(position);
+        }
+
+        public static bool IsInRange(this Vector3Int position, BoundsInt bounds)
+        {
+            return bounds.Contains(position);
+        }
+
+        public static bool IsInRange(this Vector3 position, BoundsInt bounds)
+        {
+            return position.x >= bounds.xMin && position.y >= bounds.yMin && position.z >= bounds.zMin &&
+                   position.x < bounds.xMax && position.y < bounds.yMax && position.z < bounds.zMax;
+        }
+
+        #endregion
     }
 }
