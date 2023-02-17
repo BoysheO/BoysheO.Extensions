@@ -55,7 +55,7 @@ namespace BoysheO.Util
                 {
                     v = toLower ? v.Replace('\\', '/').ToLowerInvariant() : v.Replace('\\', '/');
                     var isPassPathRegx = regexPath == null || v.IsMatch(regexPath);
-                    var filename = v.GetPathFileName();
+                    var filename = Path.GetFileName(v);
                     var isPassFilename = regexFilename == null || filename.IsMatch(regexFilename);
                     return isPassPathRegx && isPassFilename;
                 });

@@ -1,91 +1,75 @@
 using System;
 using System.Buffers;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Extensions;
 
 namespace BoysheO.Extensions
 {
-    public static partial class CharSpanExtensions
+    public static class CharSpanExtensions
     {
         /// <summary>
-        /// 将chars解析为int<br />
-        /// *假设chars满足条件：纯数字，值在int正范围内<br />
-        /// 比int.parse还要快，也适合应付从字串部分中获得int值的情况<br />
+        /// Convert chars '123' to int 123.<br />
+        /// <b>*UNSAFE</b>:make sure chars is all digit char.Not '-123' '12.3'<br />
+        /// This method is more faster than <see cref="int.Parse(string)"/> 
         /// </summary>
-        public static int ToPositiveInt(this ReadOnlySpan<char> chars)
+        public static int ParseToPositiveInt(this ReadOnlySpan<char> chars)
         {
-            var res = ToPositiveLong(chars);
+            var res = ParseToPositiveLong(chars);
             if (res < int.MinValue || res > int.MaxValue)
-                throw new Exception(
-                    $"arg {nameof(chars)}={chars.ToString()} is out of int range[{int.MinValue},{int.MaxValue}]");
-            return unchecked((int) res);
+                throw new ArgumentOutOfRangeException(nameof(chars),
+                    $"arg {nameof(chars)}={chars.ToString()} is outOf int range[{int.MinValue},{int.MaxValue}]");
+            return unchecked((int)res);
         }
 
         /// <summary>
-        /// 识别字串中的数字。任意符号均视为分割符，会识别表示正负的+-符号。但是不支持四则运算 
+        /// Identifies numbers in string.<br />
+        /// The char not number and + - will be dealt as separator<br />
+        /// NOT SUPPORT any calculations in string<br />
+        /// ex."a123b46.21+45-87"=>{123,46,21,45,-87}
         /// </summary>
-        /// <param name="str">source</param>
-        /// <param name="initBuffSize">初始大小，至少为1。函数内部不再检验，如果少于1会报错</param>
-        /// <param name="buff">用于承载结果的列表</param>
-        public static void SplitAsIntArray(this ReadOnlySpan<Char> str, int initBuffSize, IList<int> buff)
+        /// <param name="chars">source</param>
+        /// <param name="initBuffSize">any value in [1,+).</param>
+        /// <param name="ints">result</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentOutOfRangeException">initBuffSize not in [1,+) or any math value in chars too big</exception>
+        public static int SplitAsIntPoolArray(this ReadOnlySpan<char> chars, int initBuffSize, out int[] ints)
         {
-            buff.Clear();
-            var result = SplitAsIntPoolArray(str, initBuffSize,out var resultCount);
-            var span = result.AsSpan(0,resultCount);
-            foreach (var i in span)
-            {
-                buff.Add(i);
-            }
-
-            ArrayPool<int>.Shared.Return(result);
-        }
-
-        /// <summary>
-        /// 识别字串中的数字。任意符号均视为分割符，会识别表示正负的+-符号。不支持四则运算
-        /// !返回的数组是来自ArrayPool的数组，应保证归还
-        /// </summary>
-        /// <param name="str">source</param>
-        /// <param name="initBuffSize">初始大小，至少为1。函数内部不再检验，如果少于1会报错</param>
-        /// <param name="resultCount">结果数组的有效元素数量</param>
-        /// <returns>返回结果，此结果在使用完毕后需要归还到ArrayPool</returns>
-        /// <exception cref="Exception"></exception>
-        private static int[] SplitAsIntPoolArray(ReadOnlySpan<char> str, int initBuffSize, out int resultCount)
-        {
+            if (initBuffSize <= 0) throw new ArgumentOutOfRangeException(nameof(initBuffSize));
             const int mm = int.MaxValue / 10;
             var buffer = ArrayPool<int>.Shared.Rent(initBuffSize);
             var bufferLen = buffer.Length;
-            var bufPointer = 0;
+            var buffCount = 0;
             buffer[0] = 0; //init
 
-            var strLen = str.Length;
+            var charsLength = chars.Length;
             var charOrder = 0;
-            // int idx = -1;
             var state = 0; //0-findNumberAndSign 1:readingNumber 
-            var isM = false; //是否负数
+            var isNegative = false; //是否负数
             unsafe
             {
-                fixed (char* p1 = str)
+                fixed (char* p1 = chars)
                 {
                     var charPointer = p1;
-                    while (charOrder < strLen)
+                    while (charOrder < charsLength)
                         switch (state)
                         {
                             case 0:
                                 if (*charPointer >= '0' && *charPointer <= '9')
                                 {
-                                    isM = false;
+                                    isNegative = false;
                                     state = 1;
                                 }
                                 else if (*charPointer == '-')
                                 {
-                                    isM = true;
+                                    isNegative = true;
                                     charPointer++;
                                     charOrder++;
                                     state = 1;
                                 }
                                 else if (*charPointer == '+')
                                 {
-                                    isM = false;
+                                    isNegative = false;
                                     charPointer++;
                                     charOrder++;
                                     state = 1;
@@ -98,43 +82,48 @@ namespace BoysheO.Extensions
 
                                 break;
                             case 1:
-                                while (charOrder < strLen && *charPointer >= '0' && *charPointer <= '9')
+                                while (charOrder < charsLength && *charPointer >= '0' && *charPointer <= '9')
                                 {
-                                    if (buffer[bufPointer] > mm) throw new Exception($"至少一个数字超过int.Max大小");
-                                    buffer[bufPointer] *= 10;
-                                    buffer[bufPointer] += *charPointer - 48;
+                                    if (buffer[buffCount] > mm)
+                                    {
+                                        ArrayPool<int>.Shared.Return(buffer);
+                                        throw new ArgumentOutOfRangeException(nameof(chars),"one more math value inside chars is over than int.Max");
+                                    }
+
+                                    buffer[buffCount] *= 10;
+                                    buffer[buffCount] += *charPointer - 48;
                                     charPointer++;
                                     charOrder++;
                                 }
 
-                                if (isM) buffer[bufPointer] = -buffer[bufPointer];
+                                if (isNegative) buffer[buffCount] = -buffer[buffCount];
 
-                                bufPointer++;
-                                if (bufPointer >= bufferLen)
+                                buffCount++;
+                                if (buffCount >= bufferLen)
                                 {
-                                    buffer = ArrayPoolUtil.Resize(buffer, bufPointer + 1);
+                                    buffer = ArrayPoolUtil.Resize(buffer, buffCount + 1);
                                     bufferLen = buffer.Length;
                                 }
 
-                                buffer[bufPointer] = 0;
+                                buffer[buffCount] = 0;
 
                                 state = 0;
 
                                 break;
                         }
 
-                    resultCount = bufPointer;
-                    return buffer;
+                    ints = buffer;
+                    return buffCount;
                 }
             }
         }
 
         /// <summary>
-        /// 将chars解析为long
-        /// *假设chars满足条件：纯数字，值在long正范围内
-        /// 比long.parse还要快，也适合应付从字串部分中获得int值的情况
+        /// Convert chars "123" to long 123<br />
+        /// <b>*UNSAFE</b>:make sure chars is all digit char.Not '-123' '12.3'<br />
+        /// This method is more faster than <see cref="long.Parse(string)"/> 
         /// </summary>
-        public static long ToPositiveLong(this ReadOnlySpan<char> chars)
+        public static long ParseToPositiveLong(this ReadOnlySpan<char> chars)
         {
             long result = 0;
             int count = chars.Length;
@@ -154,6 +143,40 @@ namespace BoysheO.Extensions
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// creat string from chars
+        /// </summary>
+        public static string ToNewString(this ReadOnlySpan<char> chars)
+        {
+            unsafe
+            {
+                fixed (char* c = chars)
+                {
+                    return new string(c, 0, chars.Length);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Slice the source.
+        /// ex."HelloWorld".WithoutHeadCount("Hello") => "World"
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlySpan<char> WithoutHeadCount(this ReadOnlySpan<char> content, string count)
+        {
+            return content.Slice(count.Length);
+        }
+
+        /// <summary>
+        /// Slice the source.
+        /// ex."HelloWorld".WithoutHeadCount("World") => "Hello"
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlySpan<char> WithoutTailCount(this ReadOnlySpan<char> content, string count)
+        {
+            return content.Slice(0, content.Length - count.Length);
         }
     }
 }

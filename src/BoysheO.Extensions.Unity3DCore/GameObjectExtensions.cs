@@ -40,14 +40,6 @@ namespace BoysheO.Extensions.Unity3DCore
                    throw new Exception($"{o.name} missing child component {typeof(T).Name}");
         }
 
-        /// <summary>
-        /// 判断go下是否具有指定组件（引用判空，非==null判定）
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool HasComponent<T>(this GameObject go) where T : Component
-        {
-            return !(go.GetComponent<T>() is null);
-        }
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsDestroyed(this GameObject component)
         {

@@ -11,248 +11,259 @@ using Extensions;
 
 namespace BoysheO.Extensions
 {
-    public static partial class StringExtensions
+    public static class StringExtensions
     {
-        /// <summary>
-        ///     对string数组中所有string运行trim并返回自己（会改变数组内的值）
-        /// </summary>
-        public static void TrimAllElements(this string[] strAry)
-        {
-            for (var i = 0; i < strAry.Length; i++) strAry[i] = strAry[i].Trim();
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<string> SelectWithoutNullAndWhiteSpace(this IEnumerable<string> strAry)
-        {
-            return strAry.Where(v => !v.IsNullOrWhiteSpace());
-        }
-
-        /// <summary>
-        ///     对string数组中所有string删除空白并返回新值
-        ///     源字串组内不应有null元素，不会返回null元素
-        ///     <para>空白字符为[ \f\n\r\t\v]</para>
-        /// </summary>
-        public static IEnumerable<string> RemoveSpaces(this IEnumerable<string> strAry)
-        {
-            var chars = new[] { ' ', '\f', '\n', '\r', '\t', '\v' };
-            foreach (var str in strAry)
-            {
-                if (str == null) throw new NullReferenceException("null element was rejected");
-                // if (str == "") yield return "";str为""是极低概率事件，没必要在这里if
-                yield return str.Replace(chars, "");
-            }
-        }
+        // /// <summary>
+        // ///     对string数组中所有string删除空白并返回新值
+        // ///     源字串组内不应有null元素，不会返回null元素
+        // ///     <para>空白字符为[ \f\n\r\t\v]</para>
+        // /// </summary>
+        // public static IEnumerable<string> RemoveSpaces(this IEnumerable<string> strAry)
+        // {
+        //     foreach (var str in strAry)
+        //     {
+        //         if (str == null) continue;
+        //         yield return str.RemoveSpaces();
+        //     }
+        // }
 
         /// <summary>
-        ///     将字符串连接成一句，等价于string.Join<br />
-        ///     性能提示：系统自带的string.Join比ZString要快而且GC一样，并且string.Join性能在高版本CLR中有大幅提升，见Benchmark.StringExtensions.JoinAsOneString
+        ///     Same to string.Join
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string JoinAsOneString(this IEnumerable<string> strings, string sp = ",")
+        public static string JoinAsOnString(this IEnumerable<string> strings, string sp = ",")
         {
             return string.Join(sp, strings);
         }
 
-
         /// <summary>
-        ///     删除所有空白字符并返回
-        ///     <para>删除空白后如果是""，保留""，null元素返回null</para>
-        ///     <para>空白字符为[ \f\n\r\t\v]</para>
+        ///     return new string without any space
         /// </summary>
         public static string RemoveSpaces(this string str)
         {
-            if (str == null) throw new Exception("str can not be null");
-            return str.Replace(new[] { " ", "\f", "\n", "\r", "\t", "\v" }, "");
+            if (str == null) throw new ArgumentNullException(nameof(str));
+            Span<char> res = stackalloc char[str.Length];
+            int resCount = 0;
+            ReadOnlySpan<char> src = str.AsSpan();
+            for (int i = 0, count = src.Length; i < count; i++)
+            {
+                var c = src[i];
+                if (!char.IsWhiteSpace(c))
+                {
+                    res[resCount] = c;
+                    resCount++;
+                }
+            }
+
+            return res.Slice(0, resCount).AsReadOnly().ToNewString();
         }
 
-        /// <summary>
-        ///     将字符串视作int列表，此函数包含了忽略非数字字符、以中英文逗号为分割点的功能
-        /// </summary>
-        public static IEnumerable<int> AsIntEnumerable(this string? str)
-        {
-            if (str == null) yield break;
-
-            int? num = null;
-            foreach (var curChar in str)
-                if (curChar.Is0to9())
-                {
-                    var n = curChar.To0To9();
-                    if (num != null)
-                    {
-                        num = num.Value * 10;
-                        num = num.Value + n;
-                    }
-                    else
-                    {
-                        num = n;
-                    }
-                }
-                else if (curChar == ',' || curChar == '，')
-                {
-                    if (num != null)
-                    {
-                        yield return num.Value;
-                        num = null;
-                    }
-                }
-        }
+        //性能不佳
+        // /// <summary>
+        // ///     将字符串视作int列表，此函数包含了忽略非数字字符、以中英文逗号为分割点的功能
+        // /// </summary>
+        // public static IEnumerable<int> AsIntEnumerable(this string? str)
+        // {
+        //     if (str == null) yield break;
+        //
+        //     int? num = null;
+        //     foreach (var curChar in str)
+        //         if (curChar.Is0to9())
+        //         {
+        //             var n = curChar.To0To9();
+        //             if (num != null)
+        //             {
+        //                 num = num.Value * 10;
+        //                 num = num.Value + n;
+        //             }
+        //             else
+        //             {
+        //                 num = n;
+        //             }
+        //         }
+        //         else if (curChar == ',' || curChar == '，')
+        //         {
+        //             if (num != null)
+        //             {
+        //                 yield return num.Value;
+        //                 num = null;
+        //             }
+        //         }
+        // }
 
         /// <summary>
         ///     将字符串视作string列表，此函数包含了忽略元素两端空白字符、以中英文逗号为分割点的功能;不忽略双逗号时的""字符串
         ///     实测效率不如replace+split
         /// </summary>
-        [Obsolete("use replace+split instead")]
-        public static IEnumerable<string> AsStringEnumerable(this string? str)
-        {
-            if (str == null) yield break;
+        // [Obsolete("use replace+split instead")]
+        // public static IEnumerable<string> AsStringEnumerable(this string? str)
+        // {
+        //     if (str == null) yield break;
+        //
+        //     var start = -1;
+        //     var len = str.Length;
+        //     for (var i = 0; i < len; i++)
+        //     {
+        //         var c = str[i];
+        //         if (c == ',' || c == '，')
+        //         {
+        //             if (start + 1 == i)
+        //                 yield return "";
+        //             else
+        //                 yield return str.Substring((start + 1), i - (start + 1));
+        //             // yield return str[(start + 1).. i];
+        //
+        //             start = i;
+        //         }
+        //     }
+        //
+        //     if (start + 1 == len - 1)
+        //         yield return "";
+        //     else
+        //         yield return str.Substring(start + 1);
+        // }
 
-            var start = -1;
-            var len = str.Length;
-            for (var i = 0; i < len; i++)
-            {
-                var c = str[i];
-                if (c == ',' || c == '，')
-                {
-                    if (start + 1 == i)
-                        yield return "";
-                    else
-                        yield return str.Substring((start + 1), i - (start + 1));
-                    // yield return str[(start + 1).. i];
+        // /// <summary>
+        // ///     遍历替换oldstr，结果可能包含""，null(str是null的情况下)，如果参数集合中包含null则会从replace中引发异常
+        // ///     <para>old值和new值应一一对应</para>
+        // ///     <para>TODO 优化GC</para>
+        // /// </summary>
+        // public static string Replace(this string str, IEnumerable<string> oldstr, IEnumerable<string> newstr)
+        // {
+        //     if (str.IsNullOrEmpty()) return str;
+        //     var itor = oldstr.GetEnumerator();
+        //     var newitor = newstr.GetEnumerator();
+        //     while (itor.MoveNext())
+        //     {
+        //         var newerstr = newitor.MoveNext() ? newitor.Current : "";
+        //         str = str.Replace(itor.Current, newerstr);
+        //     }
+        //
+        //     itor.Dispose();
+        //     newitor.Dispose();
+        //     return str;
+        // }
 
-                    start = i;
-                }
-            }
+        // /// <summary>
+        // ///     遍历替换oldchar，结果可能包含""，null(str是null的情况下)，如果参数集合中包含null则会从replace中引发异常
+        // ///     <para>old值和new值应一一对应</para>
+        // ///     <para>TODO 优化GC</para>
+        // /// </summary>
+        // public static string Replace(this string str, IEnumerable<char> oldchar, IEnumerable<char> newchar)
+        // {
+        //     if (str.IsNullOrEmpty()) return str;
+        //     var itor = oldchar.GetEnumerator();
+        //     var newitor = newchar.GetEnumerator();
+        //     while (itor.MoveNext())
+        //         if (newitor.MoveNext())
+        //             str = str.Replace(itor.Current, newitor.Current);
+        //         else str = str.Remove(itor.Current);
+        //     itor.Dispose();
+        //     newitor.Dispose();
+        //     return str;
+        // }
 
-            if (start + 1 == len - 1)
-                yield return "";
-            else
-                yield return str.Substring(start + 1);
-        }
+        // /// <summary>
+        // ///     遍历替换oldchar，结果可能包含""
+        // ///     //todo test empty insertStr
+        // /// </summary>
+        // public static string Replace(this string srcStr, ReadOnlySpan<char> chars, string insertStr)
+        // {
+        //     if (srcStr == null) throw new ArgumentNullException(nameof(srcStr));
+        //     if (insertStr == null) throw new ArgumentNullException(nameof(insertStr));
+        //     if (chars.IsEmpty) throw new ArgumentOutOfRangeException(nameof(chars));
+        //     Span<char> res = stackalloc char[srcStr.Length];
+        //     int resCount = 0;
+        //     for (int srcStrIdx = 0, srcStrLen = srcStr.Length; srcStrIdx < srcStrLen; srcStrIdx++)
+        //     {
+        //         var srcChar = srcStr[srcStrIdx];
+        //         bool isCharOld = false;
+        //         for (int oldCharIdx = 0, oldCharLen = chars.Length; oldCharIdx < oldCharLen; oldCharIdx++)
+        //         {
+        //             var oldChar = chars[oldCharIdx];
+        //             if (oldChar == srcChar)
+        //             {
+        //                 isCharOld = true;
+        //                 break;
+        //             }
+        //         }
+        //
+        //         if (isCharOld)
+        //         {
+        //             insertStr.AsSpan().CopyTo(res.Slice(resCount));
+        //             resCount += insertStr.Length;
+        //         }
+        //         else
+        //         {
+        //             res[resCount] = srcChar;
+        //             resCount++;
+        //         }
+        //     }
+        //
+        //     unsafe
+        //     {
+        //         fixed (char* cc = res)
+        //         {
+        //             return new string(cc, 0, resCount);
+        //         }
+        //     }
+        // }
 
-        /// <summary>
-        ///     等价
-        ///     str.ReplaceAllChineseDouHaoToEnglish()
-        ///     .ReplaceAllSpace0()
-        ///     .Split(',')
-        /// </summary>
-        public static string[] SplitByDouHao(this string str)
-        {
-            if (str == null) throw new ArgumentNullException(nameof(str));
-            return str.ReplaceAllChineseDouHaoToEnglish()
-                .RemoveSpaces()
-                .Split(',');
-        }
+        // /// <summary>
+        // ///     遍历替换oldchar，结果可能包含""
+        // ///     //todo test empty insertStr
+        // /// </summary>
+        // public static string Replace(this string srcStr, ReadOnlySpan<char> chars, char insertChar)
+        // {
+        //     if (srcStr == null) throw new ArgumentNullException(nameof(srcStr));
+        //     if (chars.IsEmpty) throw new ArgumentOutOfRangeException(nameof(chars));
+        //     Span<char> res = stackalloc char[srcStr.Length];
+        //     int resCount = 0;
+        //     for (int srcStrIdx = 0, srcStrLen = srcStr.Length; srcStrIdx < srcStrLen; srcStrIdx++)
+        //     {
+        //         var srcChar = srcStr[srcStrIdx];
+        //         bool isCharOld = false;
+        //         for (int oldCharIdx = 0, oldCharLen = chars.Length; oldCharIdx < oldCharLen; oldCharIdx++)
+        //         {
+        //             var oldChar = chars[oldCharIdx];
+        //             if (oldChar == srcChar)
+        //             {
+        //                 isCharOld = true;
+        //                 break;
+        //             }
+        //         }
+        //
+        //         if (isCharOld)
+        //         {
+        //             res[resCount] = insertChar;
+        //             resCount++;
+        //         }
+        //         else
+        //         {
+        //             res[resCount] = srcChar;
+        //             resCount++;
+        //         }
+        //     }
+        //
+        //     unsafe
+        //     {
+        //         fixed (char* cc = res)
+        //         {
+        //             return new string(cc, 0, resCount);
+        //         }
+        //     }
+        // }
 
-        /// <summary>
-        ///     对形如(1,2),(4,6)的字串解析。自动替换中英文、忽略杂词
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
-        public static IEnumerable<(int x, int y)> ToXYs(this string str)
-        {
-            var standard = str
-                .RemoveSpaces()
-                .ReplaceAllChineseDouHaoToEnglish()
-                .Replace("（", "(")
-                .Replace("）", ")");
-            var regex = new Regex(@"(?<=\()-?[0-9]+,-?[-0-9]+(?=\))", RegexOptions.Singleline);
-            var coll = regex.Matches(standard);
-            foreach (Match match in coll)
-            {
-                var sp = match.Value.Split(',');
-                var x = int.Parse(sp[0]);
-                var y = int.Parse(sp[1]);
-                yield return (x, y);
-            }
-        }
-
-        /// <summary>
-        ///     替换中文逗号为英文逗号
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string ReplaceAllChineseDouHaoToEnglish(this string str)
-        {
-            return str.Replace("，", ",");
-        }
-
-        /// <summary>
-        ///     遍历替换oldstr，结果可能包含""，null(str是null的情况下)，如果参数集合中包含null则会从replace中引发异常
-        ///     <para>old值和new值应一一对应</para>
-        ///     <para>TODO 优化GC</para>
-        /// </summary>
-        public static string Replace(this string str, IEnumerable<string> oldstr, IEnumerable<string> newstr)
-        {
-            if (str.IsNullOrEmpty()) return str;
-            var itor = oldstr.GetEnumerator();
-            var newitor = newstr.GetEnumerator();
-            while (itor.MoveNext())
-            {
-                var newerstr = newitor.MoveNext() ? newitor.Current : "";
-                str = str.Replace(itor.Current, newerstr);
-            }
-
-            itor.Dispose();
-            newitor.Dispose();
-            return str;
-        }
-
-        /// <summary>
-        ///     遍历替换oldchar，结果可能包含""，null(str是null的情况下)，如果参数集合中包含null则会从replace中引发异常
-        ///     <para>old值和new值应一一对应</para>
-        ///     <para>TODO 优化GC</para>
-        /// </summary>
-        public static string Replace(this string str, IEnumerable<char> oldchar, IEnumerable<char> newchar)
-        {
-            if (str.IsNullOrEmpty()) return str;
-            var itor = oldchar.GetEnumerator();
-            var newitor = newchar.GetEnumerator();
-            while (itor.MoveNext())
-                if (newitor.MoveNext())
-                    str = str.Replace(itor.Current, newitor.Current);
-                else str = str.Remove(itor.Current);
-            itor.Dispose();
-            newitor.Dispose();
-            return str;
-        }
-
-        /// <summary>
-        ///     遍历替换oldchar，结果可能包含""，null(str是null的情况下)，如果参数集合中包含null则会从replace中引发异常
-        ///     <para>TODO 优化GC</para>
-        /// </summary>
-        public static string Replace(this string str, IEnumerable<char> oldchar, string newstr)
-        {
-            if (str.IsNullOrEmpty()) return str;
-            var sb = new StringBuilder();
-            foreach (var chr in str)
-                // ReSharper disable once PossibleMultipleEnumeration
-                if (oldchar.Contains(chr)) sb.Append(newstr);
-                else sb.Append(chr);
-            return sb.ToString();
-        }
-
-        /// <summary>
-        ///     遍历替换oldStrs，结果可能包含""，如果参数集合中包含null则会引发异常
-        /// </summary>
-        public static string Replace(this string str, IEnumerable<string> oldStrs, string newStr)
-        {
-            if (str == null) throw new ArgumentNullException(nameof(str));
-            foreach (var oStr in oldStrs) str = str.Replace(oStr, newStr);
-
-            return str;
-        }
-
-        /// <summary>
-        ///     遍历替换oldchar，结果可能包含""，null(str是null的情况下)，如果参数集合中包含null则会从replace中引发异常
-        ///     <para>TODO 优化GC</para>
-        /// </summary>
-        public static string Replace(this string str, IEnumerable<char> oldchar, char newstr)
-        {
-            if (str.IsNullOrEmpty()) return str;
-            var itor = oldchar.GetEnumerator();
-            while (itor.MoveNext()) str = str.Replace(itor.Current, newstr);
-            itor.Dispose();
-            return str;
-        }
+        // /// <summary>
+        // ///     遍历替换oldStrs，结果可能包含""，如果参数集合中包含null则会引发异常
+        // ///     *性能提示：本API等同遍历Replace
+        // /// </summary>
+        // public static string Replace(this string str, IEnumerable<string> oldStrs, string newStr)
+        // {
+        //     if (str == null) throw new ArgumentNullException(nameof(str));
+        //     foreach (var oStr in oldStrs) str = str.Replace(oStr, newStr);
+        //     return str;
+        // }
 
         //实测效率与string.replace几乎一致，因此不用。注释以备忘
         // /// <summary>
@@ -315,7 +326,6 @@ namespace BoysheO.Extensions
         //         }
         //     }
         // }
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string ReplaceByRegex(this string str, string pattern, string value)
         {
@@ -340,45 +350,34 @@ namespace BoysheO.Extensions
             return string.IsNullOrWhiteSpace(str);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Regex ToRegex(this string regex)
-        {
-            return new Regex(regex);
-        }
+        //path 相关api应当封装到独立的结构中
+        // /// <summary>
+        // ///     见<see cref="Path.Combine(string,string)" />，另外会对\号转成/号
+        // ///     u3d在可以使用字符串拼接的情况下，优先使用字符串拼接
+        // /// </summary>
+        // [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        // public static string PathCombine(this string patha, string pathb)
+        // {
+        //     return Path.Combine(patha, pathb).Replace("\\", "/");
+        // }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Regex ToRegex(this string regex, RegexOptions op)
-        {
-            return new Regex(regex, op);
-        }
+        // /// <summary>
+        // ///     <see cref="Path.GetFileName(string)" />的包装形式
+        // /// </summary>
+        // [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        // public static string GetPathFileName(this string path)
+        // {
+        //     return Path.GetFileName(path);
+        // }
 
-        /// <summary>
-        ///     见<see cref="Path.Combine(string,string)" />，另外会对\号转成/号
-        ///     u3d在可以使用字符串拼接的情况下，优先使用字符串拼接
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string PathCombine(this string patha, string pathb)
-        {
-            return Path.Combine(patha, pathb).Replace("\\", "/");
-        }
-
-        /// <summary>
-        ///     <see cref="Path.GetFileName(string)" />的包装形式
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string GetPathFileName(this string path)
-        {
-            return Path.GetFileName(path);
-        }
-
-        /// <summary>
-        ///     <see cref="Path.GetDirectoryName(string)" />的包装形式
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string GetPathDir(this string path)
-        {
-            return Path.GetDirectoryName(path) ?? throw new Exception("no dir");
-        }
+        // /// <summary>
+        // ///     <see cref="Path.GetDirectoryName(string)" />的包装形式
+        // /// </summary>
+        // [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        // public static string GetPathDir(this string path)
+        // {
+        //     return Path.GetDirectoryName(path) ?? throw new Exception("no dir");
+        // }
 
         /// <summary>
         ///     调用<see cref="Regex.IsMatch(string, string, RegexOptions)" />验证,op=
@@ -399,71 +398,45 @@ namespace BoysheO.Extensions
             return regex.IsMatch(input);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string RemoveAmountFromStart(this string content, int count)
-        {
-            return content.Remove(0, count);
-        }
+        //使用频率太低
+        // /// <summary>
+        // ///     string转换成utf8并获取base64
+        // /// </summary>
+        // [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        // public static string ToBase64(this string name)
+        // {
+        //     var bytes = Encoding.UTF8.GetBytes(name);
+        //     return Convert.ToBase64String(bytes);
+        // }
 
-        /// <param name="content">原型</param>
-        /// <param name="count">特指该字符串参数的长度</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string RemoveAmountFromStart(this string content, string count)
-        {
-            return content.Remove(0, count.Length);
-        }
+        //考虑直接使用base62
+        // /// <summary>
+        // ///     将字符串转换成^[_a-zA-Z0-9]$且以_i开头的SusiBase64字符串 (_i开头是便于识别和规避数字开头的命名不能作为变量命名的规则）
+        // /// </summary>
+        // public static string ToSusiBase64(this string str)
+        // {
+        //     var base64 = str.ToBase64();
+        //     return $"_i{base64.Replace("+", "_p").Replace("/", "_s").Replace("=", "_e")}";
+        // }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string RemoveAmountFromEnd(this string content, int count)
-        {
-            return content.Remove(content.Length - count, count);
-        }
+        // /// <summary>
+        // ///     将SusiBase64字符串转还原
+        // /// </summary>
+        // public static string FromSusiBase64(this string str)
+        // {
+        //     return str.RemoveAmountFromStart("_i")
+        //         .Replace("_p", "+")
+        //         .Replace("_s", "/")
+        //         .Replace("_e", "=")
+        //         .FromBase64();
+        // }
 
-        /// <param name="content">原型</param>
-        /// <param name="count">特指该字符串参数的长度</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string RemoveAmountFromEnd(this string content, string count)
-        {
-            return RemoveAmountFromEnd(content, count.Length);
-        }
-
-        /// <summary>
-        ///     string转换成utf8并获取base64
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string ToBase64(this string name)
-        {
-            var bytes = Encoding.UTF8.GetBytes(name);
-            return Convert.ToBase64String(bytes);
-        }
-
-        /// <summary>
-        ///     将字符串转换成^[_a-zA-Z0-9]$且以_i开头的SusiBase64字符串 (_i开头是便于识别和规避数字开头的命名不能作为变量命名的规则）
-        /// </summary>
-        public static string ToSusiBase64(this string str)
-        {
-            var base64 = str.ToBase64();
-            return $"_i{base64.Replace("+", "_p").Replace("/", "_s").Replace("=", "_e")}";
-        }
-
-        /// <summary>
-        ///     将SusiBase64字符串转还原
-        /// </summary>
-        public static string FromSusiBase64(this string str)
-        {
-            return str.RemoveAmountFromStart("_i")
-                .Replace("_p", "+")
-                .Replace("_s", "/")
-                .Replace("_e", "=")
-                .FromBase64();
-        }
-
-
-        public static string FromBase64(this string str)
-        {
-            var bytes = Convert.FromBase64String(str);
-            return Encoding.UTF8.GetString(bytes);
-        }
+        ////使用频率太低
+        // public static string FromBase64(this string str)
+        // {
+        //     var bytes = Convert.FromBase64String(str);
+        //     return Encoding.UTF8.GetString(bytes);
+        // }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static byte[] ToUTF8Bytes(this string str)
@@ -478,9 +451,10 @@ namespace BoysheO.Extensions
         }
 
         /// <summary>
-        ///     将字符串按char值忠实地转换成byte，对于ASCII编码以外的字符不会转换成问号
+        ///     Put every chars to bytes array.<br />
+        ///     ex."123".ToRawBytes() => {31,32,33}
         /// </summary>
-        /// <exception cref="InvalidCastException">字符中包含超出byte范围的字符，超出语义，视作异常</exception>
+        /// <exception cref="InvalidCastException">any char in arg:srt out of byte</exception>
         public static byte[] ToRawBytes(this string str, bool check = true)
         {
             var len = str.Length;
@@ -502,37 +476,28 @@ namespace BoysheO.Extensions
         }
 
         /// <summary>
-        ///     将字符串按char值忠实地转换成byte，对于ASCII编码以外的字符不会转换成问号
-        ///     <para>性能提示：与无buff的ToRawBytes各个性能指标相差不大，可以忽略</para>
+        ///     Put every chars to bytes array.<br />
+        ///     *Performance tips:The method perform similarly to <see cref="ToRawBytes(string,bool)"/>
+        ///     ex."123".ToRawBytes() => {31,32,33}
         /// </summary>
-        /// <exception cref="InvalidCastException">字符中包含超出byte范围的字符，超出语义，视作异常</exception>
+        /// <exception cref="InvalidCastException">any char in arg:srt out of byte</exception>
         public static void ToRawBytes(this string str, ArraySegment<byte> buff, bool check = true)
         {
             if (buff.Count != str.Length)
                 throw new ArgumentException($"buff len need to be str.len {str.Length},but {buff.Count}");
-            var len = str.Length;
-            var charSpan = str.AsSpan();
-            var result = buff.AsSpan();
-            for (len--; len >= 0; len--)
-            {
-                if (check)
-                {
-                    var c = charSpan[len];
-                    if (c < byte.MinValue || c > byte.MaxValue)
-                        throw new InvalidCastException($"str={str} idx={len} char={c} is out of byte value range.");
-                }
-
-                result[len] = unchecked((byte)charSpan[len]);
-            }
+            str.ToRawBytes(buff.Array ?? throw new ArgumentException("null buff reject"), buff.Offset, buff.Count,
+                check);
         }
 
         /// <summary>
-        ///     将字符串按char值忠实地转换成byte，对于ASCII编码以外的字符不会转换成问号
-        ///     <para>性能提示：与无buff的ToRawBytes各个性能指标相差不大，可以忽略</para>
+        ///     Put every chars to bytes array.<br />
+        ///     *Performance tips:The method perform similarly to <see cref="ToRawBytes(string,bool)"/>
+        ///     ex."123".ToRawBytes() => {31,32,33}
         /// </summary>
-        /// <exception cref="InvalidCastException">字符中包含超出byte范围的字符，超出语义，视作异常</exception>
+        /// <exception cref="InvalidCastException">any char in arg:srt out of byte</exception>
         public static void ToRawBytes(this string str, byte[] buff, int offset, int count, bool check = true)
         {
+            if (buff == null) throw new ArgumentNullException(nameof(buff));
             if (count != str.Length)
                 throw new ArgumentException($"buff len need to be str.len {str.Length},but {count}");
             var len = str.Length;
@@ -552,7 +517,7 @@ namespace BoysheO.Extensions
         }
 
         /// <summary>
-        ///     将byte忠实地按byte转换成char
+        ///      Put every bytes to char array as string<br />
         /// </summary>
         public static string ToRawString(this ReadOnlySpan<byte> source)
         {
@@ -561,244 +526,179 @@ namespace BoysheO.Extensions
             var buffer = len <= maxStackLimit ? stackalloc char[len] : new char[len];
             for (len--; len >= 0; len--) buffer[len] = (char)source[len];
 
-            unsafe
-            {
-                fixed (char* p = buffer)
-                {
-                    return new string(p, 0, source.Length);
-                }
-            }
+            return buffer.Slice(0, source.Length).AsReadOnly().ToNewString();
         }
 
         /// <summary>
-        ///     根据等价char原则，每个byte转换成char再转换成string;warp
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string ToRawString(this byte[] bytes)
-        {
-            return ToRawString((ReadOnlySpan<byte>)bytes);
-        }
-
-        /// <summary>
-        ///     根据等价char原则，每个byte转换成char再转换成string;warp
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string ToRawString(this ArraySegment<byte> bytes)
-        {
-            return ToRawString((ReadOnlySpan<byte>)bytes);
-        }
-
-        /// <summary>
-        ///     根据等价char原则，每个byte转换成char再转换成string;warp
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string ToRawString(this Span<byte> bytes)
-        {
-            return ToRawString((ReadOnlySpan<byte>)bytes);
-        }
-
-        /// <summary>
-        ///     根据string内容转换byte。要求source是稠密无杂质的hexString。未测试
-        /// </summary>
-        /// <exception cref="IndexOutOfRangeException">输入的source必须是具备偶数个字符0-F的</exception>
-        public static byte[] HexTextToBytes(this string source)
-        {
-            var bufferLen = source.Length / 2;
-            var isAsByteArray = bufferLen >= 1024;
-            var bytes = isAsByteArray ? stackalloc byte[bufferLen] : new byte[bufferLen];
-            for (var i = 0; i < bytes.Length; i++) bytes[i] = ByteUtil.HexCharToByte(source[2 * i], source[2 * i + 1]);
-
-            return bytes.ToArray();
-        }
-
-        /// <summary>
-        ///     将数据块直接视作string返回（会创建新string）
-        ///     强转成string，只有source是按utf16 char才能返回得到C#下的有意义的字段。否则此string的hex就是source的值
+        ///     Convert the source as new string directly.<br />
+        ///     If the source is utf16,the method can return string readable. 
         /// </summary>
         public static string MemoryToString(this ReadOnlySpan<byte> source)
         {
+            if (source.Length % 2 != 0) throw new Exception("only 2n bytes can be converted to string in C#");
             unsafe
             {
                 fixed (byte* p = source)
                 {
                     var sb = (char*)p;
-                    return new string(sb);
+                    return new string(sb, 0, source.Length / 2);
                 }
             }
         }
 
-        /// <summary>
-        ///     强转成string
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string MemoryToString(this Span<byte> source)
-        {
-            return MemoryToString((ReadOnlySpan<byte>)source);
-        }
+        //useless
+        // /// <summary>
+        // ///     将基础类型强制转换成string
+        // /// </summary>
+        // [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        // public static string MemoryToString<T>(this ref T source) where T : unmanaged
+        // {
+        //     return source.AsMemoryByteSpan().AsReadOnly().MemoryToString();
+        // }
 
         /// <summary>
-        ///     强转成string
+        /// Make first char upper or not without culture<br />
+        /// ex."abc"=>"Abc","ABC"=>"ABC"
         /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string MemoryToString(this byte[] bytes)
-        {
-            return MemoryToString(bytes.AsSpan());
-        }
-
-
-        /// <summary>
-        ///     强制转换成string
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string MemoryToString<T>(this ref T source) where T : unmanaged
-        {
-            return source.AsMemoryByteSpan().MemoryToString();
-        }
-
-        /// <summary>
-        /// 如果首字母不是字母则抛异常
-        /// </summary>
-        public static string MakeFirstCharUpper(this string str)
+        public static string MakeFirstCharUpperOrNot(this string str)
         {
             if (str.Length == 0) return "";
-            if (str.Length == 1) return str.ToUpper();
-            var c = str[0];
-            c = c.ToUpper();
-            return c + str.Substring(1);
-        }
-
-        public static string MakeFirstCharUpper2(this string str)
-        {
-            return str.Length > 1 && str[0].Isatoz() ? MakeFirstCharUpper(str) : str;
+            if (!str[0].Isatoz()) return str;
+            if (str.Length == 1) return str.ToUpperInvariant();
+            Span<char> buffer = stackalloc char[str.Length];
+            buffer[0] = str[0].ToUpper();
+            str.AsSpan(1).CopyTo(buffer.Slice(1));
+            return buffer.AsReadOnly().ToNewString();
         }
 
         /// <summary>
-        /// 如果首字母不是字母则抛异常
+        /// Make first char lower or not without culture<br />
+        /// ex."abc"=>"abc","ABC"=>"aBC"
         /// </summary>
-        public static string MakeFirstCharLower(this string str)
+        public static string MakeFirstCharLowerOrNot(this string str)
         {
             if (str.Length == 0) return "";
-            if (str.Length == 1) return str.ToLower();
-            var c = str[0];
-            c = c.ToLower();
-            return c + str.Substring(1);
-        }
-
-        public static string MakeFirstCharLower2(this string str)
-        {
-            return str.Length > 1 && str[0].IsAtoZ() ? MakeFirstCharLower(str) : str;
+            if (!str[0].IsAtoZ()) return str;
+            if (str.Length == 1) return str.ToLowerInvariant();
+            Span<char> buffer = stackalloc char[str.Length];
+            buffer[0] = str[0].ToUpper();
+            str.AsSpan(1).CopyTo(buffer.Slice(1));
+            return buffer.AsReadOnly().ToNewString();
         }
 
         /// <summary>
-        /// 等价于int.Parse(string str) <br />
-        /// 性能提示：如果能假定str是纯数字，使用ToPositiveInt快4倍
+        /// Same as <see cref="int.Parse(string)"/><br />
+        /// *Performance tips:If you can make sure string has number char only,
+        /// you can use <see cref="ParseToPositiveInt"/> 4 times faster.
         /// </summary>
-        public static int ToIntNumber(this string str)
+        public static int ParseToInt(this string str)
         {
             return int.Parse(str);
         }
 
         /// <summary>
-        /// 拥有更多异常信息
-        /// 性能提示：如果能假定str是纯数字，使用ToPositiveInt快4倍
+        /// Convert chars '123' to int 123.<br />
+        /// <b>*UNSAFE</b>:make sure chars is all digit char.Not '-123' '12.3'<br />
+        /// This method is more faster than <see cref="int.Parse(string)"/> 
         /// </summary>
-        /// <exception cref="ArgumentException">空arg或不是number</exception>
-        public static int ToIntNumber2(this string str)
+        public static int ParseToPositiveInt(this string str)
         {
-            if (str.IsNullOrWhiteSpace()) throw new ArgumentException($"arg is empty");
-            if (int.TryParse(str, out int res))
-            {
-                return res;
-            }
+            return str.AsSpan().ParseToPositiveInt();
+        }
 
-            throw new ArgumentException($"{str} can't be number");
+
+        /// <summary>
+        /// Convert chars "123" to long 123<br />
+        /// <b>*UNSAFE</b>:make sure chars is all digit char.Not '-123' '12.3'<br />
+        /// This method is more faster than <see cref="long.Parse(string)"/> 
+        /// </summary>
+        public static long ParseToPositiveLong(this string str)
+        {
+            return str.AsSpan().ParseToPositiveLong();
         }
 
         /// <summary>
-        /// 纯数字字串转换成int
+        /// Same as string.Format
         /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
-        public static int ToPositiveInt(this string str)
-        {
-            return str.AsSpan().ToPositiveInt();
-        }
-
-        /// <summary>
-        /// 纯数字字串转换成long
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
-        public static long ToPositiveLong(this string str)
-        {
-            return str.AsSpan().ToPositiveLong();
-        }
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string Format(this string str, object a)
         {
             return string.Format(str, a);
         }
 
+        /// <summary>
+        /// Same as string.Format
+        /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string Format(this string str, object a, object b)
         {
             return string.Format(str, a, b);
         }
 
+        /// <summary>
+        /// Same as string.Format
+        /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string Format(this string str, object a, object b, object c)
         {
             return string.Format(str, a, b, c);
         }
 
+        /// <summary>
+        /// Same as string.Format
+        /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string Format(this string str, params object[] args)
         {
             return string.Format(str, args);
         }
 
-        public static int SplitAsPooledChars(this ReadOnlySpan<char> str,
-            ReadOnlySpan<char> chars,
-            out (int start, int count)[] pooledResult)
-        {
-            if (chars.Length == 0) throw new ArgumentException("can not 0 len", nameof(chars));
-            pooledResult = ArrayPool<(int, int)>.Shared.Rent(1);
-            int pooledResultCount = 0;
-            int lp = 0;
-            int p = 0;
-            var strLen = str.Length;
-            var charsLen = chars.Length;
-            while (p < strLen)
-            {
-                bool hasSub;
-                if (p + charsLen > strLen)
-                {
-                    hasSub = false;
-                }
-                else
-                {
-                    var slice = str.Slice(p, charsLen);
-                    hasSub = slice.SequenceEqual(chars);
-                }
-
-                if (hasSub)
-                {
-                    var count = p - lp;
-                    pooledResultCount =
-                        ArrayPoolUtil.Add(pooledResult, pooledResultCount, (lp, count), out pooledResult);
-                    p += charsLen;
-                    if (p > strLen) p = strLen;
-                    lp = p;
-                    continue;
-                }
-
-                p++;
-            }
-
-            pooledResultCount =
-                ArrayPoolUtil.Add(pooledResult, pooledResultCount, (lp, str.Length - lp), out pooledResult);
-            return pooledResultCount;
-        }
+        // /// <summary>
+        // /// 虽然正确性可以得到确认，但是比string.Split慢4倍,相差一个数量级
+        // /// 测试中gc也失败于string.Split,多4倍gc，此API不再使用
+        // /// </summary>
+        // [Obsolete]
+        // public static int SplitAsPooledChars(this ReadOnlySpan<char> str,
+        //     ReadOnlySpan<char> chars,
+        //     out (int start, int count)[] pooledResult)
+        // {
+        //     if (chars.Length == 0) throw new ArgumentException("can not 0 len", nameof(chars));
+        //     pooledResult = ArrayPool<(int, int)>.Shared.Rent(1);
+        //     int pooledResultCount = 0;
+        //     int lp = 0;
+        //     int p = 0;
+        //     var strLen = str.Length;
+        //     var charsLen = chars.Length;
+        //     while (p < strLen)
+        //     {
+        //         bool hasSub;
+        //         if (p + charsLen > strLen)
+        //         {
+        //             hasSub = false;
+        //         }
+        //         else
+        //         {
+        //             var slice = str.Slice(p, charsLen);
+        //             hasSub = slice.SequenceEqual(chars);
+        //         }
+        //
+        //         if (hasSub)
+        //         {
+        //             var count = p - lp;
+        //             pooledResultCount =
+        //                 ArrayPoolUtil.Add(pooledResult, pooledResultCount, (lp, count), out pooledResult);
+        //             p += charsLen;
+        //             if (p > strLen) p = strLen;
+        //             lp = p;
+        //             continue;
+        //         }
+        //
+        //         p++;
+        //     }
+        //
+        //     pooledResultCount =
+        //         ArrayPoolUtil.Add(pooledResult, pooledResultCount, (lp, str.Length - lp), out pooledResult);
+        //     return pooledResultCount;
+        // }
     }
 }

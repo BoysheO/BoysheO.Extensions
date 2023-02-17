@@ -11,4 +11,17 @@
       <PackageReference Include="Unity3D.SDK" Version="2020.3.2.1" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="VectorExtensions.Plus.tt">
+        <Generator>TextTemplatingFileGenerator</Generator>
+        <LastGenOutput>VectorExtensions.Plus.Generated.cs</LastGenOutput>
+      </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="VectorExtensions.Plus.Generated.cs">
+        <DependentUpon>VectorExtensions.Plus.tt</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
 </Project>

@@ -5,23 +5,29 @@ namespace BoysheO.Extensions
 {
     public static class CharExtensions
     {
-        //48－57 
+        /// <summary>
+        /// Determine the char is in '0'-'9' without culture.<br />
+        /// <see cref="char.IsDigit(char)"/>has more logic.
+        /// *Performance tips:very fast in net48,but fail to against char.IsDigital() in net6.0 
+        /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        // ReSharper disable once InconsistentNaming
         public static bool Is0to9(this char c)
         {
             return c <= 57 && c >= 48;
         }
 
+        /// <summary>
+        /// Convert '0'-'9' to byte 0-9
+        /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static int To0To9(this char c)
+        public static byte To0To9(this char c)
         {
-            if (!Is0to9(c)) throw new ArgumentOutOfRangeException($"not a number:{c}");
-            return c - 48;
+            if (!c.Is0to9()) throw new ArgumentOutOfRangeException($"not a number:{c}");
+            return unchecked((byte)(c - 48));
         }
 
         /// <summary>
-        /// 是否小写a-z
+        /// Determine the char is in 'a'-'z' without culture.<br />
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         // ReSharper disable once IdentifierTypo
@@ -31,7 +37,7 @@ namespace BoysheO.Extensions
         }
 
         /// <summary>
-        /// 是否大写A-Z
+        /// Determine the char is in 'A'-'Z' without culture.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsAtoZ(this char c)
@@ -39,37 +45,46 @@ namespace BoysheO.Extensions
             return c >= 65 && c <= 90;
         }
 
+        /// <summary>
+        /// Determine the char is in [a-zA-Z] without culture.
+        /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsEnglishLetter(this char c)
         {
             return c.Isatoz() || c.IsAtoZ();
         }
 
+        /// <summary>
+        /// Convert [a-zA-Z] to [A-Z]
+        /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static char ToUpper(this char c)
         {
             if (IsAtoZ(c)) return c;
-            if (Isatoz(c)) return (char) (c - 32);
-            throw new Exception($"{c} is not english letter");
-        } 
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static char ToLower(this char c)
-        {
-            if (Isatoz(c)) return c;
-            if (IsAtoZ(c)) return (char) (c + 32);
+            if (Isatoz(c)) return (char)(c - 32);
             throw new Exception($"{c} is not english letter");
         }
 
         /// <summary>
-        /// 将A-Z a-z转换成1-26<br />
-        /// 常用于Excel列ABC转换为对应列数
+        /// Convert [a-zA-Z] to [a-z]
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static int CovertAZazTo26(this char c)
+        public static char ToLower(this char c)
         {
-            if (c.Isatoz()) return c - 96;
-            if (c.IsAtoZ()) return c - 64;
+            if (Isatoz(c)) return c;
+            if (IsAtoZ(c)) return (char)(c + 32);
+            throw new Exception($"{c} is not english letter");
+        }
+
+        /// <summary>
+        /// Convert char[a-zA-Z] to [1,26]<br />
+        /// It's useful for convert Excel col number ABC.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static byte CovertAZazTo26(this char c)
+        {
+            if (c.Isatoz()) return (byte)(c - 96);
+            if (c.IsAtoZ()) return (byte)(c - 64);
             throw new ArgumentOutOfRangeException(nameof(c), $"c={c} not the EnglishLetter");
         }
     }

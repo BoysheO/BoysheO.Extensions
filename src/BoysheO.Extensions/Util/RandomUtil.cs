@@ -11,7 +11,7 @@ namespace BoysheO.Util
 
         #region value
 
-        public static float Float => (float) Random.NextDouble();
+        public static float Float => (float)Random.NextDouble();
 
         public static long Long
         {
@@ -23,7 +23,7 @@ namespace BoysheO.Util
             }
         }
 
-        public static short Short => (short) Int;
+        public static short Short => (short)Int;
 
         public static int Int => Random.Next();
 
@@ -52,7 +52,7 @@ namespace BoysheO.Util
         public static uint MoreEqualMinLessMax(uint min, uint max)
         {
             var num = max - min;
-            return (uint) Int * num + min;
+            return (uint)Int * num + min;
         }
 
         #endregion

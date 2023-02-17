@@ -1,8 +1,9 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace BoysheO.Extensions.Unity3DCore
 {
-    public static class VectorExtensions
+    public static partial class VectorExtensions
     {
         public static float SqrDistance(this Vector2 a, Vector2 b)
         {
@@ -14,15 +15,23 @@ namespace BoysheO.Extensions.Unity3DCore
             return Vector3.SqrMagnitude(b - a);
         }
 
-        public static float ApplyAsLinerFuncArgs(this Vector2 v, float x)
+        /// <summary>
+        /// v视作区间，求线性插值结果
+        /// </summary>
+        public static float Lerp(this Vector2 v, float t)
         {
-            return v.x + v.y * x;
+            return v.x + v.y * t;
         }
 
-        public static float ApplyAsLinerFuncArgs(this Vector2Int v, float x)
+        /// <summary>
+        /// v视作区间，求线性插值结果
+        /// </summary>
+        public static float Lerp(this Vector2Int v, float t)
         {
-            return v.x + v.y * x;
+            return v.x + v.y * t;
         }
+
+        #region 解构函数
 
         // ReSharper disable once UseDeconstructionOnParameter
         public static void Deconstruct(this Vector3 v, out float x, out float y, out float z)
@@ -82,6 +91,9 @@ namespace BoysheO.Extensions.Unity3DCore
             a = v.a;
         }
 
+        #endregion
+
+
         public static float Dot(this Vector2 lhs, Vector2 rhs)
         {
             return Vector2.Dot(lhs, rhs);
@@ -113,5 +125,56 @@ namespace BoysheO.Extensions.Unity3DCore
         {
             return vector2;
         }
+
+        #region rect isInRange
+
+        public static bool IsInRange(this Vector2 position, Rect rect)
+        {
+            return rect.Contains(position);
+        }
+
+        public static bool IsInRange(this Vector2Int position, RectInt rect)
+        {
+            return rect.Contains(position);
+        }
+
+        public static bool IsInRange(this Vector2 position, RectInt rect)
+        {
+            return position.x >= rect.xMin && position.y >= rect.yMin && position.x < rect.xMax &&
+                   position.y < rect.yMax;
+        }
+
+        public static bool IsInRange(this Vector2Int position, Rect rect)
+        {
+            return position.x >= rect.xMin && position.y >= rect.yMin && position.x < rect.xMax &&
+                   position.y < rect.yMax;
+        }
+
+        #endregion
+
+        #region bounds isInRange
+
+        public static bool IsInRange(this Vector3 position, Bounds bounds)
+        {
+            return bounds.Contains(position);
+        }
+
+        public static bool IsInRange(this Vector3Int position, Bounds bounds)
+        {
+            return bounds.Contains(position);
+        }
+
+        public static bool IsInRange(this Vector3Int position, BoundsInt bounds)
+        {
+            return bounds.Contains(position);
+        }
+
+        public static bool IsInRange(this Vector3 position, BoundsInt bounds)
+        {
+            return position.x >= bounds.xMin && position.y >= bounds.yMin && position.z >= bounds.zMin &&
+                   position.x < bounds.xMax && position.y < bounds.yMax && position.z < bounds.zMax;
+        }
+
+        #endregion
     }
 }

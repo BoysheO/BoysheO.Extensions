@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <Nullable>disable</Nullable>
+        <LangVersion>7.3</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Collections.Pooled" Version="1.0.82" />
+      <PackageReference Include="UniRx" Version="5.4.1" />
+    </ItemGroup>
+
+</Project>
