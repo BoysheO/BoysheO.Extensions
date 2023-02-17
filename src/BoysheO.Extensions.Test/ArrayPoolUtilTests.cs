@@ -24,7 +24,7 @@ public class ArrayPoolUtilTests
         for (int i = 0; i < times; i++)
         {
             random.NextBytes(b);
-            elementCount = ArrayPoolUtil.Add(buff, elementCount, b[0], out buff);
+            buff = ArrayPoolUtil.Add(buff, elementCount, b[0], out elementCount);
             lst.Add(b[0]);
         }
 

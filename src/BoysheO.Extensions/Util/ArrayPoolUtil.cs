@@ -22,12 +22,14 @@ namespace Extensions
         /// <summary>
         /// 给从ArrayPool中借出的Buff添加元素
         /// ！不可以保留原buff的引用
+        /// *弃用：思前想后在高性能需求场景下这个API是负优化，不如手写
         /// </summary>
         /// <param name="buff">原始buff</param>
         /// <param name="elementCount">有效元素个数。须确保所有有效元素位于数组前端并连续</param>
         /// <param name="addValue">需要添加的值</param>
         /// <param name="count"></param>
         /// <returns>添加后的元素个数</returns>
+        [Obsolete]
         public static T[] Add<T>(T[] buff, int elementCount, T addValue, out int count)
         {
             if (elementCount >= buff.Length)
@@ -43,6 +45,7 @@ namespace Extensions
         /// <summary>
         /// 给从ArrayPool中借出的Buff添加元素
         /// ！不可以保留原buff的引用
+        /// *弃用：思前想后在高性能需求场景下这个API是负优化，不如手写
         /// </summary>
         /// <param name="buff">原始buff</param>
         /// <param name="elementCount">有效元素个数。须确保所有有效元素位于数组前端并连续</param>
@@ -51,6 +54,7 @@ namespace Extensions
         /// <param name="addValueAryCount"></param>
         /// <param name="outBuff">新的buff</param>
         /// <returns>添加后的元素个数</returns>
+        [Obsolete]
         public static int AddRange<T>(T[] buff, int elementCount,
             T[] addValueAry,
             int addValueAryOffset,

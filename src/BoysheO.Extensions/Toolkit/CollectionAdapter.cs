@@ -45,7 +45,7 @@ namespace BoysheO.Toolkit
 
         public void CopyTo(T[] array, int arrayIndex)
         {
-            _vs.CopyTo(array, arrayIndex);
+            _vs.CopyTo(array.AsSpan(arrayIndex));
         }
 
         public IEnumerator<T> GetEnumerator()
