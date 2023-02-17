@@ -152,7 +152,7 @@ namespace BoysheO.Extensions
             const int stackSize = 1024;
             if (byteSpan.Length == 0) return "";
             var charBuffCapacity = checked(byteSpan.Length * 8);
-            char[] pooledBuff = null;
+            char[] pooledBuff = null!;
             Span<char> charBuff = charBuffCapacity > stackSize
                 ? (pooledBuff = ArrayPool<char>.Shared.Rent(charBuffCapacity))
                 : stackalloc char[charBuffCapacity];
