@@ -62,7 +62,7 @@ public class ArrayPoolUtilTests
         var insertValue = RandomUtil.Int % 10;
         var insertIdx = RandomUtil.Int % source.Length;
         Console.WriteLine(
-            $"source={source.Select(v => v.ToString()).JoinAsOnString(",")} insertValue={insertValue} insertIndex={insertIdx}");
+            $"source={source.Select(v => v.ToString()).JoinAsOneString(",")} insertValue={insertValue} insertIndex={insertIdx}");
 
         int[] poolResult;
         {
@@ -75,7 +75,7 @@ public class ArrayPoolUtilTests
             var bufCount = source.Length;
             bufCount = ArrayPoolUtil.Insert(buf, bufCount, insertValue, insertIdx, out buf);
             poolResult = buf.Take(bufCount).ToArray();
-            Console.WriteLine(buf.AsSpan(0, bufCount).ToArray().Select(v => v.ToString()).JoinAsOnString());
+            Console.WriteLine(buf.AsSpan(0, bufCount).ToArray().Select(v => v.ToString()).JoinAsOneString());
             ArrayPool<int>.Shared.Return(buf);
         }
 
@@ -86,7 +86,7 @@ public class ArrayPoolUtilTests
             sysResult = lst.ToArray();
         }
 
-        Console.WriteLine($"pool={poolResult.Select(v=>v.ToString()).JoinAsOnString()} sys={sysResult.Select(v=>v.ToString()).JoinAsOnString()}");
+        Console.WriteLine($"pool={poolResult.Select(v=>v.ToString()).JoinAsOneString()} sys={sysResult.Select(v=>v.ToString()).JoinAsOneString()}");
         Assert.AreEqual(sysResult, poolResult);
     }
 }

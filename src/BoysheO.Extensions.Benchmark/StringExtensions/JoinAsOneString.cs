@@ -33,13 +33,13 @@ public class JoinAsOneString
     [Benchmark]
     public string StringJoinExtensions()
     {
-        return Source.JoinAsOnString();
+        return Source.JoinAsOneString();
     }
     
     [Benchmark]
     public string StringJoinExtensionsWithParma()
     {
-        return Source.JoinAsOnString(Sp);
+        return Source.JoinAsOneString(Sp);
     }
 
     [Benchmark]

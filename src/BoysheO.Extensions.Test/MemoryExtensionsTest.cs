@@ -19,9 +19,9 @@ public class MemoryExtensionsTest
         var copy2 = new List<int>(digits).ToArray();
         copy2.AsSpan().Panning(-1);
 
-        Console.WriteLine(digits.Select(v=>v.ToString()).JoinAsOnString());
-        Console.WriteLine(copy.Select(v=>v.ToString()).JoinAsOnString());
-        Console.WriteLine(copy2.Select(v=>v.ToString()).JoinAsOnString());
+        Console.WriteLine(digits.Select(v=>v.ToString()).JoinAsOneString());
+        Console.WriteLine(copy.Select(v=>v.ToString()).JoinAsOneString());
+        Console.WriteLine(copy2.Select(v=>v.ToString()).JoinAsOneString());
         Assert.AreEqual(copy.SkipLast(1),copy2);
     }
 }

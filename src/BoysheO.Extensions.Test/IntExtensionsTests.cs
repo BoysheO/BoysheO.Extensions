@@ -27,7 +27,7 @@ public class IntExtensionsTests
         }
 
         src.PositiveIntegerToEachDigit(buff);
-        var str = buff.ToArray().Select(v => v.ToString()).JoinAsOnString().Replace(",","").TrimStart('0');
+        var str = buff.ToArray().Select(v => v.ToString()).JoinAsOneString().Replace(",","").TrimStart('0');
         return str;
     }
 }

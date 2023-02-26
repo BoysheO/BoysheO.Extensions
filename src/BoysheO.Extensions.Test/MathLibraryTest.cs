@@ -47,7 +47,7 @@ public partial class MathLibraryTest
     public void DrawAsPooledArray(int poolSize, int count)
     {
         var res = MathLibrary.DrawAsPooledArray(poolSize, count);
-        Console.WriteLine(res.Take(count).Select(v=>v.ToString()).JoinAsOnString());
+        Console.WriteLine(res.Take(count).Select(v=>v.ToString()).JoinAsOneString());
         try
         {
             var set = new SortedSet<int>();
@@ -70,7 +70,7 @@ public partial class MathLibraryTest
     public void PermutationAsPooledArraySorted(int poolSize, int count)
     {
         var res = MathLibrary.DrawAsPooledArraySorted(poolSize, count);
-        Console.WriteLine(res.Take(count).Select(v=>v.ToString()).JoinAsOnString());
+        Console.WriteLine(res.Take(count).Select(v=>v.ToString()).JoinAsOneString());
         try
         {
             var set = new SortedSet<int>();

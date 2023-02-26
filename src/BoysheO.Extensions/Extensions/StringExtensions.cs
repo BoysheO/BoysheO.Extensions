@@ -31,7 +31,7 @@ namespace BoysheO.Extensions
         ///     Same to string.Join
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string JoinAsOnString(this IEnumerable<string> strings, string sp = ",")
+        public static string JoinAsOneString(this IEnumerable<string> strings, string sp = ",")
         {
             return string.Join(sp, strings);
         }

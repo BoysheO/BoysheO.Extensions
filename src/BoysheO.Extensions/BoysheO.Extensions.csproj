@@ -9,7 +9,7 @@
         <Authors>BoysheO</Authors>
         <RepositoryUrl>https://github.com/BoysheO/BoysheO.Extensions</RepositoryUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <PackageVersion>3.0.1</PackageVersion>
+        <PackageVersion>3.0.2</PackageVersion>
         <TargetFrameworks>netstandard2.0</TargetFrameworks>
         <PackageReleaseNotes>update package info whitch not correct in nuget</PackageReleaseNotes>
         <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
