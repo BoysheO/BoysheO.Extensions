@@ -41,6 +41,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeOnlyAndDateOnly", "Time
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DateAndTime", "DateAndTime\DateAndTime.csproj", "{7596C02D-DB09-4B01-A7B6-E0A44972A0AC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoysheO.Buffer.SimpleListPool", "BoysheO.Buffer.SimpleListPool\BoysheO.Buffer.SimpleListPool.csproj", "{0FEF7B42-507A-4CF5-8066-FAE87816B2DF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -119,6 +121,10 @@ Global
 		{7596C02D-DB09-4B01-A7B6-E0A44972A0AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7596C02D-DB09-4B01-A7B6-E0A44972A0AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7596C02D-DB09-4B01-A7B6-E0A44972A0AC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0FEF7B42-507A-4CF5-8066-FAE87816B2DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FEF7B42-507A-4CF5-8066-FAE87816B2DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FEF7B42-507A-4CF5-8066-FAE87816B2DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FEF7B42-507A-4CF5-8066-FAE87816B2DF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
