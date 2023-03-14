@@ -43,6 +43,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DateAndTime", "DateAndTime\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoysheO.Buffer.SimpleListPool", "BoysheO.Buffer.SimpleListPool\BoysheO.Buffer.SimpleListPool.csproj", "{0FEF7B42-507A-4CF5-8066-FAE87816B2DF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoysheO.Buffers.SimplePooledListPool", "BoysheO.Buffers.SimplePooledListPool\BoysheO.Buffers.SimplePooledListPool.csproj", "{0FBB48D0-D653-4E89-AF27-2828D902A813}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -125,6 +127,10 @@ Global
 		{0FEF7B42-507A-4CF5-8066-FAE87816B2DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0FEF7B42-507A-4CF5-8066-FAE87816B2DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0FEF7B42-507A-4CF5-8066-FAE87816B2DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0FBB48D0-D653-4E89-AF27-2828D902A813}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FBB48D0-D653-4E89-AF27-2828D902A813}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FBB48D0-D653-4E89-AF27-2828D902A813}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FBB48D0-D653-4E89-AF27-2828D902A813}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
