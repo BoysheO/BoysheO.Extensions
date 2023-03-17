@@ -9,7 +9,6 @@ namespace BoysheO.Buffers
         public readonly SimplePooledListPool<T> Share = new();
 
         private readonly WeakReference<ConcurrentBag<PooledList<T>>> _reference = new(new ConcurrentBag<PooledList<T>>());
-
         private readonly object gate = new object();
 
         public PooledList<T> Rent()
@@ -29,7 +28,6 @@ namespace BoysheO.Buffers
 
             if (_pool.TryTake(out var lst)) return lst;
             lst = new PooledList<T>();
-            _pool.Add(lst);
             return lst;
         }
 

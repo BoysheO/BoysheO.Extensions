@@ -35,7 +35,6 @@ namespace BoysheO.Buffers
 
             if (_pool.TryTake(out var lst)) return lst;
             lst = new List<T>();
-            _pool.Add(lst);
             return lst;
         }
 
