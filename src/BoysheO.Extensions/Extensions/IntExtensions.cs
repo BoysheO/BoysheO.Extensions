@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Buffers;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 namespace BoysheO.Extensions
@@ -58,6 +59,14 @@ namespace BoysheO.Extensions
                 buffer[p] = 0;
                 p--;
             }
+        }
+
+        /// <summary>
+        /// value &gt; 0 &amp;&amp; value &lt; collection.Count
+        /// </summary>
+        public static bool IsValidIndex<T>(this int value, ICollection<T> collection)
+        {
+            return value > 0 && value < collection.Count;
         }
     }
 }
