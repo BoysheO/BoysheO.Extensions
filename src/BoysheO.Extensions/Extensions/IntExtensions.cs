@@ -66,7 +66,7 @@ namespace BoysheO.Extensions
         /// </summary>
         public static bool IsValidIndex<T>(this int value, ICollection<T> collection)
         {
-            return value > 0 && value < collection.Count;
+            return value >= 0 && value < collection.Count;
         }
     }
 }
