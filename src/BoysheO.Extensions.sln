@@ -45,6 +45,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BoysheO.Buffer.SimpleListPo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoysheO.Buffers.PooledBuffer", "BoysheO.Buffers.PooledBuffer\BoysheO.Buffers.PooledBuffer.csproj", "{B282233A-9483-48D7-A924-119D9C6A685F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestRoslyn", "TestRoslyn\TestRoslyn.csproj", "{FA2B26CA-A17E-44F5-8CCD-08E8A936CE36}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -131,6 +133,10 @@ Global
 		{B282233A-9483-48D7-A924-119D9C6A685F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B282233A-9483-48D7-A924-119D9C6A685F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B282233A-9483-48D7-A924-119D9C6A685F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA2B26CA-A17E-44F5-8CCD-08E8A936CE36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA2B26CA-A17E-44F5-8CCD-08E8A936CE36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA2B26CA-A17E-44F5-8CCD-08E8A936CE36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA2B26CA-A17E-44F5-8CCD-08E8A936CE36}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
