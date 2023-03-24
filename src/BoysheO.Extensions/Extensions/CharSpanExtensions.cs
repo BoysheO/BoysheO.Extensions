@@ -161,20 +161,20 @@ namespace BoysheO.Extensions
 
         /// <summary>
         /// Slice the source.
-        /// ex."HelloWorld".WithoutHeadCount("Hello") => "World"
+        /// ex."HelloWorld".SkipCount("Hello") => "World"
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ReadOnlySpan<char> WithoutHeadCount(this ReadOnlySpan<char> content, string count)
+        public static ReadOnlySpan<char> SkipCount(this ReadOnlySpan<char> content, string count)
         {
             return content.Slice(count.Length);
         }
 
         /// <summary>
         /// Slice the source.
-        /// ex."HelloWorld".WithoutHeadCount("World") => "Hello"
+        /// ex."HelloWorld".SkipLastCount("World") => "Hello"
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ReadOnlySpan<char> WithoutTailCount(this ReadOnlySpan<char> content, string count)
+        public static ReadOnlySpan<char> SkipTailCount(this ReadOnlySpan<char> content, string count)
         {
             return content.Slice(0, content.Length - count.Length);
         }
