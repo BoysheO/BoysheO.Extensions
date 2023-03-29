@@ -12,7 +12,7 @@ namespace BoysheO.Buffers.PooledBuffer.Linq
         public static PooledBuffer<TTar> PooledSelect<TSrc, TTar>(this PooledBuffer<TSrc> source, Func<TSrc, TTar> selector)
         {
             var buff = PooledBuffer<TTar>.Rent();
-            for (int index = 0, count = buff.Count; index < count; index++)
+            for (int index = 0, count = source.Count; index < count; index++)
             {
                 var src = source[index];
                 var tar = selector(src);
@@ -48,7 +48,7 @@ namespace BoysheO.Buffers.PooledBuffer.Linq
         {
             var buff = PooledBuffer<T>.Rent();
             var span = source.Span;
-            for (int index = 0, count = buff.Count; index < count; index++)
+            for (int index = 0, count = source.Count; index < count; index++)
             {
                 var src = span[index];
                 if(filter(src)) buff.Add(src);
