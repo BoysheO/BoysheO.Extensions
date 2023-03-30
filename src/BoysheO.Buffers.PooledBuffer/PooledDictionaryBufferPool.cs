@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Threading;
-//using BoysheO.Extensions;
 
 namespace BoysheO.Buffers
 {
-    internal class PooledBufferPool<T>
+    internal class PooledDictionaryBufferPool<TK, TV>
     {
-        public static readonly PooledBufferPool<T> Share = new PooledBufferPool<T>();
+        public static readonly PooledDictionaryBufferPool<TK, TV> Share = new PooledDictionaryBufferPool<TK, TV>();
 
-        private readonly WeakReference<ConcurrentBag<ListProxy<T>>> _reference =
-            new WeakReference<ConcurrentBag<ListProxy<T>>>(new ConcurrentBag<ListProxy<T>>());
+        private readonly WeakReference<ConcurrentBag<DictionaryProxy<TK, TV>>> _reference =
+            new WeakReference<ConcurrentBag<DictionaryProxy<TK, TV>>>(new ConcurrentBag<DictionaryProxy<TK, TV>>());
 
         private readonly object gate = new object();
 
-        public PooledBuffer<T> Rent()
+        public PooledDictionaryBuffer<TK, TV> Rent()
         {
             // ReSharper disable once InconsistentlySynchronizedField
             if (!_reference.TryGetTarget(out var _pool))
@@ -23,7 +22,7 @@ namespace BoysheO.Buffers
                 {
                     if (!_reference.TryGetTarget(out _pool))
                     {
-                        _pool = new ConcurrentBag<ListProxy<T>>();
+                        _pool = new ConcurrentBag<DictionaryProxy<TK, TV>>();
                         _reference.SetTarget(_pool);
                     }
                 }
@@ -31,14 +30,14 @@ namespace BoysheO.Buffers
 
             if (!_pool.TryTake(out var lst))
             {
-                lst = new ListProxy<T>();
+                lst = new DictionaryProxy<TK, TV>();
             }
 
             //if (!lst.List.IsEmpty()) throw new Exception("dirty buffer");
-            return new PooledBuffer<T>(lst);
+            return new PooledDictionaryBuffer<TK, TV>(lst);
         }
 
-        public void Return(PooledBuffer<T> list)
+        public void Return(PooledDictionaryBuffer<TK, TV> list)
         {
             if (list.Version != list.ListProxy.Version) return;
             Interlocked.Increment(ref list.ListProxy.Version);
@@ -49,14 +48,14 @@ namespace BoysheO.Buffers
                 {
                     if (!_reference.TryGetTarget(out _pool))
                     {
-                        _pool = new ConcurrentBag<ListProxy<T>>();
+                        _pool = new ConcurrentBag<DictionaryProxy<TK, TV>>();
                         _reference.SetTarget(_pool);
                     }
                 }
             }
 
-            list.ListProxy.List.Clear();
-            list.ListProxy.List.Dispose();
+            list.ListProxy.Map.Clear();
+            list.ListProxy.Map.Dispose();
             _pool.Add(list.ListProxy);
         }
     }

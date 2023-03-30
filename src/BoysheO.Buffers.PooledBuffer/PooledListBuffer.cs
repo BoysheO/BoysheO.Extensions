@@ -8,13 +8,13 @@ namespace BoysheO.Buffers
     /// <summary>
     /// don't use again after disposable
     /// </summary>
-    public readonly struct PooledBuffer<T> : IDisposable, IList<T>, IList, IReadOnlyList<T>
+    public readonly struct PooledListBuffer<T> : IDisposable, IList<T>, IList, IReadOnlyList<T>
     {
         internal readonly int Version;
         internal readonly ListProxy<T> ListProxy;
         private PooledList<T> _Buffer => ListProxy.List;
 
-        internal PooledBuffer(ListProxy<T> listProxy)
+        internal PooledListBuffer(ListProxy<T> listProxy)
         {
             Version = listProxy.Version;
             ListProxy = listProxy;
@@ -24,13 +24,13 @@ namespace BoysheO.Buffers
         {
             if (_Buffer != null && Version == ListProxy.Version)
             {
-                PooledBufferPool<T>.Share.Return(this);
+                PooledListBufferPool<T>.Share.Return(this);
             }
         }
 
-        public static PooledBuffer<T> Rent()
+        public static PooledListBuffer<T> Rent()
         {
-            return PooledBufferPool<T>.Share.Rent();
+            return PooledListBufferPool<T>.Share.Rent();
         }
 
         private void ThrowIfVersionNotMatch()
@@ -201,11 +201,11 @@ namespace BoysheO.Buffers
             _Buffer.Sort(comparison);
         }
 
-        public PooledBuffer<TOutput> ConvertAll<TOutput>(Func<T, TOutput> converter)
+        public PooledListBuffer<TOutput> ConvertAll<TOutput>(Func<T, TOutput> converter)
         {
             ThrowIfVersionNotMatch();
             if (converter == null) throw new ArgumentNullException(nameof(converter));
-            var res = PooledBuffer<TOutput>.Rent();
+            var res = PooledListBuffer<TOutput>.Rent();
             for (int i = 0, count = _Buffer.Count; i < count; i++)
             {
                 res[i] = converter(_Buffer[i]);
@@ -233,10 +233,10 @@ namespace BoysheO.Buffers
             return _Buffer.TryFind(match, out result);
         }
 
-        public PooledBuffer<T> FindAll(Func<T, bool> match)
+        public PooledListBuffer<T> FindAll(Func<T, bool> match)
         {
             ThrowIfVersionNotMatch();
-            var lst = PooledBuffer<T>.Rent();
+            var lst = PooledListBuffer<T>.Rent();
             foreach (var item in _Buffer)
             {
                 if (match(item)) lst.Add(item);
