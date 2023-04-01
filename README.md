@@ -15,15 +15,11 @@ simple,high performance, useful extensions
 |BoysheO.Extensions.Unity3D.Abstractions|Use code instead|
 |BoysheO.Extensions.Unity3DCore|Use code instead|
 |BoysheO.Buffer.SimpleListPool|[![https://www.nuget.org/packages/BoysheO.Buffer.SimpleListPool](https://img.shields.io/nuget/v/BoysheO.Buffer.SimpleListPool.svg)](https://www.nuget.org/packages/BoysheO.Buffer.SimpleListPool)
+|BoysheO.Buffer.PooledBuff|[![https://www.nuget.org/packages/BoysheO.Buffers.PooledBuffer](https://img.shields.io/nuget/v/BoysheO.Buffers.PooledBuffer.svg)](https://www.nuget.org/packages/BoysheO.Buffers.PooledBuffer)
 
 Others not include in the list is in coding and do not suggest to use.
 
-## 设计目标
+## 设计目标 DesignTarget
 
-以上扩展库将通过Nuget进行共享，并始终保证它可以工作在兼容Unity3d与asp.net core中。在此基础上，会尽量提升性能表现。
-
-没有在上面列出但是在本储存库中的工程，将始终保证其源码可在Unity3D或asp.net core中编译使用。在此基础上，会尽量按源码复用的原则兼容Unity3D或asp.net core.
-
-编程风格跟随asp .net core
-
-922780612
+以上扩展库为Unity3d与asp.net core中使用设计，并且在易用性和性能表现中取得最佳平衡。  
+群922780612
