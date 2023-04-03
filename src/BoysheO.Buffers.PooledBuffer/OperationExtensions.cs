@@ -120,5 +120,16 @@ namespace BoysheO.Buffers.PooledBuffer.Linq
             source.Dispose();
             return buff;
         }
+
+        public static int PooledSum<T>(this PooledListBuffer<T> buffer, Func<T, int> selector)
+        {
+            int sum = 0;
+            for (int i = 0, count = buffer.Count; i < count; i++)
+            {
+                sum += selector(buffer[i]);
+            }
+
+            return sum;
+        }
     }
 }
