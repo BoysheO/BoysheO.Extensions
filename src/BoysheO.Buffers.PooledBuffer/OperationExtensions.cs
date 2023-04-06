@@ -70,6 +70,7 @@ namespace BoysheO.Buffers.PooledBuffer.Linq
 
         public static PooledListBuffer<PooledListBuffer<T>> PooledChunk<T>(this PooledListBuffer<T> source, int size)
         {
+            if (size <= 0) throw new ArgumentOutOfRangeException(nameof(size));
             var buff = PooledListBuffer<PooledListBuffer<T>>.Rent();
             var count = source.Count;
             for (int i = 0; i < count; i += size)
