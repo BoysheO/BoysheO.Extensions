@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
+using BoysheO.Toolkit;
 using BoysheO.Util;
 using Extensions;
 
@@ -700,5 +701,7 @@ namespace BoysheO.Extensions
         //         ArrayPoolUtil.Add(pooledResult, pooledResultCount, (lp, str.Length - lp), out pooledResult);
         //     return pooledResultCount;
         // }
+
+        public static PathValue AsPath(this string path) => new PathValue(path);
     }
 }
