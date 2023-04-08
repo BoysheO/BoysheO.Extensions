@@ -68,6 +68,23 @@ namespace BoysheO.Buffers.PooledBuffer.Linq
             return buf;
         }
 
+        public static PooledListBuffer<PooledListBuffer<T>> PooledChunk<T>(this PooledListBuffer<T> source, int size)
+        {
+            if (size <= 0) throw new ArgumentOutOfRangeException(nameof(size));
+            var buff = PooledListBuffer<PooledListBuffer<T>>.Rent();
+            var count = source.Count;
+            for (int i = 0; i < count; i += size)
+            {
+                var subBuff = PooledListBuffer<T>.Rent();
+                var destination = subBuff.GetSpanAdding(size);
+                source.Span.Slice(i, size).CopyTo(destination);
+                buff.Add(subBuff);
+            }
+
+            source.Dispose();
+            return buff;
+        }
+        
         public static PooledListBuffer<T> ToPooledListBuffer<T>(this IEnumerable<T> source)
         {
             var buff = PooledListBuffer<T>.Rent();
@@ -119,6 +136,17 @@ namespace BoysheO.Buffers.PooledBuffer.Linq
 
             source.Dispose();
             return buff;
+        }
+
+        public static int PooledSum<T>(this PooledListBuffer<T> buffer, Func<T, int> selector)
+        {
+            int sum = 0;
+            for (int i = 0, count = buffer.Count; i < count; i++)
+            {
+                sum += selector(buffer[i]);
+            }
+
+            return sum;
         }
     }
 }

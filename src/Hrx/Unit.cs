@@ -5,5 +5,6 @@
     /// </summary>
     public enum Unit : byte
     {
+        Default = default
     }
 }
