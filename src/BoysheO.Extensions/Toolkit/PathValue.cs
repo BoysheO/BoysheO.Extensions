@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace BoysheO.Toolkit
@@ -11,7 +13,7 @@ namespace BoysheO.Toolkit
 
         public PathValue(string value)
         {
-            Value = value;
+            Value = value ?? throw new ArgumentNullException(nameof(value));
         }
 
         /// <summary>
@@ -33,9 +35,10 @@ namespace BoysheO.Toolkit
         /// <summary>
         /// Same as Path.GetDirectoryName
         /// </summary>
-        public PathValue GetDirectoryName()
+        public PathValue? GetDirectoryName()
         {
-            return Path.GetDirectoryName(Value);
+            var value = Path.GetDirectoryName(Value);
+            return value == null ? (PathValue?) null : Path.GetDirectoryName(Value);
         }
 
         /// <summary>
