@@ -18,6 +18,7 @@ namespace BoysheO.Toolkit
 
         /// <summary>
         /// Same as Path.Combine
+        /// ex. "a/b" + "c.txt" -> "a/b/c.txt"
         /// </summary>
         public PathValue Combine(PathValue value)
         {
@@ -26,6 +27,7 @@ namespace BoysheO.Toolkit
 
         /// <summary>
         /// Same as Path.GetFileName
+        /// ex. "a/b/c.txt" -> "c.txt"
         /// </summary>
         public string GetFileName()
         {
@@ -34,6 +36,7 @@ namespace BoysheO.Toolkit
 
         /// <summary>
         /// Same as Path.GetDirectoryName
+        /// ex. "a/b/c.txt" -> "a/b"
         /// </summary>
         public PathValue? GetDirectoryName()
         {
@@ -43,6 +46,7 @@ namespace BoysheO.Toolkit
 
         /// <summary>
         /// Same as Path.GetFileNameWithoutExtension
+        /// ex. "a.txt" -> "a"
         /// </summary>
         public string GetFileNameWithoutExt()
         {
@@ -51,6 +55,7 @@ namespace BoysheO.Toolkit
 
         /// <summary>
         /// Same as Path.GetExtension
+        /// ex. "a.txt" -> ".txt"
         /// </summary>
         /// <returns></returns>
         public string GetExtension()
