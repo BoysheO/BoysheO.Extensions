@@ -4,7 +4,10 @@ using System.Collections.Generic;
 namespace BoysheO.Buffers.PooledBuffer.Linq
 {
     /// <summary>
-    /// Every operation will dispose the argument witch is PooledBuff.
+    /// Every operation will dispose the source PooledBuff and rent another PooledBuff to return
+    /// Rules:
+    ///  1. don't use the source PooledBuff after operation.
+    ///  2. every customer operation should dispose the source PooledBuff and return another PooledBuff.
     /// It's faster and lowGc 
     /// </summary>
     public static class OperationExtensions
