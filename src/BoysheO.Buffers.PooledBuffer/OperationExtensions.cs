@@ -15,11 +15,17 @@ namespace BoysheO.Buffers.PooledBuffer.Linq
         public static PooledListBuffer<TTar> PooledSelect<TSrc, TTar>(this PooledListBuffer<TSrc> source,
             Func<TSrc, TTar> selector)
         {
+            return PooledSelect(source, selector, (state, src) => state(src));
+        }
+
+        public static PooledListBuffer<TTar> PooledSelect<TSrc, TTar, TState>(this PooledListBuffer<TSrc> source,
+            TState state,
+            Func<TState, TSrc, TTar> selector)
+        {
             var buff = PooledListBuffer<TTar>.Rent();
-            for (int index = 0, count = source.Count; index < count; index++)
+            foreach (var src in source.Span)
             {
-                var src = source[index];
-                var tar = selector(src);
+                var tar = selector(state, src);
                 buff.Add(tar);
             }
 
@@ -50,12 +56,16 @@ namespace BoysheO.Buffers.PooledBuffer.Linq
 
         public static PooledListBuffer<T> PooledWhere<T>(this PooledListBuffer<T> source, Func<T, bool> filter)
         {
+            return PooledWhere(source, filter, (state, src) => state(src));
+        }
+
+        public static PooledListBuffer<T> PooledWhere<T, TState>(this PooledListBuffer<T> source, TState state,
+            Func<TState, T, bool> filter)
+        {
             var buff = PooledListBuffer<T>.Rent();
-            var span = source.Span;
-            for (int index = 0, count = source.Count; index < count; index++)
+            foreach (var x1 in source.Span)
             {
-                var src = span[index];
-                if (filter(src)) buff.Add(src);
+                if (filter(state, x1)) buff.Add(x1);
             }
 
             source.Dispose();
@@ -132,7 +142,7 @@ namespace BoysheO.Buffers.PooledBuffer.Linq
             Func<TS, TV> valueSelector)
         {
             var buff = PooledDictionaryBuffer<TK, TV>.Rent();
-            foreach (var x1 in source)
+            foreach (var x1 in source.Span)
             {
                 buff.Add(keySelector(x1), valueSelector(x1));
             }
