@@ -84,7 +84,7 @@ namespace BoysheO.Buffers.PooledBuffer.Linq
             source.Dispose();
             return buff;
         }
-        
+
         public static PooledListBuffer<T> ToPooledListBuffer<T>(this IEnumerable<T> source)
         {
             var buff = PooledListBuffer<T>.Rent();
@@ -147,6 +147,22 @@ namespace BoysheO.Buffers.PooledBuffer.Linq
             }
 
             return sum;
+        }
+
+        public static T PooledFirst<T>(this PooledListBuffer<T> buffer)
+        {
+            if (buffer.Count == 0) throw new Exception("PooledBuffer is empty");
+            var ele = buffer[0];
+            buffer.Dispose();
+            return ele;
+        }
+
+        public static T PooledFirstOrDefault<T>(this PooledListBuffer<T> buffer)
+        {
+            if (buffer.Count == 0) return default(T);
+            var ele = buffer[0];
+            buffer.Dispose();
+            return ele;
         }
     }
 }
