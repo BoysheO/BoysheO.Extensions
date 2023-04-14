@@ -54,6 +54,57 @@ namespace BoysheO.Buffers
         }
 
         /// <summary>
+        /// remove duplicates by loop.element order is not changed.
+        /// O(n*n)
+        /// </summary>
+        public void RemoveDuplicates()
+        {
+            RemoveDuplicates(EqualityComparer<T>.Default);
+        }
+
+        /// <summary>
+        /// remove duplicates by loop.element order is not changed.
+        /// O(n*n)
+        /// </summary>
+        public void RemoveDuplicates(Func<T, T, bool> comparer)
+        {
+            ThrowIfVersionNotMatch();
+            var lst = _Buffer;
+            for (int i = 0; i < lst.Count; i++)
+            {
+                for (int j = i + 1; j < lst.Count; j++)
+                {
+                    if (comparer(lst[i], lst[j]))
+                    {
+                        lst.RemoveAt(j);
+                        j--;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// remove duplicates by loop.element order is not changed.
+        /// O(n*n)
+        /// </summary>
+        public void RemoveDuplicates(IEqualityComparer<T> comparer)
+        {
+            ThrowIfVersionNotMatch();
+            var lst = _Buffer;
+            for (int i = 0; i < lst.Count; i++)
+            {
+                for (int j = i + 1; j < lst.Count; j++)
+                {
+                    if (comparer.Equals(lst[i], lst[j]))
+                    {
+                        lst.RemoveAt(j);
+                        j--;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// Adds the elements of the given collection to the end of this list. If
         /// required, the capacity of the list is increased to twice the previous
         /// capacity or the new size, whichever is larger.
@@ -215,7 +266,7 @@ namespace BoysheO.Buffers
         }
 
         /// <summary>Copies this list to the given span.</summary>
-        public void CopyTo(System.Span<T> span)
+        public void CopyTo(Span<T> span)
         {
             ThrowIfVersionNotMatch();
             _Buffer.CopyTo(span);
