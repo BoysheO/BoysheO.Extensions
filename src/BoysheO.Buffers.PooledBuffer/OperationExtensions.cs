@@ -15,7 +15,15 @@ namespace BoysheO.Buffers.PooledBuffer.Linq
         public static PooledListBuffer<TTar> PooledSelect<TSrc, TTar>(this PooledListBuffer<TSrc> source,
             Func<TSrc, TTar> selector)
         {
-            return PooledSelect(source, selector, (state, src) => state(src));
+            var buff = PooledListBuffer<TTar>.Rent();
+            foreach (var src in source.Span)
+            {
+                var tar = selector(src);
+                buff.Add(tar);
+            }
+
+            source.Dispose();
+            return buff;
         }
 
         public static PooledListBuffer<TTar> PooledSelect<TSrc, TTar, TState>(this PooledListBuffer<TSrc> source,
@@ -56,7 +64,14 @@ namespace BoysheO.Buffers.PooledBuffer.Linq
 
         public static PooledListBuffer<T> PooledWhere<T>(this PooledListBuffer<T> source, Func<T, bool> filter)
         {
-            return PooledWhere(source, filter, (state, src) => state(src));
+            var buff = PooledListBuffer<T>.Rent();
+            foreach (var x1 in source.Span)
+            {
+                if (filter(x1)) buff.Add(x1);
+            }
+
+            source.Dispose();
+            return buff;
         }
 
         public static PooledListBuffer<T> PooledWhere<T, TState>(this PooledListBuffer<T> source, TState state,
