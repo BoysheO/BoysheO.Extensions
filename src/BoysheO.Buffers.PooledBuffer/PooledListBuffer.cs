@@ -600,7 +600,7 @@ namespace BoysheO.Buffers
             _Buffer.Insert(index, item);
         }
 
-        void IList<T>.RemoveAt(int index)
+        public void RemoveAt(int index)
         {
             ThrowIfVersionNotMatch();
             ((IList<T>)_Buffer).RemoveAt(index);
