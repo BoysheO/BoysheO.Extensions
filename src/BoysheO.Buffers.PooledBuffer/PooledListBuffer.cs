@@ -475,7 +475,7 @@ namespace BoysheO.Buffers
         public IEnumerator<T> GetEnumerator()
         {
             ThrowIfVersionNotMatch();
-            return _Buffer.GetEnumerator();
+            return ((IEnumerable<T>)_Buffer).GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
