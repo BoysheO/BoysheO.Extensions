@@ -622,6 +622,7 @@ namespace BoysheO.Extensions
         /// Same as string.Format
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [Obsolete("use string-interpolation is better")]
         public static string Format(this string str, object a)
         {
             return string.Format(str, a);
@@ -631,6 +632,7 @@ namespace BoysheO.Extensions
         /// Same as string.Format
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [Obsolete("use string-interpolation is better")]
         public static string Format(this string str, object a, object b)
         {
             return string.Format(str, a, b);
@@ -640,6 +642,7 @@ namespace BoysheO.Extensions
         /// Same as string.Format
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [Obsolete("use string-interpolation is better")]
         public static string Format(this string str, object a, object b, object c)
         {
             return string.Format(str, a, b, c);
@@ -649,6 +652,7 @@ namespace BoysheO.Extensions
         /// Same as string.Format
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [Obsolete("use string-interpolation or native string.Format is better")]
         public static string Format(this string str, params object[] args)
         {
             return string.Format(str, args);
