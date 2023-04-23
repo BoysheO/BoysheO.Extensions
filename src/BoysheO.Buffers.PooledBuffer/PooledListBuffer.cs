@@ -470,9 +470,15 @@ namespace BoysheO.Buffers
             return _Buffer.ToArray();
         }
 
+        public PooledList<T>.Enumerator GetEnumerator()
+        {
+            ThrowIfVersionNotMatch();
+            return _Buffer.GetEnumerator();
+        }
+
         #region interface
 
-        public IEnumerator<T> GetEnumerator()
+        IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {
             ThrowIfVersionNotMatch();
             return ((IEnumerable<T>)_Buffer).GetEnumerator();

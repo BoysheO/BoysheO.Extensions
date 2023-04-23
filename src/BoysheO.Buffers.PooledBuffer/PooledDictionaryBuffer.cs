@@ -45,6 +45,12 @@ namespace BoysheO.Buffers
                 throw new ObjectDisposedException("this buffer is disposed");
         }
 
+        public PooledDictionary<TK, TV>.Enumerator GetEnumerator()
+        {
+            ThrowIfVersionNotMatch();
+            return _Buffer.GetEnumerator();
+        }
+        
         bool IDictionary.Contains(object key)
         {
             ThrowIfVersionNotMatch();
@@ -72,7 +78,7 @@ namespace BoysheO.Buffers
             }
         }
 
-        public IEnumerator<KeyValuePair<TK, TV>> GetEnumerator()
+        IEnumerator<KeyValuePair<TK, TV>> IEnumerable<KeyValuePair<TK,TV>>.GetEnumerator()
         {
             ThrowIfVersionNotMatch();
             return _ReadOnlyBuffer.GetEnumerator();
