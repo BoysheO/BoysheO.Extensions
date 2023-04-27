@@ -32,7 +32,7 @@ namespace BoysheO.Buffers
         {
             return PooledListBufferPool<T>.Share.Rent();
         }
-
+        
         private void ThrowIfVersionNotMatch()
         {
             if (_Buffer == null || Version != ListProxy.Version)

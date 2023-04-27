@@ -10,7 +10,7 @@ namespace BoysheO.Buffers.PooledBuffer.Linq
     ///  2. every customer operation should dispose the source PooledBuff and return another PooledBuff.
     /// It's faster and lowGc 
     /// </summary>
-    public static class OperationExtensions
+    public static partial class OperationExtensions
     {
         public static PooledListBuffer<TTar> PooledSelect<TSrc, TTar>(this PooledListBuffer<TSrc> source,
             Func<TSrc, TTar> selector)
@@ -19,6 +19,22 @@ namespace BoysheO.Buffers.PooledBuffer.Linq
             foreach (var src in source.Span)
             {
                 var tar = selector(src);
+                buff.Add(tar);
+            }
+
+            source.Dispose();
+            return buff;
+        }
+
+        public static PooledListBuffer<TTar> PooledSelect<TSrc, TTar>(this PooledListBuffer<TSrc> source,
+            Func<int, TSrc, TTar> selector)
+        {
+            var buff = PooledListBuffer<TTar>.Rent();
+            var len = source.Span.Length;
+            for (var index = 0; index < len; index++)
+            {
+                var src = source.Span[index];
+                var tar = selector(index, src);
                 buff.Add(tar);
             }
 
@@ -41,26 +57,22 @@ namespace BoysheO.Buffers.PooledBuffer.Linq
             return buff;
         }
 
-        // public static PooledBuffer<TDestination> SelectMany<TElement, TDestination>(
-        //     this PooledBuffer<PooledBuffer<TElement>> source, Func<TElement, TDestination> selector)
-        // {
-        //     var buff = PooledBuffer<TDestination>.Rent();
-        //     for (int index = 0, count = buff.Count; index < count; index++)
-        //     {
-        //         var enumerableSrc = source[index];
-        //         var itor = enumerableSrc.GetEnumerator();
-        //         while (itor.MoveNext())
-        //         {
-        //             buff.Add(selector(itor.Current));
-        //         }
-        //
-        //         itor.Dispose();
-        //         enumerableSrc.Dispose();
-        //     }
-        //
-        //     source.Dispose();
-        //     return buff;
-        // }
+        public static PooledListBuffer<TTar> PooledSelect<TSrc, TTar, TState>(this PooledListBuffer<TSrc> source,
+            TState state,
+            Func<int, TState, TSrc, TTar> selector)
+        {
+            var buff = PooledListBuffer<TTar>.Rent();
+            var len = source.Span.Length;
+            for (var index = 0; index < len; index++)
+            {
+                var src = source.Span[index];
+                var tar = selector(index, state, src);
+                buff.Add(tar);
+            }
+
+            source.Dispose();
+            return buff;
+        }
 
         public static PooledListBuffer<T> PooledWhere<T>(this PooledListBuffer<T> source, Func<T, bool> filter)
         {
@@ -113,18 +125,20 @@ namespace BoysheO.Buffers.PooledBuffer.Linq
             return buff;
         }
 
-        public static PooledListBuffer<T> ToPooledListBuffer<T>(this IEnumerable<T> source)
+        public static PooledListBuffer<T> PooledSelectMany<T>(this PooledListBuffer<PooledListBuffer<T>> source)
         {
             var buff = PooledListBuffer<T>.Rent();
-            foreach (var x1 in source)
+            foreach (var x1 in source.Span)
             {
-                buff.Add(x1);
+                buff.AddRange(x1.Span);
+                x1.Dispose();
             }
 
+            source.Dispose();
             return buff;
         }
 
-        public static PooledListBuffer<KeyValuePair<TK, TV>> ToPooledListBuffer<TK, TV>(
+        public static PooledListBuffer<KeyValuePair<TK, TV>> PooledToPooledListBuffer<TK, TV>(
             this PooledDictionaryBuffer<TK, TV> source)
         {
             var buff = PooledListBuffer<KeyValuePair<TK, TV>>.Rent();
@@ -137,21 +151,23 @@ namespace BoysheO.Buffers.PooledBuffer.Linq
             return buff;
         }
 
-        public static PooledDictionaryBuffer<TK, TV> ToPooledDictionaryBuffer<TS, TK, TV>(
-            this IEnumerable<TS> source,
-            Func<TS, TK> keySelector,
-            Func<TS, TV> valueSelector)
+        public static PooledListBuffer<KeyValuePair<TK, TV>> PooledToPooledListBuffer<TK, TV>(
+            this PooledSortedListBuffer<TK, TV> source)
         {
-            var buff = PooledDictionaryBuffer<TK, TV>.Rent();
+            var buff = PooledListBuffer<KeyValuePair<TK, TV>>.Rent();
+            var span = buff.GetSpanAdding(source.Count);
+            int index = 0;
             foreach (var x1 in source)
             {
-                buff.Add(keySelector(x1), valueSelector(x1));
+                span[index] = x1;
+                index++;
             }
 
+            source.Dispose();
             return buff;
         }
 
-        public static PooledDictionaryBuffer<TK, TV> ToPooledDictionaryBuffer<TS, TK, TV>(
+        public static PooledDictionaryBuffer<TK, TV> PooledToPooledDictionaryBuffer<TS, TK, TV>(
             this PooledListBuffer<TS> source,
             Func<TS, TK> keySelector,
             Func<TS, TV> valueSelector)
@@ -166,31 +182,54 @@ namespace BoysheO.Buffers.PooledBuffer.Linq
             return buff;
         }
 
-        public static int PooledSum<T>(this PooledListBuffer<T> buffer, Func<T, int> selector)
+        public static PooledSortedListBuffer<TK, TV> PooledToPooledSortedListBuffer<TS, TK, TV>(
+            this PooledListBuffer<TS> source,
+            Func<TS, TK> keySelector,
+            Func<TS, TV> valueSelector,
+            IComparer<TK> keyComparer)
         {
-            int sum = 0;
-            for (int i = 0, count = buffer.Count; i < count; i++)
+            if (keySelector == null) throw new ArgumentNullException(nameof(keySelector));
+            if (valueSelector == null) throw new ArgumentNullException(nameof(valueSelector));
+            if (keyComparer == null) throw new ArgumentNullException(nameof(keyComparer));
+            var buff = PooledSortedListBuffer<TK, TV>.Rent(keyComparer);
+            foreach (var x1 in source.Span)
             {
-                sum += selector(buffer[i]);
+                buff.Add(keySelector(x1), valueSelector(x1));
             }
 
-            return sum;
+            source.Dispose();
+            return buff;
         }
 
         public static T PooledFirst<T>(this PooledListBuffer<T> buffer)
         {
-            if (buffer.Count == 0) throw new Exception("PooledBuffer is empty");
-            var ele = buffer[0];
+            var span = buffer.Span;
+            if (span.Length == 0) throw new Exception("PooledBuffer is empty");
+            var ele = span[0];
             buffer.Dispose();
             return ele;
         }
 
         public static T PooledFirstOrDefault<T>(this PooledListBuffer<T> buffer)
         {
-            if (buffer.Count == 0) return default(T);
-            var ele = buffer[0];
+            var span = buffer.Span;
+            if (span.Length == 0) return default(T);
+            var ele = span[0];
             buffer.Dispose();
             return ele;
+        }
+
+        public static int PooledSum<T>(this PooledListBuffer<T> buffer, Func<T, int> selector)
+        {
+            int sum = 0;
+            var span = buffer.Span;
+            foreach (var x in span)
+            {
+                sum += selector(x);
+            }
+
+            buffer.Dispose();
+            return sum;
         }
     }
 }
