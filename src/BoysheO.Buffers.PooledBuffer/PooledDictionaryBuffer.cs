@@ -1,34 +1,28 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Collections.Pooled;
+using BoysheO.Buffer.PooledBuffer;
 
 namespace BoysheO.Buffers
 {
     /// <summary>
     /// don't use again after disposable
     /// </summary>
-    public readonly struct PooledDictionaryBuffer<TK, TV> : IDisposable, IReadOnlyDictionary<TK, TV>, IDictionary<TK, TV>, IDictionary
+    public readonly struct PooledDictionaryBuffer<TK, TV> : IDisposable, IReadOnlyDictionary<TK, TV>,
+        IDictionary<TK, TV>, IDictionary
     {
-        internal readonly int Version;
-        internal readonly DictionaryProxy<TK, TV> ListProxy;
-        private PooledDictionary<TK, TV> _Buffer => ListProxy.Map;
+        internal readonly long Version;
+        internal readonly DictionaryProxy<TK, TV> BufferProxy;
 
-        private IReadOnlyDictionary<TK, TV> _ReadOnlyBuffer => ListProxy.Map;
-
-        private IDictionary<TK, TV> _DictionaryBuffer => ListProxy.Map;
-
-        private IDictionary _IDictionaryBuffer => ListProxy.Map;
-
-        internal PooledDictionaryBuffer(DictionaryProxy<TK, TV> listProxy)
+        internal PooledDictionaryBuffer(DictionaryProxy<TK, TV> bufferProxy)
         {
-            ListProxy = listProxy;
-            Version = listProxy.Version;
+            BufferProxy = bufferProxy;
+            Version = bufferProxy.Version;
         }
 
         public void Dispose()
         {
-            if (_Buffer != null && Version == ListProxy.Version)
+            if (BufferProxy != null && Version == BufferProxy.Version)
             {
                 PooledDictionaryBufferPool<TK, TV>.Share.Return(this);
             }
@@ -41,32 +35,32 @@ namespace BoysheO.Buffers
 
         private void ThrowIfVersionNotMatch()
         {
-            if (_Buffer == null || Version != ListProxy.Version)
+            if (BufferProxy == null || Version != BufferProxy.Version)
                 throw new ObjectDisposedException("this buffer is disposed");
         }
 
-        public PooledDictionary<TK, TV>.Enumerator GetEnumerator()
+        public DictionaryBufferEnumerator<TK, TV> GetEnumerator()
         {
             ThrowIfVersionNotMatch();
-            return _Buffer.GetEnumerator();
+            return new DictionaryBufferEnumerator<TK, TV>(BufferProxy, BufferProxy.Version);
         }
-        
+
         bool IDictionary.Contains(object key)
         {
             ThrowIfVersionNotMatch();
-            return _IDictionaryBuffer.Contains(key);
+            return ((IDictionary) BufferProxy.Buffer).Contains(key);
         }
 
         IDictionaryEnumerator IDictionary.GetEnumerator()
         {
             ThrowIfVersionNotMatch();
-            return _IDictionaryBuffer.GetEnumerator();
+            return GetEnumerator();
         }
 
         void IDictionary.Remove(object key)
         {
             ThrowIfVersionNotMatch();
-            _IDictionaryBuffer.Remove(key);
+            ((IDictionary) BufferProxy.Buffer).Remove(key);
         }
 
         bool IDictionary.IsFixedSize
@@ -74,14 +68,14 @@ namespace BoysheO.Buffers
             get
             {
                 ThrowIfVersionNotMatch();
-                return _IDictionaryBuffer.IsFixedSize;
+                return ((IDictionary) BufferProxy.Buffer).IsFixedSize;
             }
         }
 
-        IEnumerator<KeyValuePair<TK, TV>> IEnumerable<KeyValuePair<TK,TV>>.GetEnumerator()
+        IEnumerator<KeyValuePair<TK, TV>> IEnumerable<KeyValuePair<TK, TV>>.GetEnumerator()
         {
             ThrowIfVersionNotMatch();
-            return _ReadOnlyBuffer.GetEnumerator();
+            return GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -92,43 +86,43 @@ namespace BoysheO.Buffers
         public void Add(KeyValuePair<TK, TV> item)
         {
             ThrowIfVersionNotMatch();
-            _DictionaryBuffer.Add(item);
+            ((ICollection<KeyValuePair<TK, TV>>) BufferProxy.Buffer).Add(item);
         }
 
         void IDictionary.Add(object key, object value)
         {
             ThrowIfVersionNotMatch();
-            _IDictionaryBuffer.Add(key, value);
+            ((IDictionary) BufferProxy.Buffer).Add(key, value);
         }
 
         public void Clear()
         {
             ThrowIfVersionNotMatch();
-            _DictionaryBuffer.Clear();
+            (BufferProxy.Buffer).Clear();
         }
 
         public bool Contains(KeyValuePair<TK, TV> item)
         {
             ThrowIfVersionNotMatch();
-            return _DictionaryBuffer.Contains(item);
+            return ((ICollection<KeyValuePair<TK, TV>>) BufferProxy.Buffer).Contains(item);
         }
 
         public void CopyTo(KeyValuePair<TK, TV>[] array, int arrayIndex)
         {
             ThrowIfVersionNotMatch();
-            _DictionaryBuffer.CopyTo(array, arrayIndex);
+            ((IDictionary) BufferProxy.Buffer).CopyTo(array, arrayIndex);
         }
 
         public bool Remove(KeyValuePair<TK, TV> item)
         {
             ThrowIfVersionNotMatch();
-            return _DictionaryBuffer.Remove(item);
+            return ((ICollection<KeyValuePair<TK, TV>>) BufferProxy.Buffer).Remove(item);
         }
 
         void ICollection.CopyTo(Array array, int index)
         {
             ThrowIfVersionNotMatch();
-            _IDictionaryBuffer.CopyTo(array, index);
+            ((ICollection) BufferProxy.Buffer).CopyTo(array, index);
         }
 
         public int Count
@@ -136,7 +130,7 @@ namespace BoysheO.Buffers
             get
             {
                 ThrowIfVersionNotMatch();
-                return _ReadOnlyBuffer.Count;
+                return BufferProxy.Buffer.Count;
             }
         }
 
@@ -145,7 +139,7 @@ namespace BoysheO.Buffers
             get
             {
                 ThrowIfVersionNotMatch();
-                return _IDictionaryBuffer.IsSynchronized;
+                return ((IDictionary) BufferProxy.Buffer).IsSynchronized;
             }
         }
 
@@ -154,7 +148,7 @@ namespace BoysheO.Buffers
             get
             {
                 ThrowIfVersionNotMatch();
-                return _IDictionaryBuffer.SyncRoot;
+                return ((IDictionary) BufferProxy.Buffer).SyncRoot;
             }
         }
 
@@ -163,7 +157,7 @@ namespace BoysheO.Buffers
             get
             {
                 ThrowIfVersionNotMatch();
-                return _DictionaryBuffer.IsReadOnly;
+                return ((IDictionary) BufferProxy.Buffer).IsReadOnly;
             }
         }
 
@@ -172,37 +166,37 @@ namespace BoysheO.Buffers
             get
             {
                 ThrowIfVersionNotMatch();
-                return _IDictionaryBuffer[key];
+                return ((IDictionary) BufferProxy.Buffer)[key];
             }
             set
             {
                 ThrowIfVersionNotMatch();
-                _IDictionaryBuffer[key] = value;
+                ((IDictionary) BufferProxy.Buffer)[key] = value;
             }
         }
 
         public void Add(TK key, TV value)
         {
             ThrowIfVersionNotMatch();
-            _DictionaryBuffer.Add(key, value);
+            (BufferProxy.Buffer).Add(key, value);
         }
 
         public bool ContainsKey(TK key)
         {
             ThrowIfVersionNotMatch();
-            return _ReadOnlyBuffer.ContainsKey(key);
+            return (BufferProxy.Buffer).ContainsKey(key);
         }
 
         public bool Remove(TK key)
         {
             ThrowIfVersionNotMatch();
-            return _DictionaryBuffer.Remove(key);
+            return (BufferProxy.Buffer).Remove(key);
         }
 
         public bool TryGetValue(TK key, out TV value)
         {
             ThrowIfVersionNotMatch();
-            return _ReadOnlyBuffer.TryGetValue(key, out value);
+            return (BufferProxy.Buffer).TryGetValue(key, out value);
         }
 
         public TV this[TK key]
@@ -210,12 +204,12 @@ namespace BoysheO.Buffers
             get
             {
                 ThrowIfVersionNotMatch();
-                return _ReadOnlyBuffer[key];
+                return (BufferProxy.Buffer)[key];
             }
             set
             {
                 ThrowIfVersionNotMatch();
-                _DictionaryBuffer[key] = value;
+                (BufferProxy.Buffer)[key] = value;
             }
         }
 
@@ -224,7 +218,7 @@ namespace BoysheO.Buffers
             get
             {
                 ThrowIfVersionNotMatch();
-                return _ReadOnlyBuffer.Keys;
+                return (BufferProxy.Buffer).Keys;
             }
         }
 
@@ -233,7 +227,7 @@ namespace BoysheO.Buffers
             get
             {
                 ThrowIfVersionNotMatch();
-                return _IDictionaryBuffer.Values;
+                return BufferProxy.Buffer.Values;
             }
         }
 
@@ -242,7 +236,7 @@ namespace BoysheO.Buffers
             get
             {
                 ThrowIfVersionNotMatch();
-                return _IDictionaryBuffer.Keys;
+                return BufferProxy.Buffer.Keys;
             }
         }
 
@@ -251,7 +245,7 @@ namespace BoysheO.Buffers
             get
             {
                 ThrowIfVersionNotMatch();
-                return _DictionaryBuffer.Values;
+                return BufferProxy.Buffer.Values;
             }
         }
 
@@ -260,7 +254,7 @@ namespace BoysheO.Buffers
             get
             {
                 ThrowIfVersionNotMatch();
-                return _DictionaryBuffer.Keys;
+                return BufferProxy.Buffer.Keys;
             }
         }
 
@@ -269,7 +263,7 @@ namespace BoysheO.Buffers
             get
             {
                 ThrowIfVersionNotMatch();
-                return _ReadOnlyBuffer.Values;
+                return (BufferProxy.Buffer).Values;
             }
         }
     }

@@ -29,9 +29,10 @@ namespace BoysheO.Buffers.PooledBuffer.Linq
         public static PooledSortedListBuffer<TK, TV> ToPooledSortedListBuffer<TS, TK, TV>(
             this IEnumerable<TS> source,
             Func<TS, TK> keySelector,
-            Func<TS, TV> valueSelector)
+            Func<TS, TV> valueSelector,
+            IComparer<TK> comparer)
         {
-            var buff = PooledSortedListBuffer<TK, TV>.Rent();
+            var buff = PooledSortedListBuffer<TK, TV>.Rent(comparer);
             foreach (var x1 in source)
             {
                 buff.Add(keySelector(x1), valueSelector(x1));

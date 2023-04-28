@@ -40,8 +40,8 @@ namespace BoysheO.Buffers
 
         public void Return(PooledListBuffer<T> list)
         {
-            if (list.Version != list.ListProxy.Version) return;
-            Interlocked.Increment(ref list.ListProxy.Version);
+            if (list.Version != list.BufferProxy.Version) return;
+            Interlocked.Increment(ref list.BufferProxy.Version);
             // ReSharper disable once InconsistentlySynchronizedField
             if (!_reference.TryGetTarget(out var _pool))
             {
@@ -55,9 +55,9 @@ namespace BoysheO.Buffers
                 }
             }
 
-            list.ListProxy.List.Clear();
-            list.ListProxy.List.Dispose();
-            _pool.Add(list.ListProxy);
+            list.BufferProxy.Buffer.Clear();
+            list.BufferProxy.Buffer.Dispose();
+            _pool.Add(list.BufferProxy);
         }
     }
 }

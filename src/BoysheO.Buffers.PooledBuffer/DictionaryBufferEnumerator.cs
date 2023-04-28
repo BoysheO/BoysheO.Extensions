@@ -6,17 +6,17 @@ using Collections.Pooled;
 
 namespace BoysheO.Buffer.PooledBuffer
 {
-    public struct ListEnumerator<T> : IEnumerator<T>
+    public struct DictionaryBufferEnumerator<TK, TV> : IEnumerator<KeyValuePair<TK, TV>>, IDictionaryEnumerator
     {
-        private readonly ListProxy<T> list;
+        private readonly DictionaryProxy<TK, TV> list;
         private readonly long version;
-        private PooledList<T>.Enumerator _enumerator;
+        private PooledDictionary<TK, TV>.Enumerator _enumerator;
 
-        internal ListEnumerator(ListProxy<T> list, long version)
+        internal DictionaryBufferEnumerator(DictionaryProxy<TK, TV> list, long version)
         {
             this.list = list;
             this.version = version;
-            _enumerator = list.List.GetEnumerator();
+            _enumerator = list.Buffer.GetEnumerator();
         }
 
         private void ThrowIfVersionNotMatch()
@@ -34,10 +34,10 @@ namespace BoysheO.Buffer.PooledBuffer
         void IEnumerator.Reset()
         {
             ThrowIfVersionNotMatch();
-            ((IEnumerator)_enumerator).Reset();
+            ((IEnumerator) _enumerator).Reset();
         }
 
-        public T Current
+        public KeyValuePair<TK, TV> Current
         {
             get
             {
@@ -52,5 +52,11 @@ namespace BoysheO.Buffer.PooledBuffer
         {
             _enumerator.Dispose();
         }
+
+        DictionaryEntry IDictionaryEnumerator.Entry =>
+            new DictionaryEntry(_enumerator.Current.Key, _enumerator.Current.Value);
+
+        object IDictionaryEnumerator.Key => _enumerator.Current.Key;
+        object IDictionaryEnumerator.Value => _enumerator.Current.Value;
     }
 }

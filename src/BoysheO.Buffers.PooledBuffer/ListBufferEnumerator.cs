@@ -6,17 +6,17 @@ using Collections.Pooled;
 
 namespace BoysheO.Buffer.PooledBuffer
 {
-    public struct ListEnumerator<TK, TV> : IEnumerator<KeyValuePair<TK, TV>>
+    public struct ListBufferEnumerator<T> : IEnumerator<T>
     {
-        private readonly DictionaryProxy<TK, TV> list;
+        private readonly ListProxy<T> list;
         private readonly long version;
-        private PooledDictionary<TK, TV>.Enumerator _enumerator;
+        private PooledList<T>.Enumerator _enumerator;
 
-        internal ListEnumerator(DictionaryProxy<TK, TV> list, long version)
+        internal ListBufferEnumerator(ListProxy<T> list, long version)
         {
             this.list = list;
             this.version = version;
-            _enumerator = list.Map.GetEnumerator();
+            _enumerator = list.Buffer.GetEnumerator();
         }
 
         private void ThrowIfVersionNotMatch()
@@ -37,7 +37,7 @@ namespace BoysheO.Buffer.PooledBuffer
             ((IEnumerator)_enumerator).Reset();
         }
 
-        public KeyValuePair<TK, TV> Current
+        public T Current
         {
             get
             {
