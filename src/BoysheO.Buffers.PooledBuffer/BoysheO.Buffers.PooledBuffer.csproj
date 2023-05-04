@@ -9,6 +9,7 @@
     <RepositoryUrl>https://github.com/BoysheO/BoysheO.Extensions</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageVersion>2.0.1</PackageVersion>
+    <LangVersion>8</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
