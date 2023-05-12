@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using BoysheO.Buffer.PooledBuffer;
+using Collections.Pooled;
 
 namespace BoysheO.Buffers
 {
@@ -213,10 +214,11 @@ namespace BoysheO.Buffers
         /// Sorts the elements in this list.  Uses the default comparer and
         /// Array.Sort.
         /// </summary>
-        public void Sort()
+        public PooledListBuffer<T> Sort()
         {
             ThrowIfVersionNotMatch();
             BufferProxy.Buffer.Sort();
+            return this;
         }
 
         /// <summary>
@@ -224,10 +226,11 @@ namespace BoysheO.Buffers
         /// provided comparer.
         /// </summary>
         /// <param name="comparer"></param>
-        public void Sort(IComparer<T> comparer)
+        public PooledListBuffer<T> Sort(IComparer<T> comparer)
         {
             ThrowIfVersionNotMatch();
             BufferProxy.Buffer.Sort(comparer);
+            return this;
         }
 
         /// <summary>
@@ -239,16 +242,18 @@ namespace BoysheO.Buffers
         /// 
         /// This method uses the Array.Sort method to sort the elements.
         /// </summary>
-        public void Sort(int index, int count, IComparer<T> comparer)
+        public PooledListBuffer<T> Sort(int index, int count, IComparer<T> comparer)
         {
             ThrowIfVersionNotMatch();
             BufferProxy.Buffer.Sort(index, count, comparer);
+            return this;
         }
 
-        public void Sort(Func<T, T, int> comparison)
+        public PooledListBuffer<T> Sort(Func<T, T, int> comparison)
         {
             ThrowIfVersionNotMatch();
             BufferProxy.Buffer.Sort(comparison);
+            return this;
         }
 
         public PooledListBuffer<TOutput> ConvertAll<TOutput>(Func<T, TOutput> converter)

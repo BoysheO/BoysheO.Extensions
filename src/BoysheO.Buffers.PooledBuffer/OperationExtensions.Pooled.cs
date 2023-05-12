@@ -231,5 +231,23 @@ namespace BoysheO.Buffers.PooledBuffer.Linq
             buffer.Dispose();
             return sum;
         }
+        
+        public static T PooledLastOrDefault<T>(this PooledListBuffer<T> buffer)
+        {
+            var span = buffer.Span;
+            if (span.Length == 0) return default(T);
+            var ele = span[span.Length - 1];
+            buffer.Dispose();
+            return ele;
+        }
+        
+        public static T PooledLast<T>(this PooledListBuffer<T> buffer)
+        {
+            var span = buffer.Span;
+            if (span.Length == 0) throw new Exception("PooledBuffer is empty");
+            var ele = span[span.Length - 1];
+            buffer.Dispose();
+            return ele;
+        }
     }
 }
