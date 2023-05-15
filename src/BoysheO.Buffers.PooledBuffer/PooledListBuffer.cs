@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using BoysheO.Buffer.PooledBuffer;
 using Collections.Pooled;
 
@@ -32,7 +33,7 @@ namespace BoysheO.Buffers
         {
             return PooledListBufferPool<T>.Share.Rent();
         }
-        
+
         private void ThrowIfVersionNotMatch()
         {
             if (BufferProxy.Buffer == null || Version != BufferProxy.Version)
@@ -254,6 +255,66 @@ namespace BoysheO.Buffers
             ThrowIfVersionNotMatch();
             BufferProxy.Buffer.Sort(comparison);
             return this;
+        }
+
+        public bool All(Func<T, bool> predicate)
+        {
+            ThrowIfVersionNotMatch();
+            return BufferProxy.Buffer.All(predicate);
+        }
+
+        public bool Any(Func<T, bool> predicate)
+        {
+            ThrowIfVersionNotMatch();
+            return BufferProxy.Buffer.Any(predicate);
+        }
+
+        public T First()
+        {
+            ThrowIfVersionNotMatch();
+            return BufferProxy.Buffer.First();
+        }
+
+        public T First(Func<T, bool> predicate)
+        {
+            ThrowIfVersionNotMatch();
+            return BufferProxy.Buffer.First(predicate);
+        }
+
+        public T FirstOrDefault()
+        {
+            ThrowIfVersionNotMatch();
+            return BufferProxy.Buffer.FirstOrDefault();
+        }
+
+        public T FirstOrDefault(Func<T, bool> predicate)
+        {
+            ThrowIfVersionNotMatch();
+            return BufferProxy.Buffer.FirstOrDefault(predicate);
+        }
+
+        public T Last()
+        {
+            ThrowIfVersionNotMatch();
+            return BufferProxy.Buffer.Last();
+        }
+
+        public T Last(Func<T, bool> predicate)
+        {
+            ThrowIfVersionNotMatch();
+            return BufferProxy.Buffer.Last(predicate);
+        }
+
+        public T LastOrDefault()
+        {
+            ThrowIfVersionNotMatch();
+            return BufferProxy.Buffer.LastOrDefault();
+        }
+
+        public T LastOrDefault(Func<T, bool> predicate)
+        {
+            ThrowIfVersionNotMatch();
+            return BufferProxy.Buffer.LastOrDefault(predicate);
         }
 
         public PooledListBuffer<TOutput> ConvertAll<TOutput>(Func<T, TOutput> converter)
