@@ -41,58 +41,13 @@ namespace BoysheO.Buffers.PooledBuffer.Linq
             source.Dispose();
             return buff;
         }
-
-        public static PooledListBuffer<TTar> PooledSelect<TSrc, TTar, TState>(this PooledListBuffer<TSrc> source,
-            TState state,
-            Func<TState, TSrc, TTar> selector)
-        {
-            var buff = PooledListBuffer<TTar>.Rent();
-            foreach (var src in source.Span)
-            {
-                var tar = selector(state, src);
-                buff.Add(tar);
-            }
-
-            source.Dispose();
-            return buff;
-        }
-
-        public static PooledListBuffer<TTar> PooledSelect<TSrc, TTar, TState>(this PooledListBuffer<TSrc> source,
-            TState state,
-            Func<int, TState, TSrc, TTar> selector)
-        {
-            var buff = PooledListBuffer<TTar>.Rent();
-            var len = source.Span.Length;
-            for (var index = 0; index < len; index++)
-            {
-                var src = source.Span[index];
-                var tar = selector(index, state, src);
-                buff.Add(tar);
-            }
-
-            source.Dispose();
-            return buff;
-        }
-
-        public static PooledListBuffer<T> PooledWhere<T>(this PooledListBuffer<T> source, Func<T, bool> filter)
+        
+        public static PooledListBuffer<T> PooledWhere<T>(this PooledListBuffer<T> source, Func<T, bool> predicate)
         {
             var buff = PooledListBuffer<T>.Rent();
             foreach (var x1 in source.Span)
             {
-                if (filter(x1)) buff.Add(x1);
-            }
-
-            source.Dispose();
-            return buff;
-        }
-
-        public static PooledListBuffer<T> PooledWhere<T, TState>(this PooledListBuffer<T> source, TState state,
-            Func<TState, T, bool> filter)
-        {
-            var buff = PooledListBuffer<T>.Rent();
-            foreach (var x1 in source.Span)
-            {
-                if (filter(state, x1)) buff.Add(x1);
+                if (predicate(x1)) buff.Add(x1);
             }
 
             source.Dispose();

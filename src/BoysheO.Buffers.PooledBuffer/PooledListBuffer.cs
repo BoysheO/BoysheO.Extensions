@@ -110,36 +110,40 @@ namespace BoysheO.Buffers
         /// required, the capacity of the list is increased to twice the previous
         /// capacity or the new size, whichever is larger.
         /// </summary>
-        public void AddRange(IEnumerable<T> collection)
+        public PooledListBuffer<T> AddRange(IEnumerable<T> collection)
         {
             ThrowIfVersionNotMatch();
             BufferProxy.Buffer.AddRange(collection);
+            return this;
         }
-
+        
         /// <summary>
         /// Adds the elements of the given array to the end of this list. If
         /// required, the capacity of the list is increased to twice the previous
         /// capacity or the new size, whichever is larger.
         /// </summary>
-        public void AddRange(T[] array)
+        public PooledListBuffer<T> AddRange(T[] array)
         {
             ThrowIfVersionNotMatch();
             BufferProxy.Buffer.AddRange(array);
+            return this;
         }
 
         /// <summary>
         /// design for ArrayPool&lt;T&gt;
         /// </summary>
-        public void AddRange(T[] ary, int count)
+        public PooledListBuffer<T> AddRange(T[] ary, int count)
         {
             ThrowIfVersionNotMatch();
             BufferProxy.Buffer.AddRange(ary.AsSpan(0, count));
+            return this;
         }
 
-        public void AddRange(ReadOnlySpan<T> span)
+        public PooledListBuffer<T> AddRange(ReadOnlySpan<T> span)
         {
             ThrowIfVersionNotMatch();
             BufferProxy.Buffer.AddRange(span);
+            return this;
         }
 
         /// <summary>
