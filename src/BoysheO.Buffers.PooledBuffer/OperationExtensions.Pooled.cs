@@ -10,7 +10,7 @@ namespace BoysheO.Buffers.PooledBuffer.Linq
     ///  2. every customer operation should dispose the source PooledBuff and return another PooledBuff.
     /// It's faster and lowGc 
     /// </summary>
-    public static partial class OperationExtensions
+    public static class OperationExtensions
     {
         public static PooledListBuffer<TTar> PooledSelect<TSrc, TTar>(this PooledListBuffer<TSrc> source,
             Func<TSrc, TTar> selector)
