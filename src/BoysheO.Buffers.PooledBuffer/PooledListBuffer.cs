@@ -105,6 +105,13 @@ namespace BoysheO.Buffers
             }
         }
 
+        public void RemoveLast()
+        {
+            ThrowIfVersionNotMatch();
+            var lst = BufferProxy.Buffer;
+            lst.RemoveAt(lst.Count - 1);
+        }
+
         /// <summary>
         /// Adds the elements of the given collection to the end of this list. If
         /// required, the capacity of the list is increased to twice the previous
