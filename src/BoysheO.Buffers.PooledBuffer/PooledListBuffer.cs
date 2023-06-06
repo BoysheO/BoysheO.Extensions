@@ -21,6 +21,20 @@ namespace BoysheO.Buffers
             BufferProxy = bufferProxy;
         }
 
+        /// <summary>
+        /// NoBoxing IReadOnlyList(but call IEnumerable.GetEnumerator() will boxing the internal enumerator)
+        /// *DON'T keep the instance returned,using the instance after buff disposed cause undefined behavior* 
+        /// </summary>
+        public IReadOnlyList<T> AsUnsafeReadOnlyList()
+        {
+            return BufferProxy.Buffer;
+        }
+        
+        public PooledList<T> GetInternalBuffUnsafe()
+        {
+            return BufferProxy.Buffer;
+        }
+
         public void Dispose()
         {
             if (BufferProxy.Buffer != null && Version == BufferProxy.Version)
@@ -123,7 +137,7 @@ namespace BoysheO.Buffers
             BufferProxy.Buffer.AddRange(collection);
             return this;
         }
-        
+
         /// <summary>
         /// Adds the elements of the given array to the end of this list. If
         /// required, the capacity of the list is increased to twice the previous
