@@ -43,6 +43,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BoysheO.Buffer.SimpleListPo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoysheO.Buffers.PooledBuffer", "BoysheO.Buffers.PooledBuffer\BoysheO.Buffers.PooledBuffer.csproj", "{B282233A-9483-48D7-A924-119D9C6A685F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObservableCollections", "ObservableCollections\ObservableCollections.csproj", "{A19A4ECC-6F00-42D6-800E-FBBC76DA9422}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -125,6 +127,10 @@ Global
 		{B282233A-9483-48D7-A924-119D9C6A685F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B282233A-9483-48D7-A924-119D9C6A685F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B282233A-9483-48D7-A924-119D9C6A685F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A19A4ECC-6F00-42D6-800E-FBBC76DA9422}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A19A4ECC-6F00-42D6-800E-FBBC76DA9422}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A19A4ECC-6F00-42D6-800E-FBBC76DA9422}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A19A4ECC-6F00-42D6-800E-FBBC76DA9422}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
