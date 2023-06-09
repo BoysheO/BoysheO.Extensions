@@ -22,4 +22,3 @@ Others not include in the list is in coding and do not suggest to use.
 ## 设计目标 DesignTarget
 
 以上扩展库为Unity3d与asp.net core中使用设计，并且在易用性和性能表现中取得最佳平衡。  
-群922780612
