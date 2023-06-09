@@ -27,7 +27,6 @@
 
     <ItemGroup>
         <PackageReference Include="System.Memory" Version="4.5.5" />
-        <PackageReference Include="System.ValueTuple" Version="4.5.0" Condition="'$(TargetFramework)' == 'net46'" />
     </ItemGroup>
 
     <ItemGroup>
@@ -38,13 +37,14 @@
     </ItemGroup>
 
     <ItemGroup>
+        <None Include="README.md" Pack="true" PackagePath="\"/>
+    </ItemGroup>
+
+    <ItemGroup>
       <Compile Update="Extensions\IntExtensions.IsInRange.Generated.cs">
         <AutoGen>True</AutoGen>
         <DesignTime>True</DesignTime>
         <DependentUpon>IntExtensions.IsInRange.tt</DependentUpon>
-      </Compile>
-      <Compile Update="BoysheO.Extensions.Benchmark\Class1.cs">
-        <Link>BoysheO.ExtensionsBenchmark\Class1.cs</Link>
       </Compile>
     </ItemGroup>
 
