@@ -11,7 +11,7 @@ namespace BoysheO.Buffers
     /// </summary>
     public sealed class SimpleListPool<T>
     {
-        public readonly SimpleListPool<T> Share = new SimpleListPool<T>();
+        public static readonly SimpleListPool<T> Share = new SimpleListPool<T>();
 
         private readonly WeakReference<ConcurrentBag<List<T>>> _reference =
             new WeakReference<ConcurrentBag<List<T>>>(new ConcurrentBag<List<T>>());
