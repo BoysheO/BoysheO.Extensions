@@ -1,6 +1,6 @@
 # 综述 Overview
-提供一组API，轻松使用对象池，以减少GC压力。  
-Provides a set of APIs to easily use object pools to reduce GC pressure.
+提供一组API，轻松使用池化列表，以减少GC压力。  
+Provides a set of APIs to easily use Pooled List to reduce GC pressure.
 
 # 快速入门 Quick Start
 ```C#
@@ -16,7 +16,8 @@ using var buff = PooledListBuffer.Rent();
 //do something with buff
 ```
 # PooledLinq
-PooledLinq提供了一组LINQ扩展方法，以减少GC压力。
+PooledLinq提供了一组优化的LINQ扩展方法，以减少GC压力。
+但是，使用委托本身就会产生gc，因此需要使用者自己权衡使用。
 PooledLinq遵循如下设计原则：
 1. 立即求值
 2. 对原始Buff进行释放操作
@@ -25,6 +26,7 @@ PooledLinq遵循如下设计原则：
 以上3条原则可以简化使用，如诸位要扩展自己的PooledLinq，应该遵循以上原则。
 
 PooledLinq Provides a set of LINQ extension methods to reduce GC pressure.
+However, using delegates itself will generate gc, so users need to weigh their own use.
 PooledLinq follows the following design principles:
 1. Immediate evaluation
 2. Release the original Buff
@@ -38,6 +40,10 @@ using var buff = new []{1,2,3,4,5,6,7,8,9,10}.ToPooledListBuffer()
     .PooledSelect(x=>x*2);
     //do something with buff
 ```
+
+# 最大化收益
+在开发实践中，使用IReadOnlyList等接口是常态需求，但是PooledBuffer本身是一个结构体，使用它来作为IReadOnlyList返回会导致装箱。因此PooledListBuffer提供了一个AsUnsafeReadOnlyList()方法，可以避免装箱，但是切记在buff销毁后，不要再使用该属性返回的对象。  
+In development practice, using IReadOnlyList and other interfaces is a normal requirement, but PooledBuffer itself is a structure. Using it as an IReadOnlyList return will cause boxing. Therefore, PooledListBuffer provides an AsUnsafeReadOnlyList() method to avoid boxing, but remember not to use the object returned by this property after the buff is destroyed.  
 
 # 性能提示 Performance Tips
 每次对buff的访问都会有一点额外的安全性检查开销，如果在需要遍历大量数量的情况下，可以调用其Span属性以跳过安全检查来进行遍历。  
@@ -58,7 +64,7 @@ lock(gate)
 但是，本库并不是为高并发场景设计的，高并发环境下池化会产生额外的性能消耗，因此在高并发场景下应多考虑依赖gc功能。用户应对自己的应用场景进行做出合理决策。
 
 # 注意事项
-* 字典返回的Keys和Values尚未加入Version校验，换言之就是不要保留对Keys和Values的引用，否则会导致Buff的泄漏
+* Todo 字典返回的Keys和Values尚未加入Version校验，换言之就是不要保留对字典的Keys属性和Values属性的引用，否则可能会导致Buff的泄漏
 
 # 最佳实践 Best Practices
 * 仅在需要借用Buff的时候借用，使用完毕后立即归还。并且尽可能不保留对Buff的引用。在安全的前提下尽可能使用Span操作  
