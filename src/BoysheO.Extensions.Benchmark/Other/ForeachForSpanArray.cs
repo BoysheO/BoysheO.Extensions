@@ -3,12 +3,19 @@ using BenchmarkDotNet.Jobs;
 
 namespace Benchmark.Other;
 
+[SimpleJob(RuntimeMoniker.Mono)]
 [SimpleJob(RuntimeMoniker.Net60)]
-[RPlotExporter]
+// [RPlotExporter]
 [MemoryDiagnoser]
 public class ForeachForSpanArray
 {
-    [Params("1234567890")] public string Source;
+    public int[] Source;
+
+    [GlobalSetup]
+    public void ii()
+    {
+        Source = Enumerable.Range(1, 1000).ToArray();
+    }
 
     /// <summary>
     /// 性能提示：比其他3个都慢一倍
@@ -18,10 +25,14 @@ public class ForeachForSpanArray
     public int ArrayFor()
     {
         int count = 0;
-        var len = Source.Length;
+        var src = Source;
+        var len = src.Length;
         for (var i = 0; i < len; i++)
         {
-            count += Source[i];
+            unchecked
+            {
+                count += src[i];
+            }
         }
 
         return count;
@@ -31,9 +42,13 @@ public class ForeachForSpanArray
     public int ArrayForeach()
     {
         int count = 0;
-        foreach (var c in Source)
+        var src = Source;
+        foreach (var c in src)
         {
-            count += c;
+            unchecked
+            {
+                count += c;
+            }
         }
 
         return count;
@@ -43,9 +58,13 @@ public class ForeachForSpanArray
     public int SpanForeach()
     {
         int count = 0;
-        foreach (var c in Source.AsSpan())
+        var src = Source;
+        foreach (var c in src.AsSpan())
         {
-            count += c;
+            unchecked
+            {
+                count += c;
+            }
         }
 
         return count;
@@ -55,12 +74,15 @@ public class ForeachForSpanArray
     public int SpanFor()
     {
         int count = 0;
-        var cs = Source.AsSpan();
+        var src = Source;
+        var cs = src.AsSpan();
         var len = cs.Length;
         for (var index = 0; index < len; index++)
         {
-            var c = cs[index];
-            count += c;
+            unchecked
+            {
+                count += cs[index];
+            }
         }
 
         return count;
@@ -72,9 +94,13 @@ public class ForeachForSpanArray
         int max = 0;
         var offset = 3;
         var count = 3 + offset;
+        var src = Source;
         for (var i = offset; i < count; i++)
         {
-            max += Source[i];
+            unchecked
+            {
+                max += src[i];
+            }
         }
 
         return count;
@@ -86,7 +112,8 @@ public class ForeachForSpanArray
         var offset = 3;
         var count = 3;
         int max = 0;
-        foreach (var c in Source)
+        var src = Source;
+        foreach (var c in src)
         {
             if (offset >= 0)
             {
@@ -129,15 +156,3 @@ public class ForeachForSpanArray
         return count;
     }
 }
-/*
-|         Method |     Source |      Mean |     Error |    StdDev |    Median | Allocated |
-|--------------- |----------- |----------:|----------:|----------:|----------:|----------:|
-|       ArrayFor | 1234567890 | 4.0556 ns | 0.0091 ns | 0.0080 ns | 4.0545 ns |         - |
-|   ArrayForeach | 1234567890 | 2.8145 ns | 0.0092 ns | 0.0081 ns | 2.8112 ns |         - |
-|    SpanForeach | 1234567890 | 2.9974 ns | 0.0294 ns | 0.0275 ns | 2.9868 ns |         - |
-|        SpanFor | 1234567890 | 3.0172 ns | 0.0353 ns | 0.0330 ns | 3.0429 ns |         - |
-|     ArrayFor33 | 1234567890 | 1.4254 ns | 0.0077 ns | 0.0072 ns | 1.4264 ns |         - |
-| ArrayForeach33 | 1234567890 | 6.5222 ns | 0.0235 ns | 0.0220 ns | 6.5110 ns |         - |
-|  SpanForeach33 | 1234567890 | 0.8115 ns | 0.0039 ns | 0.0036 ns | 0.8136 ns |         - |
-|      SpanFor33 | 1234567890 | 0.8118 ns | 0.0051 ns | 0.0048 ns | 0.8138 ns |         - |
- */
