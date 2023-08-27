@@ -35,6 +35,9 @@ namespace BoysheO.Buffers
 
         private void ThrowIfVersionNotMatch()
         {
+            if (BufferProxy == null)
+                throw new ObjectDisposedException(
+                    $"you must get this buffer using static method {nameof(PooledDictionaryBuffer<TK, TV>)}.{nameof(Rent)}()");
             if (BufferProxy == null || Version != BufferProxy.Version)
                 throw new ObjectDisposedException("this buffer is disposed");
         }
