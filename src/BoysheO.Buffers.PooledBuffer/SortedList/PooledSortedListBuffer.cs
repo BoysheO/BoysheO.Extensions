@@ -172,7 +172,7 @@ namespace BoysheO.Buffers
             }
         }
 
-        IReadOnlyPooledList<TK> Keys
+        public IReadOnlyPooledList<TK> Keys
         {
             get
             {
@@ -181,7 +181,7 @@ namespace BoysheO.Buffers
             }
         }
 
-        IReadOnlyPooledList<TV> Values
+        public IReadOnlyPooledList<TV> Values
         {
             get
             {
