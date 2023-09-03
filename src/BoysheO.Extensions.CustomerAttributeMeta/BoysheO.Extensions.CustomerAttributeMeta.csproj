@@ -3,7 +3,6 @@
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
         <LangVersion>9</LangVersion>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Version>0.0.1</Version>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
