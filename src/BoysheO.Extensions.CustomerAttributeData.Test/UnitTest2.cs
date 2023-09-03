@@ -7,22 +7,19 @@ using UnityEngine.Scripting;
 
 namespace BoysheO.Extensions.CustomerAttributeData.Test;
 
-[MyInfo("hello")]
-public class Tests1
+[MyInfo("hello2")]
+public class Tests2
 {
     [UnityEngine.Scripting.Preserve]
-    private class Tests_AtbMeta : ICustomerAttributeMeta
+    private class Tests2_AtbMeta : CustomerAttributeMeta.CustomerAttributeMeta
     {
-        public Type Owner => typeof(Tests1);
-        public Attribute? CustomerAttribute { get; } = new MyInfoAttribute("hello");
-
-        public Attribute[] CustomerAttributes { get; } = null;
+        public Tests2_AtbMeta() : base(typeof(Tests2), new MyInfoAttribute("hello2")) { }
     }
     
     [Test]
     public void Test1()
     {
-        var type = typeof(Tests1);
+        var type = typeof(Tests2);
         var atb = type.GetCustomAttribute<MyInfoAttribute>() ?? throw new Exception();
         var atb2 = type.GetCustomerAttributeMeta<MyInfoAttribute>(true) ?? throw new Exception();
         Assert.That(atb2.Str, Is.EqualTo(atb.Str));
