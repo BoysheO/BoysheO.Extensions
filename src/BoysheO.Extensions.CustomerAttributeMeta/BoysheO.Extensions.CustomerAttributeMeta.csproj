@@ -10,7 +10,7 @@
         <Nullable>enable</Nullable>
         <Authors>BoysheO</Authors>
         <RepositoryUrl>https://github.com/BoysheO/BoysheO.Extensions</RepositoryUrl>
-        <PackageVersion>0.0.2</PackageVersion>
+        <PackageVersion>0.0.3</PackageVersion>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <TargetFramework>netstandard2.0</TargetFramework>
         <Description>Unity3D with a special il2cpp version(hybridclr),carsh with using the API 'GetCustomerAttribute',so I creat this library for giving a way to get CustomerAttribute not too hard.</Description>

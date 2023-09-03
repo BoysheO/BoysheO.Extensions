@@ -17,7 +17,7 @@ namespace BoysheO.Extensions.CustomerAttributeMeta
             {
                 foreach (var type in assembly.GetTypes())
                 {
-                    if (type.IsClass && baseType != type && baseType.IsAssignableFrom(type))
+                    if (type.IsClass && baseType != type && baseType.IsAssignableFrom(type) && !type.IsAbstract)
                     {
                         var ins = Activator.CreateInstance(type) as ICustomerAttributeMeta ??
                                   throw new Exception("invalid type");
