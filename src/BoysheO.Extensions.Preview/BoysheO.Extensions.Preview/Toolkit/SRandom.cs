@@ -6,6 +6,9 @@ using System.Numerics;
 
 namespace BoysheO.Toolkit
 {
+    /// <summary>
+    /// 已知问题：随机浮点数，在Mac和Win环境下，会得出不一样的数值。需要使用int作为定点数使用
+    /// </summary>
     public sealed class SRandom
     {
         public SRandom()
