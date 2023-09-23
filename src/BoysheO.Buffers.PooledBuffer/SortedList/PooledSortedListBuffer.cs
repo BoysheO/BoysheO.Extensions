@@ -72,7 +72,7 @@ namespace BoysheO.Buffers
 
         bool ICollection<KeyValuePair<TK, TV>>.Contains(KeyValuePair<TK, TV> item)
         {
-            return ((ICollection<KeyValuePair<TK, TV>>)Buffer).Contains(item);
+            return ((ICollection<KeyValuePair<TK, TV>>) Buffer).Contains(item);
         }
 
         public void CopyTo(KeyValuePair<TK, TV>[] array, int arrayIndex)
@@ -84,7 +84,7 @@ namespace BoysheO.Buffers
         bool ICollection<KeyValuePair<TK, TV>>.Remove(KeyValuePair<TK, TV> item)
         {
             ThrowIfVersionNotMatch();
-            return ((ICollection<KeyValuePair<TK, TV>>)Buffer).Remove(item);
+            return ((ICollection<KeyValuePair<TK, TV>>) Buffer).Remove(item);
         }
 
         public int Count

@@ -57,6 +57,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoysheO.Extensions.Customer
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoysheO.Extensions.CustomerAttributeData.Test", "BoysheO.Extensions.CustomerAttributeData.Test\BoysheO.Extensions.CustomerAttributeData.Test.csproj", "{A1FED89D-049F-4E3B-A12B-2FF0A092B7D5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoysheO.Buffers.PooledBuffer.Test", "BoysheO.Buffers.PooledBuffer.Test\BoysheO.Buffers.PooledBuffer.Test.csproj", "{FBF0F034-A988-4DCA-B37E-522551883365}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -167,6 +169,10 @@ Global
 		{A1FED89D-049F-4E3B-A12B-2FF0A092B7D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1FED89D-049F-4E3B-A12B-2FF0A092B7D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A1FED89D-049F-4E3B-A12B-2FF0A092B7D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FBF0F034-A988-4DCA-B37E-522551883365}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBF0F034-A988-4DCA-B37E-522551883365}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FBF0F034-A988-4DCA-B37E-522551883365}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FBF0F034-A988-4DCA-B37E-522551883365}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

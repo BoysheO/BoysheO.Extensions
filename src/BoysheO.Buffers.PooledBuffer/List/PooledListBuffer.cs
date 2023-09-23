@@ -37,7 +37,7 @@ namespace BoysheO.Buffers
 
         public void Dispose()
         {
-            if (BufferProxy.Buffer != null && Version == BufferProxy.Version)
+            if (BufferProxy!=null && BufferProxy.Buffer != null && Version == BufferProxy.Version)
             {
                 PooledListBufferPool<T>.Share.Return(this);
             }

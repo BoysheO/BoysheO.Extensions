@@ -156,3 +156,24 @@ public class ForeachForSpanArray
         return count;
     }
 }
+/*
+ * 其中一次运行
+|         Method |      Job |  Runtime |          Mean |      Error |     StdDev |        Median | Allocated |
+|--------------- |--------- |--------- |--------------:|-----------:|-----------:|--------------:|----------:|
+|       ArrayFor | .NET 6.0 | .NET 6.0 |   217.2125 ns |  1.0477 ns |  0.8749 ns |   217.0490 ns |         - |
+|   ArrayForeach | .NET 6.0 | .NET 6.0 |   217.8536 ns |  0.7814 ns |  0.6927 ns |   217.8916 ns |         - |
+|    SpanForeach | .NET 6.0 | .NET 6.0 |   219.1812 ns |  1.4399 ns |  1.3469 ns |   219.2356 ns |         - |
+|        SpanFor | .NET 6.0 | .NET 6.0 |   218.4413 ns |  1.4964 ns |  1.3265 ns |   218.1631 ns |         - |
+|     ArrayFor33 | .NET 6.0 | .NET 6.0 |     0.9036 ns |  0.0187 ns |  0.0175 ns |     0.8960 ns |         - |
+| ArrayForeach33 | .NET 6.0 | .NET 6.0 |     5.1462 ns |  0.0320 ns |  0.0299 ns |     5.1328 ns |         - |
+|  SpanForeach33 | .NET 6.0 | .NET 6.0 |     0.6699 ns |  0.0133 ns |  0.0124 ns |     0.6680 ns |         - |
+|      SpanFor33 | .NET 6.0 | .NET 6.0 |     0.6483 ns |  0.0160 ns |  0.0142 ns |     0.6452 ns |         - |
+|       ArrayFor |     Mono |     Mono |   436.2396 ns |  3.0415 ns |  2.6962 ns |   436.8743 ns |         - |
+|   ArrayForeach |     Mono |     Mono |   496.2832 ns |  2.5579 ns |  2.2675 ns |   495.7494 ns |         - |
+|    SpanForeach |     Mono |     Mono | 1,096.5291 ns | 10.9542 ns | 10.2465 ns | 1,097.2127 ns |         - |
+|        SpanFor |     Mono |     Mono | 1,802.2391 ns | 10.2827 ns |  9.6184 ns | 1,800.1060 ns |         - |
+|     ArrayFor33 |     Mono |     Mono |     2.0732 ns |  0.0709 ns |  0.1145 ns |     2.1360 ns |         - |
+| ArrayForeach33 |     Mono |     Mono |     7.1962 ns |  0.1711 ns |  0.2037 ns |     7.2725 ns |         - |
+|  SpanForeach33 |     Mono |     Mono |     9.6423 ns |  0.0693 ns |  0.0648 ns |     9.6392 ns |         - |
+|      SpanFor33 |     Mono |     Mono |     9.1406 ns |  0.1117 ns |  0.1045 ns |     9.1031 ns |         - |
+ */

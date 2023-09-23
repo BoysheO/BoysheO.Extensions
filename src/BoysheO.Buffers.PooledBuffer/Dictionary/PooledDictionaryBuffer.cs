@@ -22,7 +22,7 @@ namespace BoysheO.Buffers
 
         public void Dispose()
         {
-            if (BufferProxy != null && Version == BufferProxy.Version)
+            if (BufferProxy != null && BufferProxy.Buffer != null && Version == BufferProxy.Version)
             {
                 PooledDictionaryBufferPool<TK, TV>.Share.Return(this);
             }
