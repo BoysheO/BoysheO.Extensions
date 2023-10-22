@@ -9,7 +9,7 @@
         <Authors>BoysheO</Authors>
         <RepositoryUrl>https://github.com/BoysheO/BoysheO.Extensions</RepositoryUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <PackageVersion>5.0.0</PackageVersion>
+        <PackageVersion>5.0.1</PackageVersion>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <TargetFramework>netstandard2.0</TargetFramework>
         <PackageReleaseNotes>Api not useful was moved to BoysheO.Extensions.Preview(see code in github,not packed as nuget package)</PackageReleaseNotes>
