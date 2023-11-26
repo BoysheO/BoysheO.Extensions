@@ -595,10 +595,10 @@ namespace BoysheO.Buffers
             return ((IList) BufferProxy.Buffer).Add(value);
         }
 
-        void IList.Clear()
+        public void Clear()
         {
             ThrowIfVersionNotMatch();
-            ((IList) BufferProxy.Buffer).Clear();
+            BufferProxy.Buffer.Clear();
         }
 
         bool IList.Contains(object value)

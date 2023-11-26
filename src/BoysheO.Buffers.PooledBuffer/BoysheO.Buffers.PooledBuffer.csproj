@@ -8,7 +8,7 @@
     <PackageReadmeFile>ReadMe.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/BoysheO/BoysheO.Extensions</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageVersion>2.0.6</PackageVersion>
+    <PackageVersion>2.0.7</PackageVersion>
     <LangVersion>11</LangVersion>
   </PropertyGroup>
 

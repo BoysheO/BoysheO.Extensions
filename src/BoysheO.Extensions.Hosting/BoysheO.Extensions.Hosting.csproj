@@ -3,7 +3,6 @@
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
         <RootNamespace>BoysheO</RootNamespace>
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<Authors>BoysheO</Authors>
 		<Version>1.0.1</Version>
 		<RepositoryUrl>https://github.com/BoysheO/BoysheO.Extensions</RepositoryUrl>

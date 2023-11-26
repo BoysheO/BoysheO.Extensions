@@ -101,7 +101,7 @@ namespace BoysheO.Buffers
         public void Clear()
         {
             ThrowIfVersionNotMatch();
-            (BufferProxy.Buffer).Clear();
+            BufferProxy.Buffer.Clear();
         }
 
         public bool Contains(KeyValuePair<TK, TV> item)

@@ -1,3 +1,6 @@
+## **Import
+Actually,I feel this library is not easy to use.Maybe this idea is not good enough.So,I will not update the library until I have a better idea.
+
 # BoysheO.Extensions.CustomerAttributeMeta
 
 ## what is this  
@@ -41,3 +44,4 @@ It's only support type data.I don't have time to make it perfect now.See road ma
 * Make the inherit parma working more prefect.
 * Provide a Analyser package for generate the meta code automatically.
 * Support MemberInfo instead type 
+
