@@ -157,4 +157,20 @@ public class StringExtensionsTests
     //     Console.WriteLine(rand);
     //     SplitAsPooledChars(randStr, rand);
     // }
+
+    [TestCase("abc",ExpectedResult = "abc")]
+    [TestCase("Abc",ExpectedResult = "abc")]
+    [TestCase("AbcA",ExpectedResult = "abcA")]
+    public string MakeFirstCharLowerOrNot(string str)
+    {
+        return str.MakeFirstCharLowerOrNot();
+    }
+
+    [TestCase("abc",ExpectedResult = "Abc")]
+    [TestCase("Abc",ExpectedResult = "Abc")]
+    [TestCase("abbA",ExpectedResult = "AbbA")]
+    public string MarkFirstCharUpperOrNot(string str)
+    {
+        return str.MakeFirstCharUpperOrNot();
+    }
 }

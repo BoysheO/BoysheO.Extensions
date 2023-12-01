@@ -14,7 +14,7 @@ namespace BoysheO.Extensions.Hosting
             var conf = host.Services.GetRequiredService<IConfiguration>();
             var str = conf.PrintAllConfigure();
             var logger = host.Services.GetRequiredService<ILogger<T>>();
-            logger.Log(logLevel, str);
+            logger.Log(logLevel,"Configuration:{Value}" ,str);
         }
     }
 }

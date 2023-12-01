@@ -470,7 +470,7 @@ namespace BoysheO.Extensions
                         throw new InvalidCastException($"str={str} idx={len} char={c} is out of byte value range.");
                 }
 
-                result[len] = unchecked((byte)charSpan[len]);
+                result[len] = unchecked((byte) charSpan[len]);
             }
 
             return result;
@@ -513,7 +513,7 @@ namespace BoysheO.Extensions
                         throw new InvalidCastException($"str={str} idx={len} char={c} is out of byte value range.");
                 }
 
-                result[len] = unchecked((byte)charSpan[len]);
+                result[len] = unchecked((byte) charSpan[len]);
             }
         }
 
@@ -525,7 +525,7 @@ namespace BoysheO.Extensions
             const int maxStackLimit = 1024;
             var len = source.Length;
             var buffer = len <= maxStackLimit ? stackalloc char[len] : new char[len];
-            for (len--; len >= 0; len--) buffer[len] = (char)source[len];
+            for (len--; len >= 0; len--) buffer[len] = (char) source[len];
 
             return buffer.Slice(0, source.Length).AsReadOnly().ToNewString();
         }
@@ -541,7 +541,7 @@ namespace BoysheO.Extensions
             {
                 fixed (byte* p = source)
                 {
-                    var sb = (char*)p;
+                    var sb = (char*) p;
                     return new string(sb, 0, source.Length / 2);
                 }
             }
@@ -566,10 +566,11 @@ namespace BoysheO.Extensions
             if (str.Length == 0) return "";
             if (!str[0].Isatoz()) return str;
             if (str.Length == 1) return str.ToUpperInvariant();
-            Span<char> buffer = stackalloc char[str.Length];
-            buffer[0] = str[0].ToUpper();
-            str.AsSpan(1).CopyTo(buffer.Slice(1));
-            return buffer.AsReadOnly().ToNewString();
+            // Span<char> buffer = stackalloc char[str.Length];
+            // buffer[0] = str[0].ToUpper();
+            // str.AsSpan(1).CopyTo(buffer.Slice(1));
+            // return buffer.AsReadOnly().ToNewString();
+            return string.Concat(str[0].ToUpper().ToString(), str.Substring(1, str.Length - 1));
         }
 
         /// <summary>
@@ -581,10 +582,7 @@ namespace BoysheO.Extensions
             if (str.Length == 0) return "";
             if (!str[0].IsAtoZ()) return str;
             if (str.Length == 1) return str.ToLowerInvariant();
-            Span<char> buffer = stackalloc char[str.Length];
-            buffer[0] = str[0].ToUpper();
-            str.AsSpan(1).CopyTo(buffer.Slice(1));
-            return buffer.AsReadOnly().ToNewString();
+            return string.Concat(str[0].ToLower().ToString(), str.Substring(1, str.Length - 1));
         }
 
         /// <summary>
