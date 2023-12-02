@@ -30,7 +30,7 @@ namespace BoysheO.Extensions
         }
 
         /// <summary>
-        ///     Determine the type is implement the another type (interface or class) and is class.<br />
+        ///     Determine the type is implement the another type (interface or class,GenericTypeDefinition not supported) and is class.<br />
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsClassAndImplement(this Type type, Type base1)
@@ -39,7 +39,7 @@ namespace BoysheO.Extensions
         }
 
         /// <summary>
-        ///     Determine the type is implement the another type (interface or class) and is struct.<br />
+        ///     Determine the type is implement the another type (interface or class,GenericTypeDefinition not supported) and is struct.<br />
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsStructAndImplement(this Type type, Type base1)
@@ -48,12 +48,53 @@ namespace BoysheO.Extensions
         }
 
         /// <summary>
-        ///     Determine the type is implement the another type (interface or class) and is sealed.<br />
+        ///     Determine the type is implement the another type (interface or class,GenericTypeDefinition not supported) and is sealed.<br />
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsSealedAndImplement(this Type type, Type base1)
         {
             return type.IsSealed && base1.IsAssignableFrom(type);
+        }
+
+        /// <summary>
+        ///     Determine the type is implement the another type(interface or class,GenericTypeDefinition supported)
+        /// </summary>
+        public static bool IsImplement(this Type type, Type baseType)
+        {
+            if (type == baseType) return true;
+            if (baseType.IsAssignableFrom(type)) return true;
+            if (!baseType.IsGenericTypeDefinition) return false;
+            if (baseType.IsInterface)
+            {
+                var interfaces = type.GetInterfaces();
+                for (var i = 0; i < interfaces.Length; i++)
+                {
+                    var inter = interfaces[i];
+                    if (inter.IsGenericType)
+                    {
+                        var d = inter.GetGenericTypeDefinition();
+                        if (d == baseType) return true;
+                    }
+                }
+
+                return false;
+            }
+            else
+            {
+                var b = type.BaseType;
+                while (b != null)
+                {
+                    if (b.IsGenericType)
+                    {
+                        var d = b.GetGenericTypeDefinition();
+                        if (d == baseType) return true;
+                    }
+
+                    b = type.BaseType;
+                }
+
+                return false;
+            }
         }
 
         //不太普适
