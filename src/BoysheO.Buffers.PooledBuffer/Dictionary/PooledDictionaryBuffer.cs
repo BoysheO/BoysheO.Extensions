@@ -202,6 +202,16 @@ namespace BoysheO.Buffers
             return (BufferProxy.Buffer).TryGetValue(key, out value);
         }
 
+        public TV GetValueOrDefault(TK key, TV fallback)
+        {
+            return TryGetValue(key, out var v) ? v : fallback;
+        }
+
+        public bool Remove(TK key, out TV value)
+        {
+            return BufferProxy.Buffer.Remove(key, out value);
+        }
+
         public TV this[TK key]
         {
             get
