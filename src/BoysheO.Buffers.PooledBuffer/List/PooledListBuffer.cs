@@ -37,10 +37,19 @@ namespace BoysheO.Buffers
 
         public void Dispose()
         {
-            if (BufferProxy!=null && BufferProxy.Buffer != null && Version == BufferProxy.Version)
+            if (IsAlive)
             {
                 PooledListBufferPool<T>.Share.Return(this);
             }
+        }
+
+        /// <summary>
+        /// 尽管提供了IsAlive判断，但是使用者应当在业务流程上确保Buff生命周期正确且单一，而不是频繁使用IsAlive判定。频繁使用IsAlive违背本库设计初衷
+        /// Although IsAlive verdicts are provided, users should ensure that the buff lifetime is correct and single in the business process, rather than using IsAlive verdicts frequently. Frequent use of IsAlive is contrary to the original design intent of this library
+        /// </summary>
+        public bool IsAlive
+        {
+            get { return BufferProxy != null && BufferProxy.Buffer != null && Version == BufferProxy.Version; }
         }
 
         public static PooledListBuffer<T> Rent()
@@ -592,7 +601,7 @@ namespace BoysheO.Buffers
         int IList.Add(object value)
         {
             ThrowIfVersionNotMatch();
-            return ((IList) BufferProxy.Buffer).Add(value);
+            return ((IList)BufferProxy.Buffer).Add(value);
         }
 
         public void Clear()
@@ -604,31 +613,31 @@ namespace BoysheO.Buffers
         bool IList.Contains(object value)
         {
             ThrowIfVersionNotMatch();
-            return ((IList) BufferProxy.Buffer).Contains(value);
+            return ((IList)BufferProxy.Buffer).Contains(value);
         }
 
         int IList.IndexOf(object value)
         {
             ThrowIfVersionNotMatch();
-            return ((IList) BufferProxy.Buffer).IndexOf(value);
+            return ((IList)BufferProxy.Buffer).IndexOf(value);
         }
 
         void IList.Insert(int index, object value)
         {
             ThrowIfVersionNotMatch();
-            ((IList) BufferProxy.Buffer).Insert(index, value);
+            ((IList)BufferProxy.Buffer).Insert(index, value);
         }
 
         void IList.Remove(object value)
         {
             ThrowIfVersionNotMatch();
-            ((IList) BufferProxy.Buffer).Remove(value);
+            ((IList)BufferProxy.Buffer).Remove(value);
         }
 
         void IList.RemoveAt(int index)
         {
             ThrowIfVersionNotMatch();
-            ((IList) BufferProxy.Buffer).RemoveAt(index);
+            ((IList)BufferProxy.Buffer).RemoveAt(index);
         }
 
         bool IList.IsFixedSize
@@ -636,7 +645,7 @@ namespace BoysheO.Buffers
             get
             {
                 ThrowIfVersionNotMatch();
-                return ((IList) BufferProxy.Buffer).IsFixedSize;
+                return ((IList)BufferProxy.Buffer).IsFixedSize;
             }
         }
 
@@ -645,7 +654,7 @@ namespace BoysheO.Buffers
             get
             {
                 ThrowIfVersionNotMatch();
-                return ((IList) BufferProxy.Buffer).IsReadOnly;
+                return ((IList)BufferProxy.Buffer).IsReadOnly;
             }
         }
 
@@ -654,19 +663,19 @@ namespace BoysheO.Buffers
             get
             {
                 ThrowIfVersionNotMatch();
-                return ((IList) BufferProxy.Buffer)[index];
+                return ((IList)BufferProxy.Buffer)[index];
             }
             set
             {
                 ThrowIfVersionNotMatch();
-                ((IList) BufferProxy.Buffer)[index] = value;
+                ((IList)BufferProxy.Buffer)[index] = value;
             }
         }
 
         void ICollection<T>.Clear()
         {
             ThrowIfVersionNotMatch();
-            ((ICollection<T>) BufferProxy.Buffer).Clear();
+            ((ICollection<T>)BufferProxy.Buffer).Clear();
         }
 
         public bool Contains(T item)
@@ -690,7 +699,7 @@ namespace BoysheO.Buffers
         void ICollection.CopyTo(Array array, int index)
         {
             ThrowIfVersionNotMatch();
-            ((ICollection) BufferProxy.Buffer).CopyTo(array, index);
+            ((ICollection)BufferProxy.Buffer).CopyTo(array, index);
         }
 
         public int Count
@@ -698,7 +707,7 @@ namespace BoysheO.Buffers
             get
             {
                 ThrowIfVersionNotMatch();
-                return ((ICollection) BufferProxy.Buffer).Count;
+                return ((ICollection)BufferProxy.Buffer).Count;
             }
         }
 
@@ -707,7 +716,7 @@ namespace BoysheO.Buffers
             get
             {
                 ThrowIfVersionNotMatch();
-                return ((ICollection) BufferProxy.Buffer).IsSynchronized;
+                return ((ICollection)BufferProxy.Buffer).IsSynchronized;
             }
         }
 
@@ -716,7 +725,7 @@ namespace BoysheO.Buffers
             get
             {
                 ThrowIfVersionNotMatch();
-                return ((ICollection) BufferProxy.Buffer).SyncRoot;
+                return ((ICollection)BufferProxy.Buffer).SyncRoot;
             }
         }
 
@@ -734,7 +743,7 @@ namespace BoysheO.Buffers
             get
             {
                 ThrowIfVersionNotMatch();
-                return ((ICollection<T>) BufferProxy.Buffer).IsReadOnly;
+                return ((ICollection<T>)BufferProxy.Buffer).IsReadOnly;
             }
         }
 
@@ -753,7 +762,7 @@ namespace BoysheO.Buffers
         public void RemoveAt(int index)
         {
             ThrowIfVersionNotMatch();
-            ((IList<T>) BufferProxy.Buffer).RemoveAt(index);
+            ((IList<T>)BufferProxy.Buffer).RemoveAt(index);
         }
 
         public T this[int index]

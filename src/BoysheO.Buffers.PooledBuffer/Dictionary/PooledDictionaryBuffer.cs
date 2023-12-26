@@ -22,9 +22,22 @@ namespace BoysheO.Buffers
 
         public void Dispose()
         {
-            if (BufferProxy != null && BufferProxy.Buffer != null && Version == BufferProxy.Version)
+            if (IsAlive)
             {
                 PooledDictionaryBufferPool<TK, TV>.Share.Return(this);
+            }
+        }
+
+        
+        /// <summary>
+        /// 尽管提供了IsAlive判断，但是使用者应当在业务流程上确保Buff生命周期正确且单一，而不是频繁使用IsAlive判定。频繁使用IsAlive违背本库设计初衷
+        /// Although IsAlive verdicts are provided, users should ensure that the buff lifetime is correct and single in the business process, rather than using IsAlive verdicts frequently. Frequent use of IsAlive is contrary to the original design intent of this library
+        /// </summary>
+        public bool IsAlive
+        {
+            get
+            {
+                return BufferProxy != null && BufferProxy.Buffer != null && Version == BufferProxy.Version;
             }
         }
 
