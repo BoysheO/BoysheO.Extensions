@@ -52,7 +52,7 @@ namespace BoysheO.Extensions
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Min(this float value,float another)
         {
-            return Math.Max(value,another);
+            return Math.Min(value,another);
         }
     }
 }
