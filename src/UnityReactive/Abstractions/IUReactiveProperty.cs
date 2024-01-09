@@ -1,13 +1,15 @@
-namespace UReactive.Abstractions
+using UnityReactive.Core;
+
+namespace UnityReactive.Abstractions
 {
     public interface IUReactiveProperty<T> : IUReadOnlyReactiveProperty<T>
     {
-        T Value { set; }
+        new T Value { set; }
     }
 
     public interface IUReadOnlyReactiveProperty<out T>
     {
         T Value { get; }
-        IUObservable<T> onValueChanged { get; }
+        Observable onValueChanged { get; }
     }
 }
