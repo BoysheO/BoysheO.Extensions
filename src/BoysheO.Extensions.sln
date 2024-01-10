@@ -65,6 +65,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XY2VecExample", "XY2VecExam
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XY2VecExample.Test", "XY2VecExample.Test\XY2VecExample.Test.csproj", "{69911E5B-BC00-415F-AEDF-2DD7A0766DF6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrawPoolString", "DrawPoolString\DrawPoolString.csproj", "{FB9EAC5F-ABCE-4C15-B03A-043B1FD8AA5E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrawPoolString.SimpleTest", "DrawPoolString.SimpleTest\DrawPoolString.SimpleTest.csproj", "{84871C60-6269-4F33-AABA-DFF818787138}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -191,6 +195,14 @@ Global
 		{69911E5B-BC00-415F-AEDF-2DD7A0766DF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{69911E5B-BC00-415F-AEDF-2DD7A0766DF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{69911E5B-BC00-415F-AEDF-2DD7A0766DF6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB9EAC5F-ABCE-4C15-B03A-043B1FD8AA5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB9EAC5F-ABCE-4C15-B03A-043B1FD8AA5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB9EAC5F-ABCE-4C15-B03A-043B1FD8AA5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB9EAC5F-ABCE-4C15-B03A-043B1FD8AA5E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84871C60-6269-4F33-AABA-DFF818787138}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84871C60-6269-4F33-AABA-DFF818787138}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84871C60-6269-4F33-AABA-DFF818787138}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84871C60-6269-4F33-AABA-DFF818787138}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
