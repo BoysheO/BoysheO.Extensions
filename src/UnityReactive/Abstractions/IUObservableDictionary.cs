@@ -10,9 +10,9 @@ namespace UnityReactive.Abstractions
     public interface IUReadOnlyObservableDictionary<K, V> : IReadOnlyDictionary<K, V>
     {
         IUReadOnlyReactiveProperty<int> Version { get; }
-        Observable onInsert { get; }
-        Observable onRemove { get; }
-        Observable onReplace { get; }
+        IUObservable<InsertEvent<K,V>> onInsert { get; }
+        IUObservable<RemoveEvent<K,V>> onRemove { get; }
+        IUObservable<ReplaceEvent<K,V>> onReplace { get; }
         Observable onClear { get; }
     }
 

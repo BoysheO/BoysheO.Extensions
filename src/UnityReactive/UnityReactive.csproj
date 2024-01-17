@@ -19,4 +19,8 @@
       <ProjectReference Include="..\UnityReactive.Core\UnityReactive.Core.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Linq\" />
+    </ItemGroup>
+
 </Project>

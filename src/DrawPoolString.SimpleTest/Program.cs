@@ -4,7 +4,7 @@ using DrawPoolStringSystem;
 
 Console.WriteLine("Hello, World!");
 
-const string str = "1[1,2~4];2[5];1[6]";
+const string str = "1[1,2~4];2[5];1[6]";// 1[(1,1,1),(2,2,2),(3,1,1)~(3,1,2)];...;*（1～10）
 //出现概率百分比应为 1,2,3,4=0.0625 ，5=0.5，6=0.25
 // const string str = "1[1];1[2]";
 

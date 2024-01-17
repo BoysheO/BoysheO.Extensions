@@ -2,6 +2,9 @@ using System;
 
 namespace UnityReactive.Core
 {
+    /// <summary>
+    /// call dispose at the end or cause memory leak!
+    /// </summary>
     public readonly struct Observable : IEquatable<Observable>, IDisposable
     {
         public Type Type { get; init; }
@@ -67,7 +70,7 @@ namespace UnityReactive.Core
             if (typeof(T) != Type) throw new Exception($"type mismatch obType={Type},elementType={typeof(T)}");
             UnityReactiveManager.Instance.OnNext(Ptr, element);
         }
-
+        
         public static Observable Creat(Type type, string? trackingMsg = null)
         {
             if (type == null) throw new ArgumentNullException(nameof(type));

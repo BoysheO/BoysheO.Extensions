@@ -7,9 +7,9 @@ namespace UnityReactive.Abstractions
         new T Value { set; }
     }
 
-    public interface IUReadOnlyReactiveProperty<out T>
+    public interface IUReadOnlyReactiveProperty<T>
     {
         T Value { get; }
-        Observable onValueChanged { get; }
+        IUObservable<T> onValueChanged { get; }
     }
 }

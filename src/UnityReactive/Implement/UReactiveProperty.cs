@@ -18,8 +18,8 @@ namespace UnityReactive.Implement
             }
         }
 
-        public Observable onValueChanged => _onValueChanged.ToSubscribeOnly;
-        private readonly Observable _onValueChanged = Observable.Creat(typeof(T));
+        public IUObservable<T> onValueChanged => _onValueChanged;
+        private readonly USubject<T> _onValueChanged = new USubject<T>();
 
         public void Dispose()
         {
