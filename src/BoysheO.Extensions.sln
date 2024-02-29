@@ -68,6 +68,7 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityReactive", "UnityReactive\UnityReactive.csproj", "{F4604377-65BD-44FE-8D43-BCA0E391A254}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityReactive.Core", "UnityReactive.Core\UnityReactive.Core.csproj", "{5857A75D-C373-4CE7-91FB-E4DE3D7C3FA9}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrawPoolString", "DrawPoolString\DrawPoolString.csproj", "{FB9EAC5F-ABCE-4C15-B03A-043B1FD8AA5E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrawPoolString.SimpleTest", "DrawPoolString.SimpleTest\DrawPoolString.SimpleTest.csproj", "{84871C60-6269-4F33-AABA-DFF818787138}"
