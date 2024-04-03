@@ -94,5 +94,24 @@ namespace BoysheO.Buffers.PooledBuffer.Linq
             buffer.AsSortedSet.AddRange(lst.Span);
             return buffer;
         }
+        
+        public static PooledBinSearchSortedSetPoolBuffer<T> ToPooledSetBuffer<T>(this PooledListBuffer<T> lst)
+        {
+            return ToPooledSetBuffer(lst, Comparer<T>.Default);
+        }
+        
+        public static PooledBinSearchSortedSetPoolBuffer<T> ToPooledSetBuffer<T>(this ReadOnlySpan<T> span,
+            IComparer<T> comparer)
+        {
+            if (comparer == null) throw new ArgumentNullException(nameof(comparer));
+            var buffer = PooledBinSearchSortedSetPoolBuffer<T>.Rent(comparer);
+            buffer.AsSortedSet.AddRange(span);
+            return buffer;
+        }
+        
+        public static PooledBinSearchSortedSetPoolBuffer<T> ToPooledSetBuffer<T>(this ReadOnlySpan<T> span)
+        {
+            return ToPooledSetBuffer(span, Comparer<T>.Default);
+        }
     }
 }
