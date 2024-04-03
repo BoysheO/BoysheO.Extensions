@@ -67,5 +67,10 @@ namespace BoysheO.Toolkit
         {
             return new PathValue(value);
         }
+
+        public override string ToString()
+        {
+            return Value;
+        }
     }
 }
