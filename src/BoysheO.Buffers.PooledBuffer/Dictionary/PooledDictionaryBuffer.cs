@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using BoysheO.Buffer.PooledBuffer;
+using BoysheO.Buffer.PooledBuffer.Dictionary;
+using BoysheO.Buffers.PooledBuffer.Linq;
 
 namespace BoysheO.Buffers
 {
@@ -9,7 +11,7 @@ namespace BoysheO.Buffers
     /// don't use again after disposable
     /// </summary>
     public readonly struct PooledDictionaryBuffer<TK, TV> : IDisposable, IReadOnlyDictionary<TK, TV>,
-        IDictionary<TK, TV>, IDictionary
+        IDictionary<TK, TV>, IDictionary,IReadOnlyPooledDictionaryBuff<TK,TV>
     {
         internal readonly long Version;
         internal readonly DictionaryProxy<TK, TV> BufferProxy;
@@ -59,6 +61,16 @@ namespace BoysheO.Buffers
         {
             ThrowIfVersionNotMatch();
             return new DictionaryBufferEnumerator<TK, TV>(BufferProxy, BufferProxy.Version);
+        }
+
+        public PooledListBuffer<TK> GetKeys()
+        {
+            return Keys.ToPooledListBuffer();
+        }
+
+        public PooledListBuffer<TV> GetValues()
+        {
+            return Values.ToPooledListBuffer();
         }
 
         bool IDictionary.Contains(object key)
