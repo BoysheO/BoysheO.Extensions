@@ -23,4 +23,8 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\RefArrayPoolUtil\RefArrayPoolUtil\RefArrayPoolUtil.csproj" />
+  </ItemGroup>
+
 </Project>

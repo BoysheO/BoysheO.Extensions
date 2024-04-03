@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
 using Collections.Pooled;
 
 namespace BoysheO.Buffer.PooledBuffer
 {
+    //以后有空改红黑树
     internal sealed class UnsafePooledSortedList<TK, TV> :
         IDictionary<TK, TV>,
         IReadOnlyDictionary<TK, TV>,

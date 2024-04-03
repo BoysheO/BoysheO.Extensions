@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using BoysheO.Buffer.PooledBuffer;
 using Collections.Pooled;
 
 namespace BoysheO.Buffers.PooledBuffer.Linq
@@ -72,6 +73,20 @@ namespace BoysheO.Buffers.PooledBuffer.Linq
             }
 
             return buff;
+        }
+
+        public static PooledBinSearchSortedSetPoolBuffer<T> ToPooledSetBuffer<T>(this IEnumerable<T> itor,
+            IComparer<T> comparer)
+        {
+            if (itor == null) throw new ArgumentNullException(nameof(itor));
+            if (comparer == null) throw new ArgumentNullException(nameof(comparer));
+            var buffer = PooledBinSearchSortedSetPoolBuffer<T>.Rent(comparer);
+            foreach (var x1 in itor)
+            {
+                buffer.AsSet.Add(x1);
+            }
+
+            return buffer;
         }
     }
 }
