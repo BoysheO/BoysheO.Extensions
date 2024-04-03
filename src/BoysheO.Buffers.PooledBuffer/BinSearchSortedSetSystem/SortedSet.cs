@@ -11,7 +11,7 @@ namespace BoysheO.Buffer.PooledBuffer.BinSearchSortedSetSystem;
 /// <summary>
 /// 基于二分查找的Set(简单实现，以后再优化）
 /// </summary>
-internal class BinSearchSortedSet<T> : ISet<T>, IReadOnlyPooledList<T>
+internal class SortedSet<T> : ISet<T>, IReadOnlyPooledList<T>, ISortedSet<T>
 {
     private T[] _t;
 
@@ -289,6 +289,51 @@ internal class BinSearchSortedSet<T> : ISet<T>, IReadOnlyPooledList<T>
         LifeVersion = liftVersion;
         Version = 0;
     }
+
+    public ISet<T> AsSet => this;
+    public IReadOnlyList<T> AsReadOnlyList => this;
+
+    public void AddRange(ReadOnlySpan<T> span)
+    {
+        if (Count == 0)
+        {
+            RefArrayPoolUtil.AddRange(ref _t, ref _count, span);
+            Array.Sort(_t, 0, _count, Comparer);
+        }
+        else
+        {
+            foreach (var x1 in span)
+            {
+                Add(x1);
+            }
+        }
+    }
+
+    public void AddRange(IReadOnlyList<T> lst)
+    {
+        if (Count == 0)
+        {
+            RefArrayPoolUtil.AddRange(ref _t, ref _count, lst);
+            Array.Sort(_t, 0, _count, Comparer);
+        }
+        else
+        {
+            for (var index = 0; index < lst.Count; index++)
+            {
+                var x1 = lst[index];
+                Add(x1);
+            }
+        }
+    }
+
+    public void AddRange(IEnumerable<T> lst)
+    {
+        foreach (var x1 in lst)
+        {
+            Add(x1);
+        }
+    }
+
 
     public void Recycle()
     {

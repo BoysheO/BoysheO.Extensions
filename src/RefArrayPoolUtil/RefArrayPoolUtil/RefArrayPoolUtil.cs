@@ -36,6 +36,15 @@ namespace BoysheO.Extensions.Util
         {
             InsertRange(ref buff, ref buffCount, values, buffCount);
         }
+        
+        /// <summary>
+        /// Add values to the buff from ArrayPool.Share
+        /// * resize automatically
+        /// </summary>
+        public static void AddRange<T>(ref T[] buff, ref int buffCount, ReadOnlySpan<T> values)
+        {
+            InsertRange(ref buff, ref buffCount, values, buffCount);
+        }
 
         /// <summary>
         /// Insert value to the buff from ArrayPool.Share

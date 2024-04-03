@@ -7,12 +7,12 @@ namespace BoysheO.Buffer.PooledBuffer
 {
     public struct BinSearchSortedSetEnumerator<T> : IEnumerator<T>
     {
-        private readonly BinSearchSortedSet<T> _set;
+        private readonly BinSearchSortedSetSystem.SortedSet<T> _set;
         private int index;
         private readonly long _lifeVersion;
         private readonly int _enumeratorVersion;
 
-        internal BinSearchSortedSetEnumerator(BinSearchSortedSet<T> set)
+        internal BinSearchSortedSetEnumerator(BinSearchSortedSetSystem.SortedSet<T> set)
         {
             this._set = set;
             index = -1;

@@ -2,7 +2,7 @@ using BoysheO.Buffer.PooledBuffer;
 
 namespace BoysheO.Buffers.PooledBuffer.Test.BinSearchSortedSet;
 
-public class BinSearchSortedSetTest
+public class SortedSetTest
 {
     [TestCase(1000)]
     [TestCase(10000000)]

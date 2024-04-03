@@ -8,9 +8,9 @@ namespace BoysheO.Buffer.PooledBuffer
     public readonly struct PooledBinSearchSortedSetPoolBuffer<T> : IDisposable
     {
         private readonly long _lifeVersion;
-        private readonly BinSearchSortedSet<T> _lst;
+        private readonly BinSearchSortedSetSystem.SortedSet<T> _lst;
 
-        private PooledBinSearchSortedSetPoolBuffer(BinSearchSortedSet<T> lst)
+        private PooledBinSearchSortedSetPoolBuffer(BinSearchSortedSetSystem.SortedSet<T> lst)
         {
             _lifeVersion = lst.LifeVersion;
             _lst = lst;
@@ -21,13 +21,23 @@ namespace BoysheO.Buffer.PooledBuffer
             var ins = BinSearchSortedSetPool<T>.Share.Rent(comparer, capacity);
             return new PooledBinSearchSortedSetPoolBuffer<T>(ins);
         }
-        
+
         public static PooledBinSearchSortedSetPoolBuffer<T> Rent(int capacity = 1)
         {
             var ins = BinSearchSortedSetPool<T>.Share.Rent(Comparer<T>.Default, capacity);
             return new PooledBinSearchSortedSetPoolBuffer<T>(ins);
         }
 
+        public ISortedSet<T> AsSortedSet
+        {
+            get
+            {
+                if (_lst == null || _lifeVersion != _lst.LifeVersion)
+                    throw new ObjectDisposedException("", "this obj has disposed");
+                return _lst;
+            }
+        }
+        
         public ISet<T> AsSet
         {
             get
@@ -37,7 +47,7 @@ namespace BoysheO.Buffer.PooledBuffer
                 return _lst;
             }
         }
-
+        
         public IReadOnlyPooledList<T> AsReadOnlyList
         {
             get

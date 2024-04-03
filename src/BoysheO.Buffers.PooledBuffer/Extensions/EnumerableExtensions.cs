@@ -81,11 +81,17 @@ namespace BoysheO.Buffers.PooledBuffer.Linq
             if (itor == null) throw new ArgumentNullException(nameof(itor));
             if (comparer == null) throw new ArgumentNullException(nameof(comparer));
             var buffer = PooledBinSearchSortedSetPoolBuffer<T>.Rent(comparer);
-            foreach (var x1 in itor)
-            {
-                buffer.AsSet.Add(x1);
-            }
-
+            buffer.AsSortedSet.AddRange(itor);
+            return buffer;
+        }
+        
+        
+        public static PooledBinSearchSortedSetPoolBuffer<T> ToPooledSetBuffer<T>(this PooledListBuffer<T> lst,
+            IComparer<T> comparer)
+        {
+            if (comparer == null) throw new ArgumentNullException(nameof(comparer));
+            var buffer = PooledBinSearchSortedSetPoolBuffer<T>.Rent(comparer);
+            buffer.AsSortedSet.AddRange(lst.Span);
             return buffer;
         }
     }
