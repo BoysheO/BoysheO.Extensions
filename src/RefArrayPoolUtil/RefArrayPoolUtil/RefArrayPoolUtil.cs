@@ -36,7 +36,7 @@ namespace BoysheO.Extensions.Util
         {
             InsertRange(ref buff, ref buffCount, values, buffCount);
         }
-        
+
         /// <summary>
         /// Add values to the buff from ArrayPool.Share
         /// * resize automatically
@@ -110,6 +110,34 @@ namespace BoysheO.Extensions.Util
             }
 
             buffCount = sizeNeed;
+        }
+
+        public static bool Remove<T>(ref T[] buff, ref int buffCount, T obj)
+        {
+            var idx = Array.IndexOf(buff, obj, 0, buffCount);
+            if (idx < 0) return false;
+            for (int i = idx; i < buffCount - 1; i++)
+            {
+                buff[i] = buff[i + 1];
+            }
+
+            buff[buffCount - 1] = default;
+            buffCount--;
+            return true;
+        }
+
+        public static void TrimExcess<T>(ref T[] buff, ref int buffCount)
+        {
+            //根据对ArrayPool测试结果显示，ArrayPool给出的数列大小为 0,16,32...16*2^(n-1)
+            if (buffCount == 0 && buff.Length > 0)
+            {
+                ArrayPool<T>.Shared.Return(buff);
+                buff = ArrayPool<T>.Shared.Rent(0);
+            }
+            else if (buff.Length > 16 && buff.Length > buffCount / 2)
+            {
+                Resize(ref buff, buffCount);
+            }
         }
     }
 }

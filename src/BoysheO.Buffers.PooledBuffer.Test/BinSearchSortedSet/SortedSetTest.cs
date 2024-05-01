@@ -29,8 +29,22 @@ public class SortedSetTest
     {
         var a = PooledBinSearchSortedSetPoolBuffer<int>.Rent();
         var set = a.AsSet;
-        set.UnionWith(new[] { 1, 3, 5, 7, 9 });
-        set.IntersectWith(new[] { 5, 7, 3, 7, 11, 7, 5, 2 });
-        Assert.That(set, Is.EqualTo(new[] { 3, 5, 7 }));
+        set.UnionWith(new[] {1, 3, 5, 7, 9});
+        set.IntersectWith(new[] {5, 7, 3, 7, 11, 7, 5, 2});
+        Assert.That(set, Is.EqualTo(new[] {3, 5, 7}));
+    }
+
+    [Test]
+    public void DirtyTest()
+    {
+        GC.TryStartNoGCRegion(1000000);
+        var a = PooledBinSearchSortedSetPoolBuffer<int>.Rent();
+        a.AsSortedSet.AddRange(new[] {1, 3, 5, 7, 9}.AsSpan());
+        a.Dispose();
+
+        var b = PooledBinSearchSortedSetPoolBuffer<int>.Rent();
+        Assert.That(b.AsSet.Count == 0, Is.True);
+        b.Dispose();
+        GC.EndNoGCRegion();
     }
 }
