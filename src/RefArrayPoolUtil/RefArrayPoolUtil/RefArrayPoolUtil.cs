@@ -126,7 +126,7 @@ namespace BoysheO.Extensions.Util
             return true;
         }
 
-        public static void TrimExcess<T>(ref T[] buff, ref int buffCount)
+        public static void TrimExcess<T>(ref T[] buff, int buffCount)
         {
             //根据对ArrayPool测试结果显示，ArrayPool给出的数列大小为 0,16,32...16*2^(n-1)
             if (buffCount == 0 && buff.Length > 0)
