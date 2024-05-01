@@ -4,6 +4,7 @@ using BoysheO.Extensions;
 
 namespace Extensions
 {
+    [Obsolete("use RefArrayPoolUtil instead")]
     public static class ArrayPoolUtil
     {
         /// <summary>
