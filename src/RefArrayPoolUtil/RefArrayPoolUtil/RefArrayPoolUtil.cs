@@ -118,7 +118,7 @@ namespace BoysheO.Extensions.Util
             buffCount = sizeNeed;
         }
 
-        public static bool Remove<T>(ref T[] buff, ref int buffCount, T obj, ArrayPool<T> pool = null)
+        public static bool Remove<T>(ref T[] buff, ref int buffCount, T obj)
         {
             var idx = Array.IndexOf(buff, obj, 0, buffCount);
             if (idx < 0) return false;
