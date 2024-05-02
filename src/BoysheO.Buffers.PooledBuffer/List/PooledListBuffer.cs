@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.XPath;
 using BoysheO.Buffer.PooledBuffer;
 using Collections.Pooled;
 
@@ -66,6 +67,38 @@ namespace BoysheO.Buffers
                 throw new ObjectDisposedException("this buffer is disposed");
         }
 
+        public void Push(T item)
+        {
+            Add(item);
+        }
+
+        public T Pop()
+        {
+            if (!TryPop(out var item)) throw new InvalidOperationException("stack is empty");
+            return item;
+        }
+
+        public bool TryPop(out T item)
+        {
+            var r = TryPeek(out item);
+            if (r) BufferProxy.Buffer.RemoveAt(BufferProxy.Buffer.Count - 1);
+            return r;
+        }
+
+        public bool TryPeek(out T item)
+        {
+            if (Count == 0)
+            {
+                item = default;
+                return false;
+            }
+
+            var lst = BufferProxy.Buffer;
+            var idx = lst.Count - 1;
+            item = lst[idx];
+            return true;
+        }
+        
         public int Capacity
         {
             get
@@ -601,7 +634,7 @@ namespace BoysheO.Buffers
         int IList.Add(object value)
         {
             ThrowIfVersionNotMatch();
-            return ((IList)BufferProxy.Buffer).Add(value);
+            return ((IList) BufferProxy.Buffer).Add(value);
         }
 
         public void Clear()
@@ -613,31 +646,31 @@ namespace BoysheO.Buffers
         bool IList.Contains(object value)
         {
             ThrowIfVersionNotMatch();
-            return ((IList)BufferProxy.Buffer).Contains(value);
+            return ((IList) BufferProxy.Buffer).Contains(value);
         }
 
         int IList.IndexOf(object value)
         {
             ThrowIfVersionNotMatch();
-            return ((IList)BufferProxy.Buffer).IndexOf(value);
+            return ((IList) BufferProxy.Buffer).IndexOf(value);
         }
 
         void IList.Insert(int index, object value)
         {
             ThrowIfVersionNotMatch();
-            ((IList)BufferProxy.Buffer).Insert(index, value);
+            ((IList) BufferProxy.Buffer).Insert(index, value);
         }
 
         void IList.Remove(object value)
         {
             ThrowIfVersionNotMatch();
-            ((IList)BufferProxy.Buffer).Remove(value);
+            ((IList) BufferProxy.Buffer).Remove(value);
         }
 
         void IList.RemoveAt(int index)
         {
             ThrowIfVersionNotMatch();
-            ((IList)BufferProxy.Buffer).RemoveAt(index);
+            ((IList) BufferProxy.Buffer).RemoveAt(index);
         }
 
         bool IList.IsFixedSize
@@ -645,7 +678,7 @@ namespace BoysheO.Buffers
             get
             {
                 ThrowIfVersionNotMatch();
-                return ((IList)BufferProxy.Buffer).IsFixedSize;
+                return ((IList) BufferProxy.Buffer).IsFixedSize;
             }
         }
 
@@ -654,7 +687,7 @@ namespace BoysheO.Buffers
             get
             {
                 ThrowIfVersionNotMatch();
-                return ((IList)BufferProxy.Buffer).IsReadOnly;
+                return ((IList) BufferProxy.Buffer).IsReadOnly;
             }
         }
 
@@ -663,19 +696,19 @@ namespace BoysheO.Buffers
             get
             {
                 ThrowIfVersionNotMatch();
-                return ((IList)BufferProxy.Buffer)[index];
+                return ((IList) BufferProxy.Buffer)[index];
             }
             set
             {
                 ThrowIfVersionNotMatch();
-                ((IList)BufferProxy.Buffer)[index] = value;
+                ((IList) BufferProxy.Buffer)[index] = value;
             }
         }
 
         void ICollection<T>.Clear()
         {
             ThrowIfVersionNotMatch();
-            ((ICollection<T>)BufferProxy.Buffer).Clear();
+            ((ICollection<T>) BufferProxy.Buffer).Clear();
         }
 
         public bool Contains(T item)
@@ -699,7 +732,7 @@ namespace BoysheO.Buffers
         void ICollection.CopyTo(Array array, int index)
         {
             ThrowIfVersionNotMatch();
-            ((ICollection)BufferProxy.Buffer).CopyTo(array, index);
+            ((ICollection) BufferProxy.Buffer).CopyTo(array, index);
         }
 
         public int Count
@@ -707,7 +740,7 @@ namespace BoysheO.Buffers
             get
             {
                 ThrowIfVersionNotMatch();
-                return ((ICollection)BufferProxy.Buffer).Count;
+                return ((ICollection) BufferProxy.Buffer).Count;
             }
         }
 
@@ -716,7 +749,7 @@ namespace BoysheO.Buffers
             get
             {
                 ThrowIfVersionNotMatch();
-                return ((ICollection)BufferProxy.Buffer).IsSynchronized;
+                return ((ICollection) BufferProxy.Buffer).IsSynchronized;
             }
         }
 
@@ -725,7 +758,7 @@ namespace BoysheO.Buffers
             get
             {
                 ThrowIfVersionNotMatch();
-                return ((ICollection)BufferProxy.Buffer).SyncRoot;
+                return ((ICollection) BufferProxy.Buffer).SyncRoot;
             }
         }
 
@@ -743,7 +776,7 @@ namespace BoysheO.Buffers
             get
             {
                 ThrowIfVersionNotMatch();
-                return ((ICollection<T>)BufferProxy.Buffer).IsReadOnly;
+                return ((ICollection<T>) BufferProxy.Buffer).IsReadOnly;
             }
         }
 
@@ -762,7 +795,7 @@ namespace BoysheO.Buffers
         public void RemoveAt(int index)
         {
             ThrowIfVersionNotMatch();
-            ((IList<T>)BufferProxy.Buffer).RemoveAt(index);
+            ((IList<T>) BufferProxy.Buffer).RemoveAt(index);
         }
 
         public T this[int index]
