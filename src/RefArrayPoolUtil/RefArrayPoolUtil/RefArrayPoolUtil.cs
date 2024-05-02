@@ -122,13 +122,7 @@ namespace BoysheO.Extensions.Util
         {
             var idx = Array.IndexOf(buff, obj, 0, buffCount);
             if (idx < 0) return false;
-            for (int i = idx; i < buffCount - 1; i++)
-            {
-                buff[i] = buff[i + 1];
-            }
-
-            buff[buffCount - 1] = default;
-            buffCount--;
+            RemoveAt(buff, ref buffCount, idx);
             return true;
         }
 
@@ -147,9 +141,22 @@ namespace BoysheO.Extensions.Util
             }
         }
 
-        public static void RemoveLast<T>(ref T[] buff, ref int buffCount)
+        public static void RemoveLast<T>(T[] buff, ref int buffCount)
         {
             if (buffCount <= 0) throw new ArgumentOutOfRangeException(nameof(buffCount));
+            buff[buffCount] = default;
+            buffCount--;
+        }
+
+        public static void RemoveAt<T>(T[] buff, ref int buffCount, int idx)
+        {
+            if (idx < 0) throw new ArgumentOutOfRangeException(nameof(idx), idx, "idx should more than 0");
+            buff[idx] = default;
+            for (int count = buffCount - 1; idx < count; idx++)
+            {
+                buff[idx] = buff[idx + 1];
+            }
+
             buff[buffCount] = default;
             buffCount--;
         }

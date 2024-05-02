@@ -47,6 +47,11 @@ public ref struct RefList<T>
         RefArrayPoolUtil.Remove(_items, ref _count, item);
     }
 
+    public void RemoveAt(int idx)
+    {
+        RefArrayPoolUtil.RemoveAt(_items, ref _count, idx);
+    }
+
     public void Push(T item)
     {
         Add(item);
