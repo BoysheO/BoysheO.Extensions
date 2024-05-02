@@ -108,7 +108,7 @@ namespace BoysheO.Extensions.Util
             if (sizeNeed > buff.Length) Resize(ref buff, sizeNeed, pool);
             Array.Copy(buff, index, buff, index + sizeNeed, buffCount - index);
             int i = index;
-            for (int index1 = 0,count1 = values.Count; index1 < count1; index1++)
+            for (int index1 = 0, count1 = values.Count; index1 < count1; index1++)
             {
                 var value = values[index1];
                 buff[i] = value;
@@ -145,6 +145,13 @@ namespace BoysheO.Extensions.Util
             {
                 Resize(ref buff, buffCount, pool);
             }
+        }
+
+        public static void RemoveLast<T>(ref T[] buff, ref int buffCount)
+        {
+            if (buffCount <= 0) throw new ArgumentOutOfRangeException(nameof(buffCount));
+            buff[buffCount] = default;
+            buffCount--;
         }
     }
 }
