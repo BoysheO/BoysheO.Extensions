@@ -10,12 +10,13 @@ namespace BoysheO.Extensions.Util
         /// resize a buff from ArrayPool.Share with ArrayPool.Share
         /// !after resize,buff.Length is more than the size given generally
         /// </summary>
-        public static void Resize<T>(ref T[] buff, int size, ArrayPool<T> pool = null)
+        public static void Resize<T>(ref T[] buff, int oldSize, int size, ArrayPool<T> pool = null)
         {
             if (buff.Length >= size) return;
             if (pool == null) pool = ArrayPool<T>.Shared;
             var newBuff = pool.Rent(size);
             Array.Copy(buff, newBuff, buff.Length);
+            Array.Clear(buff, 0, oldSize);
             pool.Return(buff);
             buff = newBuff;
         }
@@ -63,7 +64,7 @@ namespace BoysheO.Extensions.Util
 
             if (buff.Length == buffCount)
             {
-                Resize(ref buff, buffCount + 1, pool);
+                Resize(ref buff, buffCount, buffCount + 1, pool);
             }
 
             Array.Copy(buff, index, buff, index + 1, buffCount - index);
@@ -85,7 +86,7 @@ namespace BoysheO.Extensions.Util
             }
 
             var sizeNeed = buffCount + insertValue.Length;
-            if (sizeNeed > buff.Length) Resize(ref buff, sizeNeed, pool);
+            if (sizeNeed > buff.Length) Resize(ref buff, buffCount, sizeNeed, pool);
             Array.Copy(buff, index, buff, index + sizeNeed, buffCount - index);
             insertValue.CopyTo(buff.AsSpan(index));
             buffCount += insertValue.Length;
@@ -105,7 +106,7 @@ namespace BoysheO.Extensions.Util
             }
 
             var sizeNeed = buffCount + values.Count;
-            if (sizeNeed > buff.Length) Resize(ref buff, sizeNeed, pool);
+            if (sizeNeed > buff.Length) Resize(ref buff, buffCount, sizeNeed, pool);
             Array.Copy(buff, index, buff, index + sizeNeed, buffCount - index);
             int i = index;
             for (int index1 = 0, count1 = values.Count; index1 < count1; index1++)
@@ -137,7 +138,7 @@ namespace BoysheO.Extensions.Util
             }
             else if (buff.Length > 16 && buff.Length > buffCount / 2)
             {
-                Resize(ref buff, buffCount, pool);
+                Resize(ref buff, buffCount,buffCount, pool);
             }
         }
 
