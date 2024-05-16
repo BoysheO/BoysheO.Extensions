@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Buffers;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace BoysheO.Extensions.Util
 {
@@ -9,6 +10,7 @@ namespace BoysheO.Extensions.Util
         /// <summary>
         /// resize a buff from ArrayPool.Share with ArrayPool.Share
         /// !after resize,buff.Length is more than the size given generally
+        /// !resize cause copy every time,so call it just need
         /// </summary>
         public static void Resize<T>(ref T[] buff, int oldSize, int size, ArrayPool<T> pool = null)
         {
@@ -129,7 +131,7 @@ namespace BoysheO.Extensions.Util
 
         public static void TrimExcess<T>(ref T[] buff, int buffCount, ArrayPool<T> pool = null)
         {
-            //根据对ArrayPool测试结果显示，ArrayPool给出的数列大小为 0,16,32...16*2^(n-1)
+            //根据本机对ArrayPool测试结果显示，ArrayPool给出的数列大小为 0,16,32...16*2^(n-1)；实际根据源码，给出的数组大小是基于平台优化的
             if (pool == null) pool = ArrayPool<T>.Shared;
             if (buffCount == 0 && buff.Length > 0)
             {
@@ -138,7 +140,7 @@ namespace BoysheO.Extensions.Util
             }
             else if (buff.Length > 16 && buff.Length > buffCount / 2)
             {
-                Resize(ref buff, buffCount,buffCount, pool);
+                Resize(ref buff, buffCount, buffCount, pool);
             }
         }
 
