@@ -10,6 +10,7 @@ namespace BoysheO.Buffers
     /// <summary>
     /// don't use again after disposable
     /// </summary>
+    [Obsolete("set value will cause gc allow after Clear() called")]
     public readonly struct PooledDictionaryBuffer<TK, TV> : IDisposable, IReadOnlyDictionary<TK, TV>,
         IDictionary<TK, TV>, IDictionary,IReadOnlyPooledDictionaryBuff<TK,TV>
     {

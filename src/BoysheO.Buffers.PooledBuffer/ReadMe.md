@@ -1,3 +1,5 @@
+# due to bug from another library,I will redesign this library. 
+
 # 综述 Overview
 提供一组API，轻松使用池化列表，以减少GC压力。  
 Provides a set of APIs to easily use Pooled List to reduce GC pressure.
