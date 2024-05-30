@@ -11,13 +11,13 @@ namespace BoysheO.Extensions.Util
         /// !after resize,buff.Length is more than the size given generally
         /// !resize cause copy every time,so call it just need
         /// </summary>
-        public static void Resize<T>(ref T[] buff, int oldSize, int size, ArrayPool<T> pool = null)
+        public static void Resize<T>(ref T[] buff, int elementsCount, int buffSizeWanted, ArrayPool<T> pool = null)
         {
-            if (buff.Length >= size) return;
+            if (buff.Length >= buffSizeWanted) return;
             if (pool == null) pool = ArrayPool<T>.Shared;
-            var newBuff = pool.Rent(size);
+            var newBuff = pool.Rent(buffSizeWanted);
             Array.Copy(buff, newBuff, buff.Length);
-            Array.Clear(buff, 0, oldSize);
+            Array.Clear(buff, 0, elementsCount);
             pool.Return(buff);
             buff = newBuff;
         }
