@@ -63,11 +63,40 @@ namespace BoysheO.Extensions
         }
 
         /// <summary>
-        ///     Is A include B or A equals B.<br />
-        ///     *Performance tips:This method implements by linq.Arg:source will collect to a set immediately.
-        ///     Arg:another maybe traversed all once.
+        /// Determines whether all elements of <paramref name="another"/> are included in <paramref name="source"/> or if both collections are equal.
         /// </summary>
+        /// <remarks>
+        /// Performance tips:
+        /// This method uses LINQ. The <paramref name="source"/> collection will be converted to a set immediately.
+        /// The <paramref name="another"/> collection may be fully traversed.
+        /// </remarks>
+        /// <typeparam name="T">The type of elements in the collections.</typeparam>
+        /// <param name="source">The collection to check against.</param>
+        /// <param name="another">The collection to check for inclusion in <paramref name="source"/>.</param>
+        /// <returns>
+        /// <c>true</c> if <paramref name="source"/> includes all elements of <paramref name="another"/> or if both collections are equal; otherwise, <c>false</c>.
+        /// </returns>
+        [Obsolete("Use IsSupersetOf instead.")]
         public static bool IsInclude<T>(this IEnumerable<T> source, IEnumerable<T> another)
+        {
+            return IsSupersetOf(source, another);
+        }
+
+        /// <summary>
+        /// Determines whether <paramref name="source"/> is a superset of <paramref name="another"/> or if both collections are equal.
+        /// </summary>
+        /// <remarks>
+        /// Performance tips:
+        /// This method uses LINQ. The <paramref name="source"/> collection will be converted to a set immediately.
+        /// The <paramref name="another"/> collection may be fully traversed.
+        /// </remarks>
+        /// <typeparam name="T">The type of elements in the collections.</typeparam>
+        /// <param name="source">The collection to check against.</param>
+        /// <param name="another">The collection to check for inclusion in <paramref name="source"/>.</param>
+        /// <returns>
+        /// <c>true</c> if <paramref name="source"/> is a superset of all elements of <paramref name="another"/> or if both collections are equal; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool IsSupersetOf<T>(this IEnumerable<T> source, IEnumerable<T> another)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
             if (another == null) throw new ArgumentNullException(nameof(another));
@@ -103,6 +132,8 @@ namespace BoysheO.Extensions
         /// <summary>
         ///     Order by key.
         /// </summary>
+        [Obsolete(
+            "This method is deprecated due to low usage and limited functionality. Use the built-in OrderBy method instead.")]
         public static IOrderedEnumerable<TSource> OrderBy<TSource, TCompareKey>
         (this IEnumerable<TSource> sources,
             Func<TSource, TCompareKey> keySelector)
@@ -117,17 +148,17 @@ namespace BoysheO.Extensions
                 }));
         }
 
-
         /// <summary>
         ///     Same as SelectMany(v=>v).
         /// </summary>
+        [Obsolete("not useful enough.use internal api instead")]
         public static IEnumerable<T> SelectMany<T>(this IEnumerable<IEnumerable<T>> source)
         {
             foreach (var item in source)
             foreach (var initem in item)
                 yield return initem;
         }
-
+        
         public static T[] ToArray<T>(this ArraySegment<T> source)
         {
             var res = new T[source.Count];

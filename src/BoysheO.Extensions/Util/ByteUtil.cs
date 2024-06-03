@@ -13,9 +13,9 @@ namespace BoysheO.Util
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static byte HexCharToByte(char c)
         {
-            if (c >= 48 && c <= 57) return (byte)(c - 48);
-            if (c >= 65 && c <= 70) return (byte)(c - 55);
-            if (c >= 97 && c <= 102) return (byte)(c - 87);
+            if (c >= 48 && c <= 57) return (byte) (c - 48);
+            if (c >= 65 && c <= 70) return (byte) (c - 55);
+            if (c >= 97 && c <= 102) return (byte) (c - 87);
             throw new ArgumentOutOfRangeException(nameof(c));
         }
 
@@ -25,7 +25,7 @@ namespace BoysheO.Util
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static byte HexCharToByte(char c1, char c2)
         {
-            return unchecked((byte)((byte)(HexCharToByte(c1) << 4) + HexCharToByte(c2)));
+            return unchecked((byte) ((byte) (HexCharToByte(c1) << 4) + HexCharToByte(c2)));
         }
 
         /// <summary>
@@ -35,13 +35,19 @@ namespace BoysheO.Util
         /// </summary>
         public static void ByteToHexChar(byte src, Span<char> buff)
         {
+            // if (buff.Length != 2) throw new ArgumentException("buff len must be 2", nameof(buff));
+            // var low = src & 0x0F;
+            // if (low <= 9) buff[1] = (char) (low + 48);
+            // else buff[1] = (char) (low - 10 + 65);
+            // var high = (src & 0xF0) >> 4;
+            // if (high <= 9) buff[0] = (char) (high + 48);
+            // else buff[0] = (char) (high - 10 + 65);
             if (buff.Length != 2) throw new ArgumentException("buff len must be 2", nameof(buff));
-            var low = src & 0x0F;
-            if (low <= 9) buff[1] = (char)(low + 48);
-            else buff[1] = (char)(low - 10 + 65);
-            var high = (src & 0xF0) >> 4;
-            if (high <= 9) buff[0] = (char)(high + 48);
-            else buff[0] = (char)(high - 10 + 65);
+    
+            const string hexChars = "0123456789ABCDEF";
+    
+            buff[0] = hexChars[(src >> 4) & 0x0F];
+            buff[1] = hexChars[src & 0x0F];
         }
 
         /// <summary>
@@ -80,7 +86,7 @@ namespace BoysheO.Util
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsGZipHeader(this Span<byte> bytes)
         {
-            return ((ReadOnlySpan<byte>)bytes).IsGZipHeader();
+            return ((ReadOnlySpan<byte>) bytes).IsGZipHeader();
         }
 
         /// <summary>
@@ -90,7 +96,7 @@ namespace BoysheO.Util
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsGZipHeader(this byte[] bytes)
         {
-            return ((ReadOnlySpan<byte>)bytes).IsGZipHeader();
+            return ((ReadOnlySpan<byte>) bytes).IsGZipHeader();
         }
 
         /// <summary>

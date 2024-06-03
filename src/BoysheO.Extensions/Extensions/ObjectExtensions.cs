@@ -11,6 +11,7 @@ namespace BoysheO.Extensions
         ///     Warp a element to an array.<br />
         ///     The method is designed not to break the chained API
         /// </summary>
+        [Obsolete("This method is deprecated due to low usage and limited functionality. ")]
         public static T[] WarpToArray<T>(this T obj)
         {
             if (obj is null) throw new ArgumentNullException(nameof(obj), "null element is rejected"); //阻止null元素

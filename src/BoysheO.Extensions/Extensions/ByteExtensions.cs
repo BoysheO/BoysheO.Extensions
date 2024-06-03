@@ -12,9 +12,11 @@ namespace BoysheO.Extensions
         #region ToHexText
 
         /// <summary>
-        ///     Get Hex string from bytes like "A1 BE C1".<br />
-        ///     *Performance tips:this method use stringBuilder,and not very fast.
+        /// Get Hex string from bytes like "A1 BE C1".
         /// </summary>
+        /// <param name="bytes">The collection of bytes to be converted to a hex string.</param>
+        /// <param name="usingStringBuilder">Optional StringBuilder for improved performance by reducing allocations.</param>
+        /// <returns>A string representing the hex values of the bytes.</returns>
         public static string ToHexText(this IEnumerable<byte> bytes, StringBuilder? usingStringBuilder = null)
         {
             switch (bytes)
@@ -34,8 +36,12 @@ namespace BoysheO.Extensions
                 sb.Append(' ');
             }
 
-            if (sb.Length == 0) return "";
-            sb.Remove(sb.Length - 1, 1);
+            // Remove the trailing space if any
+            if (sb.Length > 0)
+            {
+                sb.Length--;
+            }
+
             var res = sb.ToString();
             usingStringBuilder?.Clear();
             return res;
@@ -66,7 +72,7 @@ namespace BoysheO.Extensions
             }
 
             //slice to ignore the last empty char
-            string res = buff.Slice(0, buffCount - 1).AsReadOnly().ToNewString();
+            string res = buff.Slice(0, buffCount - 1).ToString();
 
             if (ary != null)
             {
@@ -228,17 +234,10 @@ namespace BoysheO.Extensions
         ///     将该值类型转换成内存中byte表示，无复制,仅限基础类型，否则会异常.
         ///     *不安全：修改返回的span数组会修改初始值.在不清楚自己在做什么的时候不要修改返回值
         /// </summary>
+        [Obsolete("this api has moved to UnsafeUtil class")]
         public static Span<byte> AsMemoryByteSpan<T>(this ref T value) where T : unmanaged
         {
-            unsafe
-            {
-                fixed (T* p = &value)
-                {
-                    var span = new Span<byte>(p, sizeof(T));
-                    // Console.WriteLine(span.ToHexString());
-                    return span;
-                }
-            }
+            return UnsafeUtil.AsMemoryByteSpan(ref value);
         }
     }
 }

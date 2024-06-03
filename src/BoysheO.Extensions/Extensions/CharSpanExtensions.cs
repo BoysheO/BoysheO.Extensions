@@ -146,7 +146,8 @@ namespace BoysheO.Extensions
         }
 
         /// <summary>
-        /// creat string from chars
+        /// Creates a string from characters.
+        /// You should use <see cref="ReadOnlySpan{T}.ToString"/> for most cases.
         /// </summary>
         public static string ToNewString(this ReadOnlySpan<char> chars)
         {

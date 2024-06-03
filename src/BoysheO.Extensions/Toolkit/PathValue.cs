@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 
 namespace BoysheO.Toolkit
@@ -17,7 +16,7 @@ namespace BoysheO.Toolkit
         }
 
         /// <summary>
-        /// Same as Path.Combine
+        /// Same as <see cref="Path.Combine(string,string)"/>
         /// ex. "a/b" + "c.txt" -> "a/b/c.txt"
         /// </summary>
         public PathValue Combine(PathValue value)
@@ -26,7 +25,7 @@ namespace BoysheO.Toolkit
         }
 
         /// <summary>
-        /// Same as Path.GetFileName
+        /// Same as <see cref="Path.GetFileName"/>
         /// ex. "a/b/c.txt" -> "c.txt"
         /// </summary>
         public string GetFileName()
@@ -35,7 +34,7 @@ namespace BoysheO.Toolkit
         }
 
         /// <summary>
-        /// Same as Path.GetDirectoryName
+        /// Same as <see cref="Path.GetDirectoryName"/>
         /// ex. "a/b/c.txt" -> "a/b"
         /// </summary>
         public PathValue? GetDirectoryName()
@@ -45,7 +44,7 @@ namespace BoysheO.Toolkit
         }
 
         /// <summary>
-        /// Same as Path.GetFileNameWithoutExtension
+        /// Same as <see cref="Path.GetFileNameWithoutExtension"/>
         /// ex. "a.txt" -> "a"
         /// </summary>
         public string GetFileNameWithoutExt()
@@ -54,13 +53,23 @@ namespace BoysheO.Toolkit
         }
 
         /// <summary>
-        /// Same as Path.GetExtension
+        /// Same as <see cref="Path.GetExtension"/>
         /// ex. "a.txt" -> ".txt"
         /// </summary>
         /// <returns></returns>
         public string GetExtension()
         {
             return Path.GetExtension(Value);
+        }
+
+        /// <summary>
+        /// Same as <see cref="Path.ChangeExtension"/>
+        /// ex. a.txt -> a.bytes
+        /// </summary>
+        public static PathValue? ChangeExtension(string? path, string? extension)
+        {
+            var res = Path.ChangeExtension(path, extension);
+            return res == null ? (PathValue?) null : new PathValue(res);
         }
 
         public static implicit operator PathValue(string value)
