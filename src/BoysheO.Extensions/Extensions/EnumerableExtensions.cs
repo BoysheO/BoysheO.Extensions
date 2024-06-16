@@ -158,7 +158,7 @@ namespace BoysheO.Extensions
             foreach (var initem in item)
                 yield return initem;
         }
-        
+
         public static T[] ToArray<T>(this ArraySegment<T> source)
         {
             var res = new T[source.Count];
@@ -194,6 +194,29 @@ namespace BoysheO.Extensions
 
             item = default!;
             return -1;
+        }
+
+        /// <summary>
+        /// use list as stack
+        /// </summary>
+        public static bool TryPop<T>(this IReadOnlyList<T> lst, out T output)
+        {
+            if (lst.Count <= 0)
+            {
+                output = default;
+                return false;
+            }
+
+            output = lst[lst.Count - 1];
+            return true;
+        }
+
+        /// <summary>
+        /// use list as stack
+        /// </summary>
+        public static void Push<T>(this IList<T> lst,T item)
+        {
+            lst.Add(item);
         }
 
         // /// <summary>
