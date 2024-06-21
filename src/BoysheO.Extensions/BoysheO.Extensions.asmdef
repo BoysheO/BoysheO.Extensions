@@ -1,3 +1,4 @@
 {
-  "name": "BoysheO.Extensions"
+  "name": "BoysheO.Extensions",
+  "allowUnsafeCode": true
 }
