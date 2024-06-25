@@ -49,10 +49,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoysheO.Extensions.Preview"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RefArrayPoolUtil", "RefArrayPoolUtil\RefArrayPoolUtil\RefArrayPoolUtil.csproj", "{6C1DEBE4-DC0C-425D-BE71-EB147F272237}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZCancellationToken", "ZCancellationToken\ZCancellationToken.csproj", "{9BECD96E-F2A3-406F-B876-A1200B77267B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZCancellationToken.Test", "ZCancellationToken.Test\ZCancellationToken.Test.csproj", "{FBE684CC-B5FC-4013-A672-45DF490D5E69}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoysheO.Extensions.CustomerAttributeMeta", "BoysheO.Extensions.CustomerAttributeMeta\BoysheO.Extensions.CustomerAttributeMeta.csproj", "{B7CE708E-4580-4E03-A1F4-AB6DF4D175D9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoysheO.Extensions.CustomerAttributeData.Test", "BoysheO.Extensions.CustomerAttributeData.Test\BoysheO.Extensions.CustomerAttributeData.Test.csproj", "{A1FED89D-049F-4E3B-A12B-2FF0A092B7D5}"
@@ -78,8 +74,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpritePackCutter", "SpritePackCutter\SpritePackCutter.csproj", "{E7C978C9-3AD1-4A80-B922-BD79F9519484}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RefList", "RefList\RefList.csproj", "{6D065024-2F45-4D51-A827-EDDB70ABA00E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{3B87EE09-A3AC-4FF5-B90F-F133107CCBA3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CovertResxToCSharpCode", "CovertResxToCSharpCode\CovertResxToCSharpCode.csproj", "{59BE8D0D-BEF6-413D-ACCD-048490F70E6A}"
 EndProject
@@ -179,14 +173,6 @@ Global
 		{6C1DEBE4-DC0C-425D-BE71-EB147F272237}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6C1DEBE4-DC0C-425D-BE71-EB147F272237}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6C1DEBE4-DC0C-425D-BE71-EB147F272237}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9BECD96E-F2A3-406F-B876-A1200B77267B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9BECD96E-F2A3-406F-B876-A1200B77267B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9BECD96E-F2A3-406F-B876-A1200B77267B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9BECD96E-F2A3-406F-B876-A1200B77267B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FBE684CC-B5FC-4013-A672-45DF490D5E69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FBE684CC-B5FC-4013-A672-45DF490D5E69}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FBE684CC-B5FC-4013-A672-45DF490D5E69}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FBE684CC-B5FC-4013-A672-45DF490D5E69}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B7CE708E-4580-4E03-A1F4-AB6DF4D175D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B7CE708E-4580-4E03-A1F4-AB6DF4D175D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B7CE708E-4580-4E03-A1F4-AB6DF4D175D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -239,10 +225,6 @@ Global
 		{6D065024-2F45-4D51-A827-EDDB70ABA00E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6D065024-2F45-4D51-A827-EDDB70ABA00E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6D065024-2F45-4D51-A827-EDDB70ABA00E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3B87EE09-A3AC-4FF5-B90F-F133107CCBA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3B87EE09-A3AC-4FF5-B90F-F133107CCBA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3B87EE09-A3AC-4FF5-B90F-F133107CCBA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3B87EE09-A3AC-4FF5-B90F-F133107CCBA3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{59BE8D0D-BEF6-413D-ACCD-048490F70E6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{59BE8D0D-BEF6-413D-ACCD-048490F70E6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{59BE8D0D-BEF6-413D-ACCD-048490F70E6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
