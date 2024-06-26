@@ -2,7 +2,7 @@
 using System.Buffers;
 using System.Collections.Generic;
 
-namespace BoysheO.Extensions.Util
+namespace BoysheO.Util
 {
     public static class RefArrayPoolUtil
     {
@@ -11,7 +11,7 @@ namespace BoysheO.Extensions.Util
         /// !after resize,buff.Length is more than the size given generally
         /// !resize cause copy every time,so call it just need
         /// </summary>
-        public static void Resize<T>(ref T[] buff, int elementsCount, int buffSizeWanted, ArrayPool<T> pool = null)
+        public static void Resize<T>(ref T[] buff, int elementsCount, int buffSizeWanted, ArrayPool<T>? pool = null)
         {
             if (buff.Length >= buffSizeWanted) return;
             if (pool == null) pool = ArrayPool<T>.Shared;
@@ -26,7 +26,7 @@ namespace BoysheO.Extensions.Util
         /// Add value to the buff from ArrayPool.Share
         /// * resize automatically
         /// </summary>
-        public static void Add<T>(ref T[] buff, ref int buffCount, T value, ArrayPool<T> pool = null)
+        public static void Add<T>(ref T[] buff, ref int buffCount, T value, ArrayPool<T>? pool = null)
         {
             Insert(ref buff, ref buffCount, value, buffCount, pool);
         }
@@ -36,7 +36,7 @@ namespace BoysheO.Extensions.Util
         /// * resize automatically
         /// </summary>
         public static void AddRange<T>(ref T[] buff, ref int buffCount, IReadOnlyList<T> values,
-            ArrayPool<T> pool = null)
+            ArrayPool<T>? pool = null)
         {
             InsertRange(ref buff, ref buffCount, values, buffCount, pool);
         }
@@ -46,7 +46,7 @@ namespace BoysheO.Extensions.Util
         /// * resize automatically
         /// </summary>
         public static void AddRange<T>(ref T[] buff, ref int buffCount, ReadOnlySpan<T> values,
-            ArrayPool<T> pool = null)
+            ArrayPool<T>? pool = null)
         {
             InsertRange(ref buff, ref buffCount, values, buffCount, pool);
         }
@@ -55,7 +55,7 @@ namespace BoysheO.Extensions.Util
         /// Insert value to the buff from ArrayPool.Share
         /// * resize automatically
         /// </summary>
-        public static void Insert<T>(ref T[] buff, ref int buffCount, T value, int index, ArrayPool<T> pool = null)
+        public static void Insert<T>(ref T[] buff, ref int buffCount, T value, int index, ArrayPool<T>? pool = null)
         {
             if (index > buffCount || index < 0)
             {
@@ -78,7 +78,7 @@ namespace BoysheO.Extensions.Util
         /// * resize automatically
         /// </summary>
         public static void InsertRange<T>(ref T[] buff, ref int buffCount, ReadOnlySpan<T> insertValue, int index,
-            ArrayPool<T> pool = null)
+            ArrayPool<T>? pool = null)
         {
             if (index > buffCount || index < 0)
             {
@@ -98,7 +98,7 @@ namespace BoysheO.Extensions.Util
         /// * resize automatically
         /// </summary>
         public static void InsertRange<T>(ref T[] buff, ref int buffCount, IReadOnlyList<T> values, int index,
-            ArrayPool<T> pool = null)
+            ArrayPool<T>? pool = null)
         {
             if (index > buffCount || index < 0)
             {
@@ -128,7 +128,7 @@ namespace BoysheO.Extensions.Util
             return true;
         }
 
-        public static void TrimExcess<T>(ref T[] buff, int buffCount, ArrayPool<T> pool = null)
+        public static void TrimExcess<T>(ref T[] buff, int buffCount, ArrayPool<T>? pool = null)
         {
             //根据本机对ArrayPool测试结果显示，ArrayPool给出的数列大小为 0,16,32...16*2^(n-1)；实际根据源码，给出的数组大小是基于平台优化的
             if (pool == null) pool = ArrayPool<T>.Shared;
@@ -146,20 +146,20 @@ namespace BoysheO.Extensions.Util
         public static void RemoveLast<T>(T[] buff, ref int buffCount)
         {
             if (buffCount <= 0) throw new ArgumentOutOfRangeException(nameof(buffCount));
-            buff[buffCount] = default;
+            buff[buffCount] = default!;
             buffCount--;
         }
 
         public static void RemoveAt<T>(T[] buff, ref int buffCount, int idx)
         {
             if (idx < 0) throw new ArgumentOutOfRangeException(nameof(idx), idx, "idx should more than 0");
-            buff[idx] = default;
+            buff[idx] = default!;
             for (int count = buffCount - 1; idx < count; idx++)
             {
                 buff[idx] = buff[idx + 1];
             }
 
-            buff[buffCount] = default;
+            buff[buffCount] = default!;
             buffCount--;
         }
     }
