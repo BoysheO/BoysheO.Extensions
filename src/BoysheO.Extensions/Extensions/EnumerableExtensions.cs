@@ -203,7 +203,7 @@ namespace BoysheO.Extensions
         {
             if (lst.Count <= 0)
             {
-                output = default;
+                output = default!;
                 return false;
             }
 
