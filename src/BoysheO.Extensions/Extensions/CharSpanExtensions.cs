@@ -1,8 +1,7 @@
 using System;
 using System.Buffers;
-using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using Extensions;
+using BoysheO.Util;
 
 namespace BoysheO.Extensions
 {
@@ -101,7 +100,7 @@ namespace BoysheO.Extensions
                                 buffCount++;
                                 if (buffCount >= bufferLen)
                                 {
-                                    buffer = ArrayPoolUtil.Resize(buffer, buffCount + 1);
+                                    RefArrayPoolUtil.Resize(ref buffer,buffCount,buffCount+1);
                                     bufferLen = buffer.Length;
                                 }
 
