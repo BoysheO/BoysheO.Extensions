@@ -29,5 +29,33 @@ namespace BoysheO.Util
                 // }
             }
         }
+        
+        public static Span<TTo> As<TFrom, TTo>(Span<TFrom> src)
+        {
+#pragma warning disable CS8500 // This takes the address of, gets the size of, or declares a pointer to a managed type
+            unsafe
+            {
+                fixed (void* p = src)
+                {
+                    var c = (TTo*)p;
+                    return new Span<TTo>(c, src.Length);
+                }
+            }
+#pragma warning restore CS8500 // This takes the address of, gets the size of, or declares a pointer to a managed type
+        }
+        
+        public static ReadOnlySpan<TTo> As<TFrom, TTo>(ReadOnlySpan<TFrom> src)
+        {
+#pragma warning disable CS8500 // This takes the address of, gets the size of, or declares a pointer to a managed type
+            unsafe
+            {
+                fixed (void* p = src)
+                {
+                    var c = (TTo*)p;
+                    return new ReadOnlySpan<TTo>(c, src.Length);
+                }
+            }
+#pragma warning restore CS8500 // This takes the address of, gets the size of, or declares a pointer to a managed type
+        }
     }
 }
