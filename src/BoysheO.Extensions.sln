@@ -71,6 +71,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CovertResxToCSharpCode", "C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JoyConTest", "JoyConTest\JoyConTest.csproj", "{195A07B2-358A-4A1E-B748-4B449E250685}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoysheO.ProcessSystem", "BoysheO.ProcessSystem\BoysheO.ProcessSystem.csproj", "{A3F2A3AA-BEA4-4A8B-9A56-B359C76675B3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -209,6 +211,10 @@ Global
 		{195A07B2-358A-4A1E-B748-4B449E250685}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{195A07B2-358A-4A1E-B748-4B449E250685}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{195A07B2-358A-4A1E-B748-4B449E250685}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3F2A3AA-BEA4-4A8B-9A56-B359C76675B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3F2A3AA-BEA4-4A8B-9A56-B359C76675B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3F2A3AA-BEA4-4A8B-9A56-B359C76675B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3F2A3AA-BEA4-4A8B-9A56-B359C76675B3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
