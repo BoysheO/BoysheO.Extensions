@@ -12,6 +12,11 @@ namespace BoysheO.Extensions
         {
             if (!stream.CanSeek) throw new Exception("stream must can seek to 0");
             stream.Seek(0, SeekOrigin.Begin);
+            if (stream is MemoryStream mm)
+            {
+                return mm.ToArray();
+            }
+
             using var mem = new MemoryStream();
             stream.CopyTo(mem);
             return mem.ToArray();
