@@ -25,6 +25,20 @@ namespace BoysheO.Extensions
             File.WriteAllBytes(filePath.Value, bytes);
         }
 
+#if NET6_0_OR_GREATER
+        /// <summary>
+        /// Creat directory if not exist and write file.
+        /// </summary>
+        /// <param name="filePath">file</param>
+        public static void WriteAllBytes(this PathValue filePath,ReadOnlySpan<byte> bytes)
+        {
+            filePath.GetDirectoryName().Value.CreatDirectoryIfNotExist();
+            using var sfh = File.OpenHandle(filePath.Value, FileMode.Create, FileAccess.Write, FileShare.Read);
+            RandomAccess.Write(sfh,bytes,0);
+        }
+#endif
+
+
         public static DirectoryInfo ToDirectoryInfo(this PathValue directoryPath)
         {
             return new DirectoryInfo(directoryPath.Value);

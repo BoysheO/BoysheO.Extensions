@@ -30,11 +30,18 @@ namespace BoysheO.Extensions
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static double Clamp(this double value, double min, double max)
         {
+#if NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
+            return Math.Clamp(value, min, max);
+#else
+            if (min > max)
+            {
+                throw new ArgumentException("min cannot be greater than max.");
+            }
+
             if (value < min)
-                value = min;
-            else if (value > max)
-                value = max;
-            return value;
+                return min;
+            return value > max ? max : value;
+#endif
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

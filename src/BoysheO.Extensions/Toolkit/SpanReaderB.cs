@@ -7,6 +7,7 @@
 
     /// <summary>
     /// 按大端序读取数据
+    /// *不会验证Seek是否越界，以获取更多性能。这应该是合理的
     /// </summary>
     public ref struct SpanReaderB
     {
@@ -22,7 +23,7 @@
         private void EnsureCapacity(int length)
         {
             if (Seek + length > _buffer.Length)
-                throw new InvalidOperationException("Buffer overflow.");
+                throw new InvalidOperationException("No bytes enough");
         }
 
         public int ReadInt32()
@@ -80,32 +81,31 @@
         /// <exception cref="InvalidOperationException"></exception>
         public string ReadStringASCII()
         {
-            var idx = _buffer.Slice(Seek).IndexOf((byte)0);
+            var bytes = ReadBytesUntilNull();
+#if NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
+            return Encoding.ASCII.GetString(bytes);
+#else
+            unsafe
+            {
+                fixed (byte* b = bytes)
+                {
+                    var result = Encoding.ASCII.GetString(b, bytes.Length);
+                    return result;
+                }
+            }
+#endif
+        }
 
-            if (idx == -1)
-                throw new InvalidOperationException("Null terminator not found for ASCII string.");
-            if (idx == 0) return "";
-
+        [Obsolete("The API is designed not good enough")]
+        public string ReadStringUTF8()
+        {
+            var len = ReadUInt16();
+            if (Seek + len > _buffer.Length) throw new Exception("invalid size"); //字符串长度过大
             unsafe
             {
                 fixed (byte* b = _buffer.Slice(Seek))
                 {
-                    var result = Encoding.ASCII.GetString(b, idx);
-                    Seek += idx; // 跳过\0
-                    return result;
-                }
-            }
-        }
-
-        public string ReadStringUTF8()
-        {
-            var len = ReadUInt16();
-            if (Seek + len > _buffer.Length) throw new Exception("invalid size");//字符串长度过大
-            unsafe
-            {
-                fixed (byte* b = _buffer.Slice(Seek))
-                { 
-                    var str =Encoding.UTF8.GetString(b, len);
+                    var str = Encoding.UTF8.GetString(b, len);
                     Seek += len;
                     return str;
                 }
@@ -118,6 +118,22 @@
             var bytes = _buffer.Slice(Seek, length);
             Seek += length;
             return bytes;
+        }
+
+        /// <summary>
+        /// 读取到下个/0标记，输出/0标记前的所有byte，并且Seek跳到/0符号后一个位置
+        /// 没有找到/0标记就会抛异常
+        /// 如果/0标记在第一个字符，则输出的Span会是长度0
+        /// </summary>
+        /// <returns></returns>
+        public ReadOnlySpan<byte> ReadBytesUntilNull()
+        {
+            if (Seek >= _buffer.Length) throw new InvalidOperationException("No bytes can be read");
+            var idx = _buffer.Slice(Seek).IndexOf<byte>(0);
+            if (idx < 0) throw new InvalidOperationException("No /0 found");
+            var start = Seek;
+            Seek = start + idx + 1;
+            return _buffer.Slice(start, idx);
         }
 
         public void Reset()

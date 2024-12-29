@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 
 namespace BoysheO.Extensions
 {
@@ -36,7 +35,7 @@ namespace BoysheO.Extensions
         // /// </summary>
         // public static ArraySegment<byte> AsSegment(this MemoryStream mem)
         // {
-        //     if (!mem.TryGetBuffer(out var buffer)) throw new Exception("MemoryStream must can be read and write.");
+        //     if (!mem.TryGetBuffer(out var buffer)) throw new Exception("MemoryStream must be read and write.");
         //
         //     return buffer.Slice(0, checked((int) mem.Position));
         // }

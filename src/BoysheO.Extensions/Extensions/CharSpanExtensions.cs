@@ -10,7 +10,7 @@ namespace BoysheO.Extensions
         /// <summary>
         /// Convert chars '123' to int 123.<br />
         /// <b>*UNSAFE</b>:make sure chars is all digit char.Not '-123' '12.3'<br />
-        /// This method is more faster than <see cref="int.Parse(string)"/> 
+        /// This method is faster than <see cref="int.Parse(string)"/> 
         /// </summary>
         public static int ParseToPositiveInt(this ReadOnlySpan<char> chars)
         {
@@ -86,7 +86,8 @@ namespace BoysheO.Extensions
                                     if (buffer[buffCount] > mm)
                                     {
                                         ArrayPool<int>.Shared.Return(buffer);
-                                        throw new ArgumentOutOfRangeException(nameof(chars),"one more math value inside chars is over than int.Max");
+                                        throw new ArgumentOutOfRangeException(nameof(chars),
+                                            "one more math value inside chars is over than int.Max");
                                     }
 
                                     buffer[buffCount] *= 10;
@@ -100,7 +101,7 @@ namespace BoysheO.Extensions
                                 buffCount++;
                                 if (buffCount >= bufferLen)
                                 {
-                                    RefArrayPoolUtil.Resize(ref buffer,buffCount,buffCount+1);
+                                    RefArrayPoolUtil.Resize(ref buffer, buffCount, buffCount + 1);
                                     bufferLen = buffer.Length;
                                 }
 
@@ -120,7 +121,7 @@ namespace BoysheO.Extensions
         /// <summary>
         /// Convert chars "123" to long 123<br />
         /// <b>*UNSAFE</b>:make sure chars is all digit char.Not '-123' '12.3'<br />
-        /// This method is more faster than <see cref="long.Parse(string)"/> 
+        /// This method is faster than <see cref="long.Parse(string)"/> 
         /// </summary>
         public static long ParseToPositiveLong(this ReadOnlySpan<char> chars)
         {
@@ -150,6 +151,9 @@ namespace BoysheO.Extensions
         /// </summary>
         public static string ToNewString(this ReadOnlySpan<char> chars)
         {
+#if NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
+            return new string(chars);
+#else
             unsafe
             {
                 fixed (char* c = chars)
@@ -157,6 +161,7 @@ namespace BoysheO.Extensions
                     return new string(c, 0, chars.Length);
                 }
             }
+#endif
         }
 
         /// <summary>

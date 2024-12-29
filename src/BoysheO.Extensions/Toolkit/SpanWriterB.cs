@@ -74,24 +74,27 @@ namespace BoysheO.Toolkit
             if (value == null) throw new ArgumentNullException(nameof(value));
             if (value.Length > 0 && value[value.Length - 1] == '\0')
             {
-                throw new ArgumentOutOfRangeException(nameof(value),"can not ends with \\0");
-                return;
+                throw new ArgumentOutOfRangeException(nameof(value), "Value can not ends with \\0");
             }
 
             int byteCount = Encoding.ASCII.GetByteCount(value);
             EnsureCapacity(byteCount + 1);
+            int count;
+#if NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
+            count = Encoding.ASCII.GetBytes(value, _buffer[Seek..]);
+#else
             unsafe
             {
                 fixed (char* c = value)
                 {
                     fixed (byte* b = _buffer.Slice(Seek))
                     {
-                        int count = Encoding.ASCII.GetBytes(c, value.Length, b, _buffer.Length - Seek);
-                        Seek += count;
+                        count = Encoding.ASCII.GetBytes(c, value.Length, b, _buffer.Length - Seek);
                     }
                 }
             }
-
+#endif
+            Seek += count;
             //查看字符串是否以\0结尾
             if (value.Length > 0 && value[value.Length - 1] != '\0')
             {
@@ -101,6 +104,7 @@ namespace BoysheO.Toolkit
         }
 
         //utf8使用长度头+内容
+        [Obsolete("The API is designed not good enough")]
         public void WriteStringUTF8(string value)
         {
             if (value == null) throw new ArgumentNullException(nameof(value));
@@ -131,7 +135,7 @@ namespace BoysheO.Toolkit
             bytes.CopyTo(_buffer.Slice(Seek));
             Seek += bytes.Length;
         }
-        
+
         public void Reset()
         {
             Seek = 0;

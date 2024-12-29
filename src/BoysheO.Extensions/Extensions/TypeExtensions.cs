@@ -38,6 +38,7 @@ namespace BoysheO.Extensions
             return type.IsClass && base1 != type && base1.IsAssignableFrom(type);
         }
 
+        //这个函数似乎使用率不够高，以后或许会被移除
         /// <summary>
         ///     Determine the type is implement the another type (interface or class,GenericTypeDefinition not supported) and is struct.<br />
         /// </summary>

@@ -8,6 +8,10 @@ namespace BoysheO.Extensions
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DateTimeOffset Clamp(this DateTimeOffset value, DateTimeOffset min, DateTimeOffset max)
         {
+            if (min > max)
+            {
+                throw new ArgumentException("min cannot be greater than max.");
+            }
             if (value < min) return min;
             if (value > max) return max;
             return value;

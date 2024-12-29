@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Cronos;
 using DateAndTime;
 using NUnit.Framework;
 
@@ -39,6 +41,29 @@ public class TimeUtilTest
         Console.WriteLine(new {startMs,endMs,time=time.TotalMilliseconds,offset=(int)TimeSpan.FromHours(8).TotalMilliseconds});
         return TimeUtil.GetCountOfTheTimeBetween(startMs, endMs, (int)time.TotalMilliseconds,
             (int)TimeSpan.FromHours(8).TotalMilliseconds);
+    }
+    
+    [TestCase("2023/1/17 09:45:12 +8:00", "2023/1/17 09:45:12 +8:00", "06:00:00", "0 6 * * *")]
+    [TestCase("2023/1/17 09:45:12 +8:00", "2023/1/18 09:45:12 +8:00", "06:00:00", "0 6 * * *")]
+    [TestCase("2023/1/17 09:45:12 +8:00", "2023/1/18 09:45:12 +8:00", "06:00:00", "0 6 * * *")]
+    [TestCase("2023/1/17 09:45:12 +8:00", "2023/1/19 09:45:12 +8:00", "06:00:00", "0 6 * * *")]
+    [TestCase("2023/1/17 06:00:00 +8:00", "2023/1/19 06:00:00 +8:00", "06:00:00", "0 6 * * *")]
+    [TestCase("2023/1/17 06:00:00 +8:00", "2023/1/19 06:00:01 +8:00", "06:00:00", "0 6 * * *")]
+    [TestCase("2023/1/17 06:00:00 +8:00", "2023/1/18 06:00:01 +8:00", "06:00:00", "0 6 * * *")]
+    [TestCase("2023/1/17 06:00:00 +8:00", "2023/1/17 06:00:00 +8:00", "06:00:00", "0 6 * * *")]
+    public void GetCountOfTheTimeBetween_Cronos(string start, string end, string timeOfDay,string cron)
+    {
+        var startMs = DateTimeOffset.Parse(start);
+        var endMs = DateTimeOffset.Parse(end);
+        var cronExp = CronExpression.Parse(cron);
+        
+        var time = TimeSpan.Parse(timeOfDay);
+        Console.WriteLine(new {startMs,endMs,time=time.TotalMilliseconds,offset=(int)TimeSpan.FromHours(8).TotalMilliseconds});
+        var count = TimeUtil.GetCountOfTheTimeBetween(startMs.ToUnixTimeMilliseconds(), endMs.ToUnixTimeMilliseconds(), (int)time.TotalMilliseconds,
+            (int)TimeSpan.FromHours(8).TotalMilliseconds);
+
+        var cou = cronExp.GetOccurrences(startMs, endMs,TimeZoneInfo.CreateCustomTimeZone("8",TimeSpan.FromHours(8),"ch","ch")).Count();
+        Assert.AreEqual(count,cou);
     }
 
     // [TestCase("2023/1/17 05:59:59 +8:00", "06:00:00", ExpectedResult = "2023/01/16 06:00:00")]

@@ -7,13 +7,16 @@ namespace BoysheO.Extensions
     {
         /// <summary>
         /// Determine the char is in '0'-'9' without culture.<br />
+        /// It's not same as <see cref="char.IsDigit(char)"/>.
         /// <see cref="char.IsDigit(char)"/>has more logic.
         /// *Performance tips:very fast in net48,but fail to against char.IsDigital() in net6.0 
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        // ReSharper disable once InconsistentNaming
         public static bool Is0to9(this char c)
         {
-            return c <= 57 && c >= 48;
+            return c >= '0' && c <= '9';
+            // return c <= 57 && c >= 48;
         }
 
         /// <summary>

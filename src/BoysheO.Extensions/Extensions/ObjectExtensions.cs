@@ -1,14 +1,13 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 
 namespace BoysheO.Extensions
 {
     public static class ObjectExtensions
     {
         /// <summary>
-        ///     Warp a element to an array.<br />
+        ///     Warp an element to an array.<br />
         ///     The method is designed not to break the chained API
         /// </summary>
         [Obsolete("This method is deprecated due to low usage and limited functionality. ")]
@@ -50,7 +49,9 @@ namespace BoysheO.Extensions
 
         /// <summary>
         ///     Get <see cref="DescriptionAttribute.Description" /> by reflection.<br />
-        ///     * GetCustomAttribute is not support in Unity IL2CPP,so don't use this in IL2CPP
+        ///     * Emphasize that in practice, it has been found that GetCustomAttribute() is often stripped by Unity's IL2CPP.
+        ///     If you are using it in Unity, you must ensure that this function is used somewhere in the IL2CPP code.<br />
+        ///     * 重点强调，在实践中发现GetCustomAttribute()经常会被Unity IL2CPP裁剪，如果在Unity中使用，必须保证在IL2CPP代码中有使用过此函数。<br />
         /// </summary>
         public static string? GetDescription(this Enum @enum)
         {
@@ -62,7 +63,7 @@ namespace BoysheO.Extensions
 
         // /// <summary>
         // ///     等价于(T)obj强制类型转换。减少强转语法对代码可读性伤害<br />
-        // ///     不赶时间的话使用（T）更好，可以获得IDE支持，提前发现类型转换错误
+        // ///     *我发现它会隐藏类型转换错误到Runtime中才报错，这是一个隐患，因此我弃用了这个函数
         // /// </summary>
         // [MethodImpl(MethodImplOptions.AggressiveInlining)]
         // public static T CastType<T>(this object obj)

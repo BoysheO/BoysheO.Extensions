@@ -31,7 +31,7 @@ namespace BoysheO.Extensions
         {
             return string.Join(sp, strings);
         }
-
+        
         /// <summary>
         ///     return new string without any space
         /// </summary>
@@ -87,10 +87,10 @@ namespace BoysheO.Extensions
         //         }
         // }
 
-        /// <summary>
-        ///     将字符串视作string列表，此函数包含了忽略元素两端空白字符、以中英文逗号为分割点的功能;不忽略双逗号时的""字符串
-        ///     实测效率不如replace+split
-        /// </summary>
+        // /// <summary>
+        // ///     将字符串视作string列表，此函数包含了忽略元素两端空白字符、以中英文逗号为分割点的功能;不忽略双逗号时的""字符串
+        // ///     实测效率不如replace+split
+        // /// </summary>
         // [Obsolete("use replace+split instead")]
         // public static IEnumerable<string> AsStringEnumerable(this string? str)
         // {
@@ -513,7 +513,7 @@ namespace BoysheO.Extensions
         }
 
         /// <summary>
-        ///      Put every bytes to char array as string<br />
+        ///      Put every byte to char array as string<br />
         /// </summary>
         public static string ToRawString(this ReadOnlySpan<byte> source)
         {
@@ -599,12 +599,11 @@ namespace BoysheO.Extensions
         {
             return str.AsSpan().ParseToPositiveInt();
         }
-
-
+        
         /// <summary>
         /// Convert chars "123" to long 123<br />
         /// <b>*UNSAFE</b>:make sure chars is all digit char.Not '-123' '12.3'<br />
-        /// This method is more faster than <see cref="long.Parse(string)"/> 
+        /// This method is faster than <see cref="long.Parse(string)"/> 
         /// </summary>
         public static long ParseToPositiveLong(this string str)
         {

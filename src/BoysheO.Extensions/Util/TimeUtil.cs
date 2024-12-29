@@ -13,6 +13,7 @@ namespace DateAndTime
         /// *起始时刻与timeMsOfDay重叠时算入出现次数，终止时刻与timeMsOfDay重叠时不算入出现次数<br />
         /// calculate the count of the time of day between start to end <br />
         /// *Result increase while starMs same as timeMsOfDay but endMs do not<br />
+        /// *弃用：与Cron库计算结果不一致。函数实现有误或单元测试编写有误
         /// </summary>
         /// <param name="startMs">
         /// 起始时间戳，需要保证起点为0点<br/>
@@ -30,6 +31,7 @@ namespace DateAndTime
         /// Timezone's timeoffset.Millsec.<br/>
         /// </param>
         /// <returns></returns>
+        [Obsolete("No same to cron")]
         public static long GetCountOfTheTimeBetween(long startMs, long endMs, int timeMsOfDay, int timeOffset)
         {
             if (startMs > endMs)
