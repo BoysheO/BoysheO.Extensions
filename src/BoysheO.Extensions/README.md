@@ -2,6 +2,9 @@
 
 simple,high performance, useful extensions
 
+6.2.2 Updates  
+Append [System.Diagnostics.CodeAnalysis.NotNullWhen(false)] to string.IsNullOrEmpty and IsNullOrWhiteSpace
+
 6.2.1 Updates  
 Support more platform now.  
 Optimize performance.  

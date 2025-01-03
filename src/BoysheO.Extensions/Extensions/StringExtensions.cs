@@ -31,7 +31,7 @@ namespace BoysheO.Extensions
         {
             return string.Join(sp, strings);
         }
-        
+
         /// <summary>
         ///     return new string without any space
         /// </summary>
@@ -333,15 +333,23 @@ namespace BoysheO.Extensions
         {
             return regex.Replace(str, evaluator);
         }
-
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsNullOrEmpty(this string? str)
+        public static bool IsNullOrEmpty(
+#if NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
+            [System.Diagnostics.CodeAnalysis.NotNullWhen(false)]
+#endif
+            this string? str)
         {
             return string.IsNullOrEmpty(str);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsNullOrWhiteSpace(this string? str)
+        public static bool IsNullOrWhiteSpace(
+#if NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
+            [System.Diagnostics.CodeAnalysis.NotNullWhen(false)]
+#endif
+            this string? str)
         {
             return string.IsNullOrWhiteSpace(str);
         }
@@ -465,7 +473,7 @@ namespace BoysheO.Extensions
                         throw new InvalidCastException($"str={str} idx={len} char={c} is out of byte value range.");
                 }
 
-                result[len] = unchecked((byte) charSpan[len]);
+                result[len] = unchecked((byte)charSpan[len]);
             }
 
             return result;
@@ -508,7 +516,7 @@ namespace BoysheO.Extensions
                         throw new InvalidCastException($"str={str} idx={len} char={c} is out of byte value range.");
                 }
 
-                result[len] = unchecked((byte) charSpan[len]);
+                result[len] = unchecked((byte)charSpan[len]);
             }
         }
 
@@ -520,7 +528,7 @@ namespace BoysheO.Extensions
             const int maxStackLimit = 1024;
             var len = source.Length;
             var buffer = len <= maxStackLimit ? stackalloc char[len] : new char[len];
-            for (len--; len >= 0; len--) buffer[len] = (char) source[len];
+            for (len--; len >= 0; len--) buffer[len] = (char)source[len];
 
             return buffer.Slice(0, source.Length).AsReadOnly().ToNewString();
         }
@@ -536,7 +544,7 @@ namespace BoysheO.Extensions
             {
                 fixed (byte* p = source)
                 {
-                    var sb = (char*) p;
+                    var sb = (char*)p;
                     return new string(sb, 0, source.Length / 2);
                 }
             }
@@ -593,13 +601,13 @@ namespace BoysheO.Extensions
         /// <summary>
         /// Convert chars '123' to int 123.<br />
         /// <b>*UNSAFE</b>:make sure chars is all digit char.Not '-123' '12.3'<br />
-        /// This method is more faster than <see cref="int.Parse(string)"/> 
+        /// This method is faster than <see cref="int.Parse(string)"/> 
         /// </summary>
         public static int ParseToPositiveInt(this string str)
         {
             return str.AsSpan().ParseToPositiveInt();
         }
-        
+
         /// <summary>
         /// Convert chars "123" to long 123<br />
         /// <b>*UNSAFE</b>:make sure chars is all digit char.Not '-123' '12.3'<br />
