@@ -5,7 +5,7 @@ simple,high performance, useful extensions
 6.3.0 Updates  
 Modify the BoysheO.Extensions.ObjectExtensions.EnsureNotNull method to correct its flawed design.
 
-6.2.3(Departed) Updates  
+6.2.3(Deprecated) Updates  
 Append BoysheO.Extensions.ObjectExtensions.EnsureNotNull method.
 
 6.2.2 Updates  
