@@ -2,6 +2,9 @@
 
 simple,high performance, useful extensions
 
+6.2.3 Updates
+Append BoysheO.Extensions.ObjectExtensions.EnsureNotNull method.
+
 6.2.2 Updates  
 Append [System.Diagnostics.CodeAnalysis.NotNullWhen(false)] to string.IsNullOrEmpty and IsNullOrWhiteSpace
 

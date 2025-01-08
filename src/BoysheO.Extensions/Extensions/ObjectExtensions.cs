@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace BoysheO.Extensions
@@ -14,7 +15,7 @@ namespace BoysheO.Extensions
         public static T[] WarpToArray<T>(this T obj)
         {
             if (obj is null) throw new ArgumentNullException(nameof(obj), "null element is rejected"); //阻止null元素
-            return new[] {obj};
+            return new[] { obj };
         }
 
         // /// <summary>
@@ -70,5 +71,15 @@ namespace BoysheO.Extensions
         // {
         //     return (T) obj;
         // }
+
+        public static object EnsureNotNull(
+#if NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
+            [NotNull]
+#endif
+            this object? ins, string? erMsg = null)
+        {
+            if (ins == null) throw new NullReferenceException(erMsg);
+            return ins;
+        }
     }
 }
