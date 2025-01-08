@@ -72,11 +72,11 @@ namespace BoysheO.Extensions
         //     return (T) obj;
         // }
 
-        public static object EnsureNotNull(
+        public static T EnsureNotNull<T>(
 #if NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
             [NotNull]
 #endif
-            this object? ins, string? erMsg = null)
+            this T? ins, string? erMsg = null) where T:class
         {
             if (ins == null) throw new NullReferenceException(erMsg);
             return ins;
