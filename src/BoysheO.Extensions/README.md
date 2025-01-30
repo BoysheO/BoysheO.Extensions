@@ -2,6 +2,9 @@
 
 simple,high performance, useful extensions
 
+6.3.3 Updates
+Change EnsureIsNotNullOrWhiteSpace(string) to EnsureNotNullOrWhiteSpace(string).
+
 6.3.2 Updates
 Append EnsureIsNotNullOrWhiteSpace(string).I found that it is used very frequently too.
 

@@ -366,7 +366,7 @@ namespace BoysheO.Extensions
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void EnsureIsNotNullOrWhiteSpace(this string? str)
+        public static void EnsureNotNullOrWhiteSpace(this string? str)
         {
             if (str.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(str));
         }
