@@ -2,6 +2,9 @@
 
 simple,high performance, useful extensions
 
+6.3.1 Updates
+Append IsNotNullOrWhiteSpace(string).I found that it is used very, very frequently.
+
 6.3.0 Updates  
 Modify the BoysheO.Extensions.ObjectExtensions.EnsureNotNull method to correct its flawed design.
 

@@ -354,6 +354,12 @@ namespace BoysheO.Extensions
             return string.IsNullOrWhiteSpace(str);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsNotNullOrWhiteSpace(this string? str)
+        {
+            return !string.IsNullOrWhiteSpace(str);
+        }
+
         //path 相关api应当封装到独立的结构中
         // /// <summary>
         // ///     见<see cref="Path.Combine(string,string)" />，另外会对\号转成/号
