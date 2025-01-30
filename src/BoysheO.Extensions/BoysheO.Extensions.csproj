@@ -9,7 +9,7 @@
         <Authors>BoysheO</Authors>
         <RepositoryUrl>https://github.com/BoysheO/BoysheO.Extensions</RepositoryUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <PackageVersion>6.3.1</PackageVersion>
+        <PackageVersion>6.3.2</PackageVersion>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <TargetFrameworks>netstandard2.0;netstandard2.1;net471;net481;net6;net8</TargetFrameworks>
         <PackageReleaseNotes>Add SerializableRandom,PathValueExtensions,optimize StreamExtensions.GetAllBytesFromOffset0</PackageReleaseNotes>

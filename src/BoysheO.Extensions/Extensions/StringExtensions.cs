@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -347,7 +348,7 @@ namespace BoysheO.Extensions
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsNullOrWhiteSpace(
 #if NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
-            [System.Diagnostics.CodeAnalysis.NotNullWhen(false)]
+            [NotNullWhen(false)]
 #endif
             this string? str)
         {
@@ -355,9 +356,19 @@ namespace BoysheO.Extensions
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsNotNullOrWhiteSpace(this string? str)
+        public static bool IsNotNullOrWhiteSpace(
+#if NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
+            [NotNullWhen(true)]
+#endif
+            this string? str)
         {
             return !string.IsNullOrWhiteSpace(str);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void EnsureIsNotNullOrWhiteSpace(this string? str)
+        {
+            if (str.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(str));
         }
 
         //path 相关api应当封装到独立的结构中
