@@ -52,7 +52,7 @@ namespace BoysheO.Util
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static double Remap(double v, double vMin, double vMax, double newMin, double newMax)
         {
-            if (Math.Abs(vMin - vMax) < 0.002f || Math.Abs(newMin - newMax) > 0.002f)
+            if (Math.Abs(vMin - vMax) < 0.002f || Math.Abs(newMin - newMax) < 0.002f)
                 throw new ArgumentException();
             return (v - vMin) / (vMax - vMin) * (newMax - newMin) + newMin;
         }
