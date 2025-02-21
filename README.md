@@ -15,7 +15,9 @@ simple,high performance, useful extensions
 |BoysheO.Extensions.Unity3D.Abstractions|Use code instead|
 |BoysheO.Extensions.Unity3DCore|Use code instead|
 |BoysheO.Buffer.SimpleListPool|[![https://www.nuget.org/packages/BoysheO.Buffer.SimpleListPool](https://img.shields.io/nuget/v/BoysheO.Buffer.SimpleListPool.svg)](https://www.nuget.org/packages/BoysheO.Buffer.SimpleListPool)
-|BoysheO.Buffer.PooledBuff|Use BoysheO.Collection2 BoysheO.Collection instead|
+|BoysheO.Buffer.PooledBuff|Use BoysheO.Collection instead|
+|BoysheO.Collection|[![https://www.nuget.org/packages/BoysheO.Collection](https://img.shields.io/nuget/v/BoysheO.Collection.svg)](https://www.nuget.org/packages/BoysheO.Collection)|
+|BoysheO.Collection2|[![https://www.nuget.org/packages/BoysheO.Collection](https://img.shields.io/nuget/v/BoysheO.Collection2.svg)](https://www.nuget.org/packages/BoysheO.Collection2)|
 
 Others not include in the list is in coding and do not suggest to use.
 
