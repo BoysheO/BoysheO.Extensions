@@ -720,5 +720,11 @@ namespace BoysheO.Extensions
         // }
 
         public static PathValue AsPath(this string path) => new PathValue(path);
+        
+        /// <summary>
+        /// Same as str.Replace('\\','/');
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static string ReplaceBackslash(this string str) =>str.Replace('\\','/');
     }
 }
