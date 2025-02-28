@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using BoysheO.Extensions;
-using BoysheO.ProcessSystem;
+using Boysheo.ProcessSystem;
+using Boysheo.ProcessSystem.LogSystem;
 using Moq;
 using NUnit.Framework;
-using WorkFlow;
 
 [TestFixture]
 public class ProcessHelperTests

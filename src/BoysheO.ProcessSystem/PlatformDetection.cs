@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace WorkFlowUtil
+namespace Boysheo.ProcessSystem
 {
     /// <summary>
     /// This source file is shared by both Grpc.Core and Grpc.Tools to avoid duplication

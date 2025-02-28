@@ -1,4 +1,4 @@
-﻿namespace BoysheO.ProcessSystem
+﻿namespace Boysheo.ProcessSystem.LogSystem
 {
     public readonly struct Log
     {

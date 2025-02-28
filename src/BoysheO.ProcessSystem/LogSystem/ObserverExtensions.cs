@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BoysheO.ProcessSystem
+namespace Boysheo.ProcessSystem.LogSystem
 {
     public static class ObserverExtensions
     {
