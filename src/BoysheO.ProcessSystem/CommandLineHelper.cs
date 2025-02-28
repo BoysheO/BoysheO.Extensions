@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using BoysheO.Extensions;
 using BoysheO.ProcessSystem.LogSystem;
 
 namespace BoysheO.ProcessSystem
@@ -16,7 +17,8 @@ namespace BoysheO.ProcessSystem
         public static async Task<(bool isSuccesss, List<Log>? consoleLog, int exitCode)> ExecuteCommandAsync(
             string command,
             string arguments, bool requireElevation = false,
-            IObserver<Log>? logger = null, CancellationToken cancellationToken = default)
+            IObserver<Log>? logger = null, string? workingDirectory = null,
+            CancellationToken cancellationToken = default)
         {
             var platform = PlatformDetection.GetOSKind();
             if (platform == PlatformDetection.OSKind.MacOSX || platform == PlatformDetection.OSKind.Linux)
@@ -29,10 +31,17 @@ namespace BoysheO.ProcessSystem
                 }
             }
 
-            var processStartInfo = CreateProcessStartInfo(command, arguments, requireElevation);
+            var processStartInfo = CreateProcessStartInfo(command, arguments, workingDirectory, requireElevation);
 
             using var process = new Process { StartInfo = processStartInfo };
-            logger.LogInformation($"Starting process: {command} {arguments}");
+            if (workingDirectory.IsNotNullOrWhiteSpace())
+            {
+                logger.LogInformation($"Starting process: {command} {arguments} at {workingDirectory}");
+            }
+            else
+            {
+                logger.LogInformation($"Starting process: {command} {arguments}");
+            }
 
             // Start the process
             process.Start();
@@ -43,26 +52,26 @@ namespace BoysheO.ProcessSystem
 #else
             using (cancellationToken.Register(() =>
 #endif
-                   {
-                       // ReSharper disable AccessToDisposedClosure
-                       try
-                       {
-                           if (!process.HasExited)
-                           {
-                               logger.LogInformation("Cancellation requested. Killing process...");
+                         {
+                             // ReSharper disable AccessToDisposedClosure
+                             try
+                             {
+                                 if (!process.HasExited)
+                                 {
+                                     logger.LogInformation("Cancellation requested. Killing process...");
 #if NET6_0_OR_GREATER
                                      process.Kill(true); // Kill the process and its children
 #else
                                process.Kill();
 #endif
-                           }
-                       }
-                       catch (Exception ex)
-                       {
-                           logger.LogError($"Error killing process: {ex.Message}");
-                       }
-                       // ReSharper restore AccessToDisposedClosure
-                   }))
+                                 }
+                             }
+                             catch (Exception ex)
+                             {
+                                 logger.LogError($"Error killing process: {ex.Message}");
+                             }
+                             // ReSharper restore AccessToDisposedClosure
+                         }))
             {
                 // Asynchronously read the output and error streams
                 var task = SteamReaderHelper.ReadAllAsync(process.StandardOutput, process.StandardError,
@@ -92,6 +101,7 @@ namespace BoysheO.ProcessSystem
         }
 
         public static ProcessStartInfo CreateProcessStartInfo(string command, string arguments,
+            string? workingDirectory,
             bool requireElevation)
         {
             var processStartInfo = new ProcessStartInfo
@@ -103,6 +113,11 @@ namespace BoysheO.ProcessSystem
                 UseShellExecute = false,
                 CreateNoWindow = true
             };
+
+            if (workingDirectory != null)
+            {
+                processStartInfo.WorkingDirectory = workingDirectory;
+            }
 
             if (requireElevation)
             {

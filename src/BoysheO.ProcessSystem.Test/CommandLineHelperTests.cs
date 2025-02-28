@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,6 +18,59 @@ public class CommandLineHelperTests
     public void SetUp()
     {
         _loggerMock = new Mock<IObserver<Log>>();
+    }
+
+    [Test]
+    public async Task ExecuteCommandAsync_ShouldUseSpecifiedWorkingDirectory()
+    {
+        // Arrange
+        string command = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "cmd.exe" : "bash";
+        string arguments = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "/c dir" : "-c \"ls\"";
+        var cancellationToken = CancellationToken.None;
+
+        // Create a temporary directory and a dummy file
+        string tempDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+        Directory.CreateDirectory(tempDir);
+        string dummyFilePath = Path.Combine(tempDir, "testfile.txt");
+        File.WriteAllText(dummyFilePath, "Hello, World!");
+
+        try
+        {
+            // Act
+            var result = await CommandLineHelper.ExecuteCommandAsync(command, arguments, workingDirectory: tempDir,
+                logger: _loggerMock.Object, cancellationToken: cancellationToken);
+
+            // Assert
+            Assert.That(result.isSuccesss);
+            Assert.That(result.exitCode, Is.Zero);
+
+            Assert.That(result.consoleLog?.Any(log => log.Text.Contains("testfile.txt")) ??
+                        false); // Ensure the dummy file is listed
+        }
+        finally
+        {
+            // Clean up
+            Directory.Delete(tempDir, true);
+        }
+    }
+
+    [Test]
+    public async Task ExecuteCommandAsync_ShouldUseCurrentDirectory_WhenWorkingDirectoryIsNotSpecified()
+    {
+        // Arrange
+        string command = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "cmd.exe" : "bash";
+        string arguments = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "/c echo %CD%" : "-c \"echo $PWD\"";
+        var cancellationToken = CancellationToken.None;
+
+        // Act
+        var result = await CommandLineHelper.ExecuteCommandAsync(command, arguments, logger: _loggerMock.Object,
+            cancellationToken: cancellationToken);
+
+        // Assert
+        Assert.That(result.isSuccesss);
+        Assert.That(result.exitCode, Is.Zero);
+        Assert.That(result.consoleLog?.Any(log => log.Text.Contains(Directory.GetCurrentDirectory())) ??
+                    false); // Ensure the current directory is printed
     }
 
     [Test]
@@ -49,7 +104,7 @@ public class CommandLineHelperTests
             ? "/c invalidcommand"
             : "-c \"invalidcommand\"";
         var cancellationToken = CancellationToken.None;
-        
+
         // Act
         var result = await CommandLineHelper.ExecuteCommandAsync(command, arguments, logger: _loggerMock.Object,
             cancellationToken: cancellationToken);
@@ -57,7 +112,7 @@ public class CommandLineHelperTests
         //Console.WriteLine(result.consoleLog.Select(v=>$"{v.Level} {v.Text}").JoinAsOneString("\n"));
 
         // Assert
-        Assert.That(result.isSuccesss,Is.True);
+        Assert.That(result.isSuccesss, Is.True);
         Assert.That(0 != result.exitCode);
         //_loggerMock.Verify(logger => logger.OnNext(It.Is<Log>(log => log.Level == LogLevel.E)), Times.AtLeastOnce);
     }
