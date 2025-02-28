@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
+        <TargetFrameworks>net461;netstandard2.0;net6.0;net8.0</TargetFrameworks>
         <Nullable>enable</Nullable>
         <RootNamespace>Boysheo.ProcessSystem</RootNamespace>
+        <LangVersion>9.0</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
@@ -12,7 +12,10 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
+      <PackageReference Include="PolySharp" Version="1.15.0">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
     </ItemGroup>
 
 </Project>
