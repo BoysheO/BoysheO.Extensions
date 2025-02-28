@@ -2,13 +2,13 @@
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using Boysheo.ProcessSystem;
-using Boysheo.ProcessSystem.LogSystem;
+using BoysheO.ProcessSystem;
+using BoysheO.ProcessSystem.LogSystem;
 using Moq;
 using NUnit.Framework;
 
 [TestFixture]
-public class ProcessHelperTests
+public class CommandLineHelperTests
 {
     private Mock<IObserver<Log>> _loggerMock;
 
@@ -27,7 +27,7 @@ public class ProcessHelperTests
         var cancellationToken = CancellationToken.None;
 
         // Act
-        var result = await ProcessHelper.ExecuteCommandAsync(command, arguments, logger: _loggerMock.Object,
+        var result = await CommandLineHelper.ExecuteCommandAsync(command, arguments, logger: _loggerMock.Object,
             cancellationToken: cancellationToken);
 
         // Assert
@@ -51,7 +51,7 @@ public class ProcessHelperTests
         var cancellationToken = CancellationToken.None;
         
         // Act
-        var result = await ProcessHelper.ExecuteCommandAsync(command, arguments, logger: _loggerMock.Object,
+        var result = await CommandLineHelper.ExecuteCommandAsync(command, arguments, logger: _loggerMock.Object,
             cancellationToken: cancellationToken);
 
         //Console.WriteLine(result.consoleLog.Select(v=>$"{v.Level} {v.Text}").JoinAsOneString("\n"));
@@ -75,7 +75,7 @@ public class ProcessHelperTests
         var cancellationToken = CancellationToken.None;
 
         // Act
-        var result = await ProcessHelper.ExecuteCommandAsync(command, arguments, logger: _loggerMock.Object,
+        var result = await CommandLineHelper.ExecuteCommandAsync(command, arguments, logger: _loggerMock.Object,
             cancellationToken: cancellationToken);
 
         // Assert
@@ -97,7 +97,7 @@ public class ProcessHelperTests
         cts.CancelAfter(500); // Cancel after 500ms
 
         // Act
-        var result = await ProcessHelper.ExecuteCommandAsync(command, arguments, logger: _loggerMock.Object,
+        var result = await CommandLineHelper.ExecuteCommandAsync(command, arguments, logger: _loggerMock.Object,
             cancellationToken: cts.Token);
 
         // Assert
@@ -121,7 +121,7 @@ public class ProcessHelperTests
         var cancellationToken = CancellationToken.None;
 
         // Act
-        var result = await ProcessHelper.ExecuteCommandAsync(command, arguments, requireElevation,
+        var result = await CommandLineHelper.ExecuteCommandAsync(command, arguments, requireElevation,
             logger: _loggerMock.Object, cancellationToken: cancellationToken);
 
         // Assert
@@ -142,7 +142,7 @@ public class ProcessHelperTests
         string filePath = "/tmp/nonexistentfile"; // A non-existent file
 
         // Act
-        bool isExecutable = ProcessHelper.CheckIfFileIsExecutable(filePath, _loggerMock.Object);
+        bool isExecutable = CommandLineHelper.CheckIfFileIsExecutable(filePath, _loggerMock.Object);
 
         // Assert
         Assert.That(!isExecutable);
@@ -161,7 +161,7 @@ public class ProcessHelperTests
         string filePath = "/bin/ls"; // A known executable file
 
         // Act
-        bool isExecutable = ProcessHelper.CheckIfFileIsExecutable(filePath, _loggerMock.Object);
+        bool isExecutable = CommandLineHelper.CheckIfFileIsExecutable(filePath, _loggerMock.Object);
 
         // Assert
         Assert.That(isExecutable);

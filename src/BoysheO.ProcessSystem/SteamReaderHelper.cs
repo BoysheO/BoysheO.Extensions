@@ -2,9 +2,9 @@
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Boysheo.ProcessSystem.LogSystem;
+using BoysheO.ProcessSystem.LogSystem;
 
-namespace Boysheo.ProcessSystem
+namespace BoysheO.ProcessSystem
 {
     internal static class SteamReaderHelper
     {

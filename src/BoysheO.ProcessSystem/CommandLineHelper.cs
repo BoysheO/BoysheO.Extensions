@@ -4,11 +4,11 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Boysheo.ProcessSystem.LogSystem;
+using BoysheO.ProcessSystem.LogSystem;
 
-namespace Boysheo.ProcessSystem
+namespace BoysheO.ProcessSystem
 {
-    public static class ProcessHelper
+    public static class CommandLineHelper
     {
         /// <summary>
         /// 特别提示：返回isSuccess为true仅仅是代表进程正常结束，而不是运行正确。要判断命令行是否成功执行应当判断exitCode是否等于0

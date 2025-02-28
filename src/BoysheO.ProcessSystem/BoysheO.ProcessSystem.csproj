@@ -3,8 +3,12 @@
     <PropertyGroup>
         <TargetFrameworks>net461;netstandard2.0;net6.0;net8.0</TargetFrameworks>
         <Nullable>enable</Nullable>
-        <RootNamespace>Boysheo.ProcessSystem</RootNamespace>
+        <RootNamespace>BoysheO.ProcessSystem</RootNamespace>
         <LangVersion>9.0</LangVersion>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <DocumentationFile>bin\Release\BoysheO.ProcessSystem.xml</DocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>
