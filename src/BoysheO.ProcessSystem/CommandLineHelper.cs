@@ -16,7 +16,6 @@ namespace BoysheO.ProcessSystem
         public static async Task<(bool isSuccesss, List<Log>? consoleLog, int exitCode)> ExecuteCommandAsync(
             string command,
             string arguments, bool requireElevation = false,
-            bool withLog = false,
             IObserver<Log>? logger = null, CancellationToken cancellationToken = default)
         {
             var platform = PlatformDetection.GetOSKind();
