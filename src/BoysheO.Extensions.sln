@@ -75,6 +75,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoysheO.ProcessSystem", "Bo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoysheO.ProcessSystem.Test", "BoysheO.ProcessSystem.Test\BoysheO.ProcessSystem.Test.csproj", "{036CEA39-0D04-4A0F-B7BC-818BA45AFE77}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoysheO.Extensions.Configuration.Reloadable", "BoysheO.Extensions.Configuration.Reloadable\BoysheO.Extensions.Configuration.Reloadable.csproj", "{238A298B-27BD-44D3-84C1-7CF2CB37C92C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -221,6 +223,10 @@ Global
 		{036CEA39-0D04-4A0F-B7BC-818BA45AFE77}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{036CEA39-0D04-4A0F-B7BC-818BA45AFE77}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{036CEA39-0D04-4A0F-B7BC-818BA45AFE77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{238A298B-27BD-44D3-84C1-7CF2CB37C92C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{238A298B-27BD-44D3-84C1-7CF2CB37C92C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{238A298B-27BD-44D3-84C1-7CF2CB37C92C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{238A298B-27BD-44D3-84C1-7CF2CB37C92C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
