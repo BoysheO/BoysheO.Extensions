@@ -2,6 +2,19 @@
 
 simple,high performance, useful extensions
 
+6.6.1 Updates  
+Change
+
+```csharp
+void EnsureNotNullOrWhiteSpace(this string? str) 
+```
+
+to
+
+```csharp
+string EnsureNotNullOrWhiteSpace(this string? str)
+```
+
 6.6.0 Updates  
 New API:IOUtil
 
@@ -29,7 +42,7 @@ Optimize performance.
 SpanReaderB.ReadingStringUTF8 was deprecated.  
 SpanWriterB.WriteStringUTF8 was deprecated.  
 StringUtil.BytesToReadableSize(long) was deprecated.  
-TimeUtil.GetCountOfTheTimeBetween was deprecated.  
+TimeUtil.GetCountOfTheTimeBetween was deprecated.
 
 6.0.0 Updates  
 Remove ArrayPoolUtil which was deprecated.

@@ -366,9 +366,10 @@ namespace BoysheO.Extensions
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void EnsureNotNullOrWhiteSpace(this string? str)
+        public static string EnsureNotNullOrWhiteSpace(this string? str)
         {
             if (str.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(str));
+            return str!;
         }
 
         //path 相关api应当封装到独立的结构中
