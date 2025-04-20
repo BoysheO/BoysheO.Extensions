@@ -72,11 +72,22 @@ namespace BoysheO.Extensions
         //     return (T) obj;
         // }
 
+        [Obsolete("I thing it's not a suitable name.Use ThrowIfNull instead",true)]
         public static T EnsureNotNull<T>(
 #if NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
             [NotNull]
 #endif
-            this T? ins, string? erMsg = null) where T:class
+            this T? ins, string? erMsg = null) where T : class
+        {
+            if (ins == null) throw new NullReferenceException(erMsg);
+            return ins;
+        }
+
+        public static T ThrowIfNull<T>(
+#if NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
+            [NotNull]
+#endif
+            this T ins, string? erMsg = null)
         {
             if (ins == null) throw new NullReferenceException(erMsg);
             return ins;

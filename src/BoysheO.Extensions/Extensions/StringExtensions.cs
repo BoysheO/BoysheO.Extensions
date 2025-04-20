@@ -365,8 +365,15 @@ namespace BoysheO.Extensions
             return !string.IsNullOrWhiteSpace(str);
         }
         
+        [Obsolete("I thing it's not a suitable name.Use ThrowIfNullOrWhiteSpace instead",true)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string EnsureNotNullOrWhiteSpace(this string? str)
+        {
+            if (str.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(str));
+            return str!;
+        }
+        
+        public static string ThrowIfNullOrWhiteSpace(this string? str)
         {
             if (str.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(str));
             return str!;
