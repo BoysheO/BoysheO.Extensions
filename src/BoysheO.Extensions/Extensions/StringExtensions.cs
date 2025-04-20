@@ -373,7 +373,11 @@ namespace BoysheO.Extensions
             return str!;
         }
         
-        public static string ThrowIfNullOrWhiteSpace(this string? str)
+        public static string ThrowIfNullOrWhiteSpace(
+#if NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
+            [NotNull]
+#endif
+            this string? str)
         {
             if (str.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(str));
             return str!;

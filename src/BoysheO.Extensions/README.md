@@ -1,6 +1,9 @@
 # BoysheO.Extensions
 
 simple,high performance, useful extensions
+## [6.7.1] - 2025-04-20
+Fixed the issue where ThrowIfNull and the original function EnsureNotNull were not synonymous
+
 ## [6.7.0] - 2025-04-20 
 ### What changed
 

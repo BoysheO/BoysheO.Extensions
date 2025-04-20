@@ -82,14 +82,14 @@ namespace BoysheO.Extensions
             if (ins == null) throw new NullReferenceException(erMsg);
             return ins;
         }
-
+        
         public static T ThrowIfNull<T>(
 #if NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
             [NotNull]
 #endif
-            this T ins, string? erMsg = null)
+            this T? ins, string? erMsg = null) where T : class
         {
-            if (ins == null) throw new NullReferenceException(erMsg);
+            if (ins is null) throw new NullReferenceException(erMsg);
             return ins;
         }
     }
