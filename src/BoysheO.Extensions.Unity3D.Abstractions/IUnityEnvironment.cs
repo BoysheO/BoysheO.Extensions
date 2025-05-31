@@ -64,6 +64,11 @@ namespace BoysheO.Extensions.Unity3D.Abstractions
         /// 等价<see cref="UnityEngine.Application.productName"/>
         /// </summary>
         string ProductName { get; }
+        
+        /// <summary>
+        /// Unity是否正在游玩；当UnityEditor停止播放时，此Token变为Cancel状态
+        /// </summary>
+        CancellationToken CancellationToken { get; }
 
         /// <summary>
         /// 等价<see cref="UnityEngine.Application.quitting"/>
