@@ -1,59 +1,54 @@
 ﻿using System;
 using System.Threading;
-using UnityEngine;
 
 namespace BoysheO.Extensions.Unity3D.Abstractions
 {
     /// <summary>
-    /// 提供Unity3D的环境
+    /// 提供Unity3D的环境(具体实现，在初始化后，应都支持多线程访问）
     /// </summary>
     public interface IUnityEnvironment
     {
         /// <summary>
-        ///     <see cref="Application.platform"/>
+        /// 等价<see cref="UnityEngine.Application.platform"/>，是它的字符串形式
         /// </summary>
-        RuntimePlatform Platform { get; }
+        string Platform { get; }
 
         /// <summary>
         /// 是否播放中；此值应处处可用不抛异常，以解决Application.isPlaying在构造时抛异常的问题
+        /// 在UnityEditor中，这个值应为开发者按下播放按钮之后会true，松开播放按钮之后为false。对应的值应为EditorApplication.isPlayingOrWillChangePlaymode（但是还是有点小区别）
+        /// 在后端和Runtime中，这个值应恒为true。
         /// </summary>
         bool IsPlaying { get; }
 
-
         /// <summary>
-        /// 根据IL2CPP运行环境的特点关闭一些Not-support特性，例如reload
-        /// </summary>
-        bool IsIL2CPP { get; }
-
-        /// <summary>
-        ///     等价或等义<see cref="Application.version"/>，支持多线程访问
+        /// 等价<see cref="UnityEngine.Application.version"/>
         /// </summary>
         string Version { get; }
 
         /// <summary>
-        ///     等价<see cref="Application.streamingAssetsPath"/>，支持多线程访问
+        /// 等价<see cref="UnityEngine.Application.streamingAssetsPath"/>
         /// </summary>
         string StreamingAssetsPath { get; }
 
         /// <summary>
-        ///     等价<see cref="Application.dataPath"/>，支持多线程访问
+        /// 等价<see cref="UnityEngine.Application.dataPath"/>
         /// </summary>
         string DataPath { get; }
 
         /// <summary>
-        /// 等价<see cref="Application.persistentDataPath"/>，支持多线程访问
+        /// 等价<see cref="UnityEngine.Application.persistentDataPath"/>
         /// </summary>
         string PersistentDataPath { get; }
 
         /// <summary>
-        /// 等价<see cref="Application.temporaryCachePath"/>，支持多线程访问
+        /// 等价<see cref="UnityEngine.Application.temporaryCachePath"/>
         /// </summary>
         string TemporaryCachePath { get; }
 
         /// <summary>
-        /// 等价<see cref="Application.systemLanguage"/>，支持多线程访问
+        /// 等价<see cref="UnityEngine.Application.systemLanguage"/>，是它的字符串形式
         /// </summary>
-        SystemLanguage SystemLanguage { get; }
+        string SystemLanguage { get; }
 
         /// <summary>
         /// Unity3D主线程上下文
@@ -66,17 +61,17 @@ namespace BoysheO.Extensions.Unity3D.Abstractions
         Thread Thread { get; }
 
         /// <summary>
-        /// 等价<see cref="Application.productName"/>，支持多线程访问
+        /// 等价<see cref="UnityEngine.Application.productName"/>
         /// </summary>
         string ProductName { get; }
 
         /// <summary>
-        /// 等价<see cref="Application.quitting"/>
+        /// 等价<see cref="UnityEngine.Application.quitting"/>
         /// </summary>
         event Action Quitting;
 
         /// <summary>
-        /// 等价<see cref="Application.wantsToQuit"/>
+        /// 等价<see cref="UnityEngine.Application.wantsToQuit"/>
         /// </summary>
         event Func<bool> WantsToQuit;
 
@@ -85,19 +80,18 @@ namespace BoysheO.Extensions.Unity3D.Abstractions
         /// </summary>
         bool IsInUnityThread();
 
-
         /// <summary>
-        /// 等价<see cref="MonoBehaviour"/>.Update
+        /// 等价<see cref="UnityEngine.MonoBehaviour"/>.Update
         /// </summary>
         event Action onUpdate;
 
         /// <summary>
-        /// 等价<see cref="MonoBehaviour"/>.FixedUpdate
+        /// 等价<see cref="UnityEngine.MonoBehaviour"/>.FixedUpdate
         /// </summary>
         event Action onFixedUpdate;
 
         /// <summary>
-        /// 等价<see cref="MonoBehaviour"/>.LateUpdate
+        /// 等价<see cref="UnityEngine.MonoBehaviour"/>.LateUpdate
         /// </summary>
         event Action onLateUpdate;
     }

@@ -6,21 +6,10 @@
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<Authors>BoysheO</Authors>
-		<Version>1.0.2</Version>
+		<Version>2.0.0</Version>
 		<RepositoryUrl>https://github.com/BoysheO/BoysheO.Extensions</RepositoryUrl>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<PackageVersion>1.0.4</PackageVersion>
+		<PackageVersion>2.0.0</PackageVersion>
 
 	</PropertyGroup>
-
-    <ItemGroup>
-        <Reference Include="UnityEngine">
-            <HintPath>..\Dlls\UnityEngine.dll</HintPath>
-        </Reference>
-    </ItemGroup>
-
-    <ItemGroup>
-      <PackageReference Include="Unity3D.SDK" Version="2020.3.2.1" />
-    </ItemGroup>
-
 </Project>
