@@ -1,6 +1,10 @@
 # BoysheO.Extensions
 
 simple,high performance, useful extensions
+
+## [6.7.2] - 2025-08-26
+New Toolkit: PathX
+
 ## [6.7.1] - 2025-04-20
 Fixed the issue where ThrowIfNull and the original function EnsureNotNull were not synonymous
 
