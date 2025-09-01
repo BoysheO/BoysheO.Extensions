@@ -71,11 +71,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CovertResxToCSharpCode", "C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JoyConTest", "JoyConTest\JoyConTest.csproj", "{195A07B2-358A-4A1E-B748-4B449E250685}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoysheO.ProcessSystem", "BoysheO.ProcessSystem\BoysheO.ProcessSystem.csproj", "{A3F2A3AA-BEA4-4A8B-9A56-B359C76675B3}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoysheO.ProcessSystem.Test", "BoysheO.ProcessSystem.Test\BoysheO.ProcessSystem.Test.csproj", "{036CEA39-0D04-4A0F-B7BC-818BA45AFE77}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoysheO.Extensions.Configuration.Reloadable", "BoysheO.Extensions.Configuration.Reloadable\BoysheO.Extensions.Configuration.Reloadable.csproj", "{238A298B-27BD-44D3-84C1-7CF2CB37C92C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoysheoO.CommandLineTool", "BoysheoO.CommandLineTool\BoysheoO.CommandLineTool.csproj", "{BEA58348-716E-48DF-B7C1-7401F2A0454E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -215,18 +213,14 @@ Global
 		{195A07B2-358A-4A1E-B748-4B449E250685}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{195A07B2-358A-4A1E-B748-4B449E250685}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{195A07B2-358A-4A1E-B748-4B449E250685}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A3F2A3AA-BEA4-4A8B-9A56-B359C76675B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A3F2A3AA-BEA4-4A8B-9A56-B359C76675B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A3F2A3AA-BEA4-4A8B-9A56-B359C76675B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A3F2A3AA-BEA4-4A8B-9A56-B359C76675B3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{036CEA39-0D04-4A0F-B7BC-818BA45AFE77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{036CEA39-0D04-4A0F-B7BC-818BA45AFE77}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{036CEA39-0D04-4A0F-B7BC-818BA45AFE77}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{036CEA39-0D04-4A0F-B7BC-818BA45AFE77}.Release|Any CPU.Build.0 = Release|Any CPU
 		{238A298B-27BD-44D3-84C1-7CF2CB37C92C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{238A298B-27BD-44D3-84C1-7CF2CB37C92C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{238A298B-27BD-44D3-84C1-7CF2CB37C92C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{238A298B-27BD-44D3-84C1-7CF2CB37C92C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BEA58348-716E-48DF-B7C1-7401F2A0454E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BEA58348-716E-48DF-B7C1-7401F2A0454E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BEA58348-716E-48DF-B7C1-7401F2A0454E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BEA58348-716E-48DF-B7C1-7401F2A0454E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

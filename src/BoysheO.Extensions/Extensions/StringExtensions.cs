@@ -334,7 +334,7 @@ namespace BoysheO.Extensions
         {
             return regex.Replace(str, evaluator);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsNullOrEmpty(
 #if NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
@@ -364,15 +364,15 @@ namespace BoysheO.Extensions
         {
             return !string.IsNullOrWhiteSpace(str);
         }
-        
-        [Obsolete("I thing it's not a suitable name.Use ThrowIfNullOrWhiteSpace instead",true)]
+
+        [Obsolete("I thing it's not a suitable name.Use ThrowIfNullOrWhiteSpace instead", true)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string EnsureNotNullOrWhiteSpace(this string? str)
         {
             if (str.IsNullOrWhiteSpace()) throw new ArgumentNullException(nameof(str));
             return str!;
         }
-        
+
         public static string ThrowIfNullOrWhiteSpace(
 #if NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
             [NotNull]
@@ -732,11 +732,31 @@ namespace BoysheO.Extensions
         // }
 
         public static PathValue AsPath(this string path) => new PathValue(path);
-        
+
         /// <summary>
         /// Same as str.Replace('\\','/');
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string ReplaceBackslash(this string str) =>str.Replace('\\','/');
+        public static string ReplaceBackslash(this string str) => str.Replace('\\', '/');
+
+        public static string RemoveHead(this string source, string head)
+        {
+            if (source.StartsWith(head))
+            {
+                return source.AsSpan().SkipCount(head).ToString();
+            }
+
+            return source;
+        }
+
+        public static string RemoveTail(this string source, string tail)
+        {
+            if (source.EndsWith(tail))
+            {
+                return source.AsSpan().SkipTailCount(tail).ToString();
+            }
+
+            return source;
+        }
     }
 }
