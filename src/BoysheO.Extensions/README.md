@@ -2,6 +2,9 @@
 
 simple,high performance, useful extensions
 
+#  [6.7.3] - 2025-09-08
+New Api: GetCallerContextSimple()
+
 ## [6.7.2] - 2025-08-26
 New Toolkit: PathX
 

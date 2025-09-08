@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.IO;
+using System.Runtime.CompilerServices;
 
 namespace BoysheO.Util
 {
@@ -36,5 +37,17 @@ namespace BoysheO.Util
             return memberName;
         }
         
+        /// <summary>
+        ///     获取调用方信息(简化文件路径）
+        /// </summary>
+        public static string GetCallerContextSimple(
+            [CallerMemberName] string memberName = "",
+            [CallerFilePath] string sourceFilePath = "",
+            [CallerLineNumber] int sourceLineNumber = 0
+        )
+        {
+            var file = Path.GetFileName(sourceFilePath);
+            return $"{file}@{memberName}:{sourceLineNumber}";
+        }
     }
 }
