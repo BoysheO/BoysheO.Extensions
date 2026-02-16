@@ -31,7 +31,7 @@ namespace DateAndTime
         /// Timezone's timeoffset.Millsec.<br/>
         /// </param>
         /// <returns></returns>
-        [Obsolete("No same to cron")]
+        [Obsolete("No same to cron,it's not correct",true)]
         public static long GetCountOfTheTimeBetween(long startMs, long endMs, int timeMsOfDay, int timeOffset)
         {
             if (startMs > endMs)

@@ -25,6 +25,7 @@ public class TimeUtilTest
     //         (int)TimeSpan.FromHours(8).TotalMilliseconds);
     // }
     
+    [Obsolete][Ignore("API确定有误，被弃用了")]
     [TestCase("2023/1/17 09:45:12 +8:00", "2023/1/17 09:45:12 +8:00", "06:00:00", ExpectedResult = 0)]
     [TestCase("2023/1/17 09:45:12 +8:00", "2023/1/18 09:45:12 +8:00", "06:00:00", ExpectedResult = 1)]
     [TestCase("2023/1/17 09:45:12 +8:00", "2023/1/18 09:45:12 +8:00", "06:00:00", ExpectedResult = 1)]
@@ -43,6 +44,7 @@ public class TimeUtilTest
             (int)TimeSpan.FromHours(8).TotalMilliseconds);
     }
     
+    [Obsolete][Ignore("API确定有误，被弃用了")]
     [TestCase("2023/1/17 09:45:12 +8:00", "2023/1/17 09:45:12 +8:00", "06:00:00", "0 6 * * *")]
     [TestCase("2023/1/17 09:45:12 +8:00", "2023/1/18 09:45:12 +8:00", "06:00:00", "0 6 * * *")]
     [TestCase("2023/1/17 09:45:12 +8:00", "2023/1/18 09:45:12 +8:00", "06:00:00", "0 6 * * *")]

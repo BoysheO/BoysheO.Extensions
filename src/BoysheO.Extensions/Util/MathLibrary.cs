@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Buffers;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
-using System.Linq;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using BoysheO.Extensions;
-using BoysheO.Toolkit;
 
 namespace BoysheO.Util
 {
@@ -15,68 +13,99 @@ namespace BoysheO.Util
         #region Distance
 
         /// <summary>
-        ///     计算两坐标曼哈顿距离
+        ///     计算两坐标曼哈顿距离（溢出抛异常)
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int ManhattanDistance(int x1, int y1, int x2, int y2)
         {
-            return (x1 - x2).Abs() + (y1 - y2).Abs();
+            checked
+            {
+                return (x1 - x2).Abs() + (y1 - y2).Abs();
+            }
         }
 
         #endregion
 
         #region remap
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static int Remap(int v, int vMin, int vMax, int newMin, int newMax)
-        {
-            if (vMin == vMax || newMin == newMax) throw new ArgumentException();
-            return (v - vMin) / (vMax - vMin) * (newMax - newMin) + newMin;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static uint Remap(uint v, uint vMin, uint vMax, uint newMin, uint newMax)
-        {
-            if (vMin == vMax || newMin == newMax) throw new ArgumentException();
-            return (v - vMin) / (vMax - vMin) * (newMax - newMin) + newMin;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static float Remap(float v, float vMin, float vMax, float newMin, float newMax)
-        {
-            if (Math.Abs(vMin - vMax) < 0.002f || Math.Abs(newMin - newMax) < 0.002f)
-                throw new ArgumentException();
-            return (v - vMin) / (vMax - vMin) * (newMax - newMin) + newMin;
-        }
-
+        /// <summary>
+        /// 重映射区间[vMin,vMax]的值v到[newMin,newMax]
+        /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static double Remap(double v, double vMin, double vMax, double newMin, double newMax)
         {
-            if (Math.Abs(vMin - vMax) < 0.002f || Math.Abs(newMin - newMax) < 0.002f)
-                throw new ArgumentException();
-            return (v - vMin) / (vMax - vMin) * (newMax - newMin) + newMin;
+            //对于0长区间，特殊处理
+            if (vMin == vMax)
+            {
+                if (newMin == newMax)
+                {
+                    var d = v - vMin;
+                    var newValue = newMin + d;
+                    return newValue;
+                }
+
+                throw new ArgumentOutOfRangeException(nameof(vMin), "vMin equals vMax");
+            }
+
+            var newSpan = newMax - newMin;
+            var oldSpan = vMax - vMin;
+            var a = (v - vMin) / oldSpan * newSpan + newMin;
+            return a;
         }
 
+        /// <summary>
+        /// 重映射区间[vMin,vMax]的值v到[newMin,newMax]
+        /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static decimal Remap(decimal v, decimal vMin, decimal vMax, decimal newMin,
-            decimal newMax)
+        public static decimal Remap(decimal v, decimal vMin, decimal vMax, decimal newMin, decimal newMax)
         {
-            if (vMin == vMax || newMin == newMax) throw new ArgumentException();
-            return (v - vMin) / (vMax - vMin) * (newMax - newMin) + newMin;
+            //对于0长区间，特殊处理
+            if (vMin == vMax)
+            {
+                if (newMin == newMax)
+                {
+                    var d = v - vMin;
+                    var newValue = newMin + d;
+                    return newValue;
+                }
+
+                throw new ArgumentOutOfRangeException(nameof(vMin), "vMin equals vMax");
+            }
+
+            var newSpan = newMax - newMin;
+            var oldSpan = vMax - vMin;
+            var a = (v - vMin) / oldSpan * newSpan + newMin;
+            return a;
         }
 
+        /// <summary>
+        /// 重映射区间[vMin,vMax]的值v到[newMin,newMax]，使用四舍五入算法
+        /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static long Remap(long v, long vMin, long vMax, long newMin, long newMax)
         {
-            if (vMin == vMax || newMin == newMax) throw new ArgumentException();
-            return (v - vMin) / (vMax - vMin) * (newMax - newMin) + newMin;
-        }
+            checked
+            {
+                //对于0长区间，特殊处理
+                if (vMin == vMax)
+                {
+                    if (newMin == newMax)
+                    {
+                        var d = v - vMin;
+                        var newValue = newMin + d;
+                        return newValue;
+                    }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ulong Remap(ulong v, ulong vMin, ulong vMax, ulong newMin, ulong newMax)
-        {
-            if (vMin == vMax || newMin == newMax) throw new ArgumentException();
-            return (v - vMin) / (vMax - vMin) * (newMax - newMin) + newMin;
+                    throw new ArgumentOutOfRangeException(nameof(vMin), "vMin equals vMax");
+                }
+
+                var newSpan = newMax - newMin;
+                var oldSpan = vMax - vMin;
+                var delta = ((double)v - vMin) / oldSpan * newSpan;
+                var iDelta = (long)Math.Round(delta, MidpointRounding.AwayFromZero);
+                var result = iDelta + newMin; //这里要先转v到double，防止出现int.MinValue-n这样的bug
+                return result;
+            }
         }
 
         #endregion
@@ -88,111 +117,93 @@ namespace BoysheO.Util
         /// <summary>
         ///     等概率抽取1个元素
         /// </summary>
-        public static (ushort Idx, T Item) Draw<T>(this ReadOnlySpan<T> source)
+        public static (int Idx, T Item) Draw<T>(this ReadOnlySpan<T> source)
         {
-            if (source.Length == 0) throw new Exception("can not draw anything in empty pool");
+            if (source.Length == 0) throw new ArgumentException("can not draw anything in empty pool");
             var rand = RandomUtil.MoreEqualMinLessMax(0, source.Length);
-            return ((ushort)rand, source[rand]);
+            return (rand, source[rand]);
         }
 
         /// <summary>
         ///     等概率抽取1个元素
         /// </summary>
-        public static (ushort Idx, T Item) Draw<T>(this IList<T> source)
+        public static (int Idx, T Item) Draw<T>(this IReadOnlyList<T> source)
         {
-            Contract.Assert(source.Count > 0, "can not draw anything in empty pool");
+            if (source.Count == 0) throw new ArgumentException("can not draw anything in empty pool");
             var rand = RandomUtil.MoreEqualMinLessMax(0, source.Count);
-            return ((ushort)rand, source[rand]);
+            return (rand, source[rand]);
         }
-
-        public static (ushort Idx, T Item) Draw<T>(this ICollection<T> source)
-        {
-            Contract.Assert(source.Count > 0, "can not draw anything in empty pool");
-            var rand = RandomUtil.MoreEqualMinLessMax(0, source.Count);
-            return ((ushort)rand, source.ElementAt(rand));
-        }
-
+        
         /// <summary>
-        ///     加权抽取1个元素
+        ///     加权抽取1个元素（items 与 weights 视为 zip）
+        ///     *注意的点：1.出于预期性能考虑，约定weight传入的就是正整数
         /// </summary>
-        public static (ushort Idx, T Item) Draw<T>(this ICollection<(T Item, uint Weight)> source)
+        public static (int Idx, T Item) Draw<T>(
+            this IReadOnlyList<T> items,
+            IReadOnlyList<int> weights)
         {
-            Contract.Assert(source.Count > 0, "can not draw anything in empty pool");
+            if (items is null) throw new ArgumentNullException(nameof(items));
+            if (weights is null) throw new ArgumentNullException(nameof(weights));
+            if (items.Count == 0) throw new ArgumentOutOfRangeException(nameof(items), "empty source detected");
+            if (items.Count != weights.Count) throw new ArgumentException("items and weights length must be equal");
+
             long sum = 0;
-            foreach (var v in source) sum += v.Weight;
+            for (var i = 0; i < weights.Count; i++)
+            {
+                var w = weights[i];
+                sum = checked(sum + w);
+            }
+
+            if (sum <= 0) throw new InvalidOperationException("total weight must be > 0");
 
             var rand = RandomUtil.MoreEqualMinLessMax(0, sum) + 1;
-            ushort index = 0;
-            foreach (var valueTuple in source)
+
+            for (var i = 0; i < items.Count; i++)
             {
-                rand -= valueTuple.Weight;
-                if (rand <= 0) return (index, valueTuple.Item);
-                index++;
+                rand -= weights[i];
+                if (rand <= 0) return (i, items[i]);
             }
 
             throw new InvalidOperationException();
         }
 
         /// <summary>
-        ///     加权抽取1个元素
+        /// 遍历 source；每个元素以 hitProbability 命中；返回第一个命中的元素。
+        /// 对无穷 IEnumerable 也适用（p>0 时几乎必然终止）。
         /// </summary>
-        public static (ushort Idx, T Item) Draw<T>(this ReadOnlySpan<(T Item, uint Weight)> source)
+        public static bool Draw<T>(
+            this IEnumerable<T> source,
+            double hitProbability,
+#if NET6_0_OR_GREATER
+            [NotNullWhen(true)]
+#else
+#endif
+            out T picked,
+            CancellationToken cancellationToken)
         {
-            Contract.Assert(source.Length > 0, "can not draw anything in empty pool");
-            long sum = 0;
-            foreach (var v in source) sum += v.Weight;
-
-            var rand = RandomUtil.MoreEqualMinLessMax(0, sum) + 1;
-            var len = source.Length;
-            for (ushort i = 0; i < len; i++)
+            if (!cancellationToken.CanBeCanceled)
+                throw new ArgumentOutOfRangeException(nameof(cancellationToken),
+                    "CancellationToken must be cancelable to avoid infinite loop.");
+            if (source is null) throw new ArgumentNullException(nameof(source));
+            if (hitProbability < 0 || hitProbability > 1) throw new ArgumentOutOfRangeException(nameof(hitProbability));
+            if (hitProbability == 0)
             {
-                var cur = source[i];
-                rand -= cur.Weight;
-                if (rand <= 0) return (i, cur.Item);
+                picked = default!;
+                return false;
             }
 
-            throw new InvalidOperationException();
-        }
+            foreach (var item in source)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                if (RandomUtil.Random.NextDouble() < hitProbability)
+                {
+                    picked = item;
+                    return true;
+                }
+            }
 
-        #endregion
-
-        #region Extension
-
-        /// <summary>
-        ///     等概率抽取1个元素
-        /// </summary>
-        public static (ushort Idx, T Item) Draw<T>(this T[] source)
-        {
-            Contract.Assert(source.Length > 0, "can not draw anything in empty pool");
-            return Draw((ReadOnlySpan<T>)source);
-        }
-
-        /// <summary>
-        ///     等概率抽取1个元素
-        ///     collection必须可数
-        /// </summary>
-        public static (ushort Idx, T Item) Draw<T>(this Span<T> source)
-        {
-            Contract.Assert(source.Length > 0, "can not draw anything in empty pool");
-            return Draw((ReadOnlySpan<T>)source);
-        }
-
-        /// <summary>
-        ///     加权抽取1个元素
-        /// </summary>
-        public static (ushort Idx, T Item) Draw<T>(this (T Item, uint Weight)[] source)
-        {
-            Contract.Assert(source.Length > 0, "can not draw anything in empty pool");
-            return Draw(new ReadOnlySpan<(T, uint)>(source));
-        }
-
-        /// <summary>
-        ///     加权抽取1个元素
-        /// </summary>
-        public static (ushort Idx, T Item) Draw<T>(this Span<(T Item, uint Weight)> source)
-        {
-            Contract.Assert(source.Length > 0, "can not draw anything in empty pool");
-            return Draw((ReadOnlySpan<(T, uint)>)source);
+            picked = default!;
+            return false; // 只有在 source 真的枚举完（有限序列）才会到这
         }
 
         #endregion
@@ -202,18 +213,18 @@ namespace BoysheO.Util
         #region Lottery Permutation
 
         /// <summary>
-        ///     等概率抽取n个元素（排列）<br/>
+        ///     等概率抽取n个元素<br/>
         ///     蓄水池算法<br/>
         ///     *最终输出结果的顺序既有可能是顺序的，也有可能是乱序的
         /// </summary>
         /// <param name="count">抽取多少个元素</param>
         /// <param name="poolSize">奖池大小</param>
-        /// <returns>池化数组，用完记得归还<see cref="ArrayPool{T}"/></returns>
+        /// <returns>池化数组，用完记得归还<see cref="ArrayPool{T}"/>，返回一组从集合[0,poolSize)中随机抽取的count个元素的排列</returns>
         /// <exception cref="ArgumentOutOfRangeException">参数不正确</exception>
-        public static int[] DrawAsPooledArray(int poolSize, int count)
+        public static int[] DrawToPooledArray(int poolSize, int count)
         {
             if (poolSize < 0)
-                throw new ArgumentOutOfRangeException(nameof(poolSize), $"{nameof(poolSize)}={poolSize} should >0");
+                throw new ArgumentOutOfRangeException(nameof(poolSize), $"{nameof(poolSize)}={poolSize} should =>0");
             if (!count.IsInRange(0, poolSize))
                 throw new ArgumentOutOfRangeException(nameof(count),
                     $"{nameof(count)}={count} should belong [0,{nameof(poolSize)}={poolSize}]");
@@ -226,7 +237,7 @@ namespace BoysheO.Util
 
             for (int i = count; i < poolSize; i++)
             {
-                var rand = RandomUtil.Random.Next() % (i + 1);
+                var rand = RandomUtil.Random.Next(i + 1);
                 if (rand < count)
                 {
                     span[rand] = i;
@@ -243,12 +254,12 @@ namespace BoysheO.Util
         /// </summary>
         /// <param name="count">抽取多少个元素</param>
         /// <param name="poolSize">奖池大小</param>
-        /// <returns>池化数组，用完记得归还<see cref="ArrayPool{T}"/></returns>
+        /// <returns>池化数组，用完记得归还<see cref="ArrayPool{T}"/>，返回一组从集合[0,poolSize)中随机抽取的count个元素的排列</returns>
         /// <exception cref="ArgumentOutOfRangeException">参数不正确</exception>
-        public static int[] DrawAsPooledArraySorted(int poolSize, int count)
+        public static int[] DrawToPooledArraySorted(int poolSize, int count)
         {
             if (poolSize < 0)
-                throw new ArgumentOutOfRangeException(nameof(poolSize), $"{nameof(poolSize)}={poolSize} should >0");
+                throw new ArgumentOutOfRangeException(nameof(poolSize), $"{nameof(poolSize)}={poolSize} should >=0");
             if (!count.IsInRange(0, poolSize))
                 throw new ArgumentOutOfRangeException(nameof(count),
                     $"{nameof(count)}={count} should belong [0,{nameof(poolSize)}={poolSize}]");
@@ -257,7 +268,7 @@ namespace BoysheO.Util
             var spanCount = 0;
             for (int i = 0; i < poolSize; i++)
             {
-                var chance = (count - spanCount) * 1f / (poolSize - i);
+                var chance = (double)(count - spanCount) / (poolSize - i);
                 var rand = RandomUtil.Random.NextDouble();
                 if (!(rand <= chance)) continue;
                 span[spanCount] = i;
@@ -268,158 +279,8 @@ namespace BoysheO.Util
             return buff;
         }
 
-        /// <summary>
-        ///     加权抽取n个元素（排列）(非树）
-        /// </summary>
-        public static IEnumerable<(ushort Index, T Item)> Permutation<T>(this (uint Weight, T Item)[] source,
-            uint count)
-        {
-            if (source.Length == 0) throw new Exception("can not draw anything in empty pool");
-            if (!(count > 0 && count < source.Length))
-                throw new Exception($"count need belong to [1,{nameof(source)}.{nameof(source.Length)}]");
-            long sum = 0;
-            var len = source.Length;
-            for (var i = 0; i < len; i++) sum += source[i].Weight;
-
-            //通常count总是远小于weight_item数量的，这里算法按记录已取出索引而不是记录剩余索引做
-            var indexSkip = new SortedSet<ushort>(); //记录下已经取出的物品
-            for (; count > 0; count--)
-            {
-                var rand = RandomUtil.MoreEqualMinLessMax(1, sum + 1);
-                for (ushort i = 0; i < len; i++)
-                {
-                    if (indexSkip.Contains(i)) continue; //跳过已经取出的
-                    rand -= source[i].Weight;
-                    if (rand <= 0)
-                    {
-                        var item = source[i].Item;
-                        yield return (i, item);
-                        sum -= source[i].Weight;
-                        indexSkip.Add(i); //标记为已经取出
-                        break;
-                    }
-                }
-
-                // if (rand <= 0) throw new Exception("missing yield return"); //断言失败意味着漏抽了元素
-            }
-        }
-
-        /// <summary>
-        ///     加权抽取n个元素（排列）(非树）
-        /// </summary>
-        public static IEnumerable<(ushort Index, T Item)> Permutation<T>(
-            this IList<(uint Weight, T Item)> source, uint count)
-        {
-            if (source.Count == 0) throw new Exception("can not draw anything in empty pool");
-            if (!(count > 0 && count < source.Count))
-                throw new Exception($"count need belong to [1,{nameof(source)}.{nameof(source.Count)}]");
-            long sum = 0;
-            var len = source.Count;
-            for (var i = 0; i < len; i++) sum += source[i].Weight;
-
-            //通常count总是远小于weight_item数量的，这里算法按记录已取出索引而不是记录剩余索引做
-            var indexSkip = new SortedSet<ushort>(); //记录下已经取出的物品
-            for (; count > 0; count--)
-            {
-                var rand = RandomUtil.MoreEqualMinLessMax(1, sum + 1);
-                for (ushort i = 0; i < len; i++)
-                {
-                    if (indexSkip.Contains(i)) continue; //跳过已经取出的
-                    rand -= source[i].Weight;
-                    if (rand <= 0)
-                    {
-                        var item = source[i].Item;
-                        yield return (i, item);
-                        sum -= source[i].Weight;
-                        indexSkip.Add(i); //标记为已经取出
-                        break;
-                    }
-                }
-
-                // if (rand <= 0) throw new Exception("missing yield return"); //断言失败意味着漏抽了元素
-            }
-        }
-
         #endregion
-
-        #region Lottery Combination
-
-        /// <summary>
-        ///     等概率抽取抽取n个元素（组合）
-        /// </summary>
-        public static IEnumerable<(ushort Index, T Item)> Combination<T>(this T[] source, uint count)
-        {
-            if (source.IsEmpty()) throw new Exception("can not draw anything in empty pool");
-            for (; count > 0; count--) yield return source.Draw();
-        }
-
-        /// <summary>
-        ///     等概率抽取抽取n个元素（组合）
-        /// </summary>
-        public static IEnumerable<(ushort Index, T Item)> Combination<T>(this IList<T> source, uint count)
-        {
-            if (source.IsEmpty()) throw new Exception("can not draw anything in empty pool");
-            for (; count > 0; count--) yield return source.Draw();
-        }
-
-        /// <summary>
-        ///     加权抽取n个元素（组合）(非树）
-        /// </summary>
-        public static IEnumerable<(ushort Index, T Item)> Combination<T>(this (uint Weight, T Item)[] source,
-            uint count)
-        {
-            if (source.IsEmpty()) throw new Exception("can not draw anything in empty pool");
-            long sum = 0;
-            var len = source.Length;
-            for (var i = 0; i < len; i++) sum += source[i].Weight;
-
-            for (; count > 0; count--)
-            {
-                var rand = RandomUtil.MoreEqualMinLessMax(1, sum + 1);
-                for (ushort i = 0; i < len; i++)
-                {
-                    rand -= source[i].Weight;
-                    if (rand <= 0)
-                    {
-                        yield return (i, source[i].Item);
-                        break;
-                    }
-                }
-
-                // Assert(rand <= 0, "missing yield return"); //断言失败意味着漏抽了元素
-            }
-        }
-
-        /// <summary>
-        ///     加权抽取n个元素（组合）(非树）
-        /// </summary>
-        public static IEnumerable<(ushort Index, T Item)> Combination<T>(
-            this IList<(uint Weight, T Item)> source, uint count)
-        {
-            if (source.IsEmpty()) throw new Exception("can not draw anything in empty pool");
-            long sum = 0;
-            var len = source.Count;
-            for (var i = 0; i < len; i++) sum += source[i].Weight;
-
-            for (; count > 0; count--)
-            {
-                var rand = RandomUtil.MoreEqualMinLessMax(1, sum + 1);
-                for (ushort i = 0; i < len; i++)
-                {
-                    rand -= source[i].Weight;
-                    if (rand <= 0)
-                    {
-                        yield return (i, source[i].Item);
-                        break;
-                    }
-                }
-
-                // Assert(rand <= 0, "missing yield return"); //断言失败意味着漏抽了元素
-            }
-        }
-
-        #endregion
-
+        
         #region CombinationAndPermutaion
 
         /// <summary>
@@ -460,7 +321,7 @@ namespace BoysheO.Util
         public static int Factorial1(int n)
         {
             if (n == 0) return 1;
-            if (!n.IsInRange(1, 12)) throw new Exception($"n={n} is too big,n∈[1,12]");
+            if (!n.IsInRange(1, 12)) throw new ArgumentException($"n={n} is too big,n∈[1,12]");
             var res = 1;
             while (n > 1)
             {
@@ -478,7 +339,7 @@ namespace BoysheO.Util
         public static long Factorial2(int n)
         {
             if (n == 0) return 1;
-            if (!n.IsInRange(1, 20)) throw new Exception($"n={n} is too big,n∈[1,20]");
+            if (!n.IsInRange(1, 20)) throw new ArgumentException($"n={n} is too big,n∈[1,20]");
             long res = 1;
             while (n > 1)
             {

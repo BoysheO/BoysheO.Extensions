@@ -2,6 +2,9 @@
 
 simple,high performance, useful extensions
 
+# [6.8.0] - 2026-02-17
+Remake MathLibrary and RandomUtil
+
 #  [6.7.3] - 2025-09-08
 New Api: GetCallerContextSimple()
 

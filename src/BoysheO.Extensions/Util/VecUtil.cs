@@ -3,7 +3,7 @@ namespace BoysheO.Util
     //provide api about xy2ulong.benchmark and test see XY2VecExample projects
     public class VecUtil
     {
-        public static ulong CombineXY(int x, int y)
+        public static ulong PackXY(int x, int y)
         {
             var xx = unchecked((ulong) x) & 0x00000000FFFFFFFF;
             var yy = unchecked((ulong) y) << 8 * sizeof(int);
@@ -11,7 +11,7 @@ namespace BoysheO.Util
             return xy;
         }
         
-        public static (int x, int y) DepartXY(ulong xy)
+        public static (int x, int y) DepackXY(ulong xy)
         {
             unsafe
             {
