@@ -17,7 +17,8 @@ public class ReverseBenchmark
     public void LinqReverse()
     {
         var bytes = Prepare();
-        bytes = bytes.Reverse().ToArray();
+        bytes = System.Linq.Enumerable.Reverse(bytes).ToArray();
+        // bytes = bytes.Reverse().ToArray();
     }
 
     [Benchmark]
