@@ -10,6 +10,6 @@
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageVersion>2.1.1</PackageVersion>
 		<TargetFrameworks>netstandard2.0;net462</TargetFrameworks>
-
+        <NoWarn>$(NoWarn);1574</NoWarn>
 	</PropertyGroup>
 </Project>

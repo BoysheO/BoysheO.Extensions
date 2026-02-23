@@ -25,7 +25,7 @@ namespace BoysheO.Toolkit
         }
 
         /// <summary>
-        /// Same as <see cref="Path.GetFileName"/>
+        /// Same as <see cref="Path.GetFileName(string)"/>
         /// ex. "a/b/c.txt" -> "c.txt"
         /// </summary>
         public string GetFileName()
@@ -34,17 +34,17 @@ namespace BoysheO.Toolkit
         }
 
         /// <summary>
-        /// Same as <see cref="Path.GetDirectoryName"/>
+        /// Same as <see cref="Path.GetDirectoryName(string)"/>
         /// ex. "a/b/c.txt" -> "a/b"
         /// </summary>
         public PathValue? GetDirectoryName()
         {
             var value = Path.GetDirectoryName(Value);
-            return value == null ? (PathValue?) null : Path.GetDirectoryName(Value);
+            return value == null ? (PathValue?) null : Path.GetDirectoryName(Value)!;
         }
 
         /// <summary>
-        /// Same as <see cref="Path.GetFileNameWithoutExtension"/>
+        /// Same as <see cref="Path.GetFileNameWithoutExtension(string)"/>
         /// ex. "a.txt" -> "a"
         /// </summary>
         public string GetFileNameWithoutExt()
@@ -53,7 +53,7 @@ namespace BoysheO.Toolkit
         }
 
         /// <summary>
-        /// Same as <see cref="Path.GetExtension"/>
+        /// Same as <see cref="Path.GetExtension(string)"/>
         /// ex. "a.txt" -> ".txt"
         /// </summary>
         /// <returns></returns>

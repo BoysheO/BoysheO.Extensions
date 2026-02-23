@@ -57,7 +57,7 @@ namespace BoysheO.Extensions
         public static string? GetDescription(this Enum @enum)
         {
             var type = @enum.GetType();
-            var field = type.GetField(@enum.ToString());
+            var field = type.GetField(@enum.ToString())!;
             var atr = field.GetCustomAttribute<DescriptionAttribute>();
             return atr?.Description;
         }

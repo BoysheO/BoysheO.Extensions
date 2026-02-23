@@ -197,7 +197,7 @@ namespace BoysheO.Util
                 cancellationToken.ThrowIfCancellationRequested();
                 if (RandomUtil.Random.NextDouble() < hitProbability)
                 {
-                    picked = item;
+                    picked = item!;
                     return true;
                 }
             }

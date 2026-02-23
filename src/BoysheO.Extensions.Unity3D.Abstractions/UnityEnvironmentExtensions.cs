@@ -1,5 +1,8 @@
 namespace BoysheO.Extensions.Unity3D.Abstractions
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class UnityEnvironmentExtensions
     {
         /// <summary>

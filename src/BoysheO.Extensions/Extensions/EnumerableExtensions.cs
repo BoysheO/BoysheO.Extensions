@@ -111,7 +111,7 @@ namespace BoysheO.Extensions
                 return false;
             }
 
-            output = lst[lst.Count - 1];
+            output = lst[lst.Count - 1]!;
             return true;
         }
 
@@ -139,7 +139,7 @@ namespace BoysheO.Extensions
         {
             for (int i = 0, count = lst.Count; i < count; i++)
             {
-                item = lst[i];
+                item = lst[i]!;
                 if (predicate(item))
                 {
                     lst.RemoveAt(i);
