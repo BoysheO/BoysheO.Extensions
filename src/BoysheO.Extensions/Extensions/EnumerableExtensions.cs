@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
@@ -98,7 +99,11 @@ namespace BoysheO.Extensions
         /// <summary>
         /// use list as stack
         /// </summary>
-        public static bool TryPop<T>(this IReadOnlyList<T> lst, out T output)
+        public static bool TryPop<T>(this IReadOnlyList<T> lst,
+#if NETSTANDARD2_1_OR_GREATER
+            [NotNullWhen(returnValue: true)]
+#endif
+            out T output)
         {
             if (lst.Count <= 0)
             {
@@ -116,6 +121,34 @@ namespace BoysheO.Extensions
         public static void Push<T>(this IList<T> lst, T item)
         {
             lst.Add(item);
+        }
+
+        /// <summary>
+        /// Try to remove the first element that match the predicate.
+        /// </summary>
+        /// <param name="lst"></param>
+        /// <param name="predicate"></param>
+        /// <param name="item"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static bool TryRemoveFirst<T>(this IList<T> lst, Predicate<T> predicate,
+#if NETSTANDARD2_1_OR_GREATER
+            [NotNullWhen(returnValue: true)]
+#endif
+            out T item)
+        {
+            for (int i = 0, count = lst.Count; i < count; i++)
+            {
+                item = lst[i];
+                if (predicate(item))
+                {
+                    lst.RemoveAt(i);
+                    return true;
+                }
+            }
+
+            item = default!;
+            return false;
         }
 
         public static IEnumerable<T[]> Chunk<T>(this IEnumerable<T> source, int size)

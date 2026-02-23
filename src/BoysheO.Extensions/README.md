@@ -2,6 +2,9 @@
 
 simple,high performance, useful extensions
 
+# [6.8.1] - 2026-02-23
+New method:TryRemoveFirst
+
 # [6.8.0] - 2026-02-17
 Remake MathLibrary and RandomUtil
 
