@@ -1,6 +1,8 @@
 # BoysheO.Extensions
 
 simple,high performance, useful extensions
+# [6.9.0] - 2026-03-28
+bool TryPop<T>(IReadOnlyList<T>) is removed.
 
 # [6.8.1] - 2026-02-23
 New method:TryRemoveFirst

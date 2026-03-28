@@ -95,11 +95,11 @@ namespace BoysheO.Extensions
             item = default!;
             return -1;
         }
-
+        
         /// <summary>
         /// use list as stack
         /// </summary>
-        public static bool TryPop<T>(this IReadOnlyList<T> lst,
+        public static bool TryPop<T>(this IList<T> lst,
 #if NETSTANDARD2_1_OR_GREATER
             [NotNullWhen(returnValue: true)]
 #endif
@@ -111,10 +111,12 @@ namespace BoysheO.Extensions
                 return false;
             }
 
-            output = lst[lst.Count - 1]!;
+            var lastIdx = lst.Count - 1;
+            output = lst[lastIdx]!;
+            lst.RemoveAt(lastIdx);
             return true;
         }
-
+        
         /// <summary>
         /// use list as stack
         /// </summary>
