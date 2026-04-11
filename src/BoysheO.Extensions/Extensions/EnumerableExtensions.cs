@@ -152,26 +152,80 @@ namespace BoysheO.Extensions
             item = default!;
             return false;
         }
-
-        public static IEnumerable<T[]> Chunk<T>(this IEnumerable<T> source, int size)
+        
+        /// <summary>
+        /// Split the elements of a sequence into chunks of size at most <paramref name="size"/>.
+        /// </summary>
+        /// <remarks>
+        /// Every chunk except the last will be of size <paramref name="size"/>.
+        /// The last chunk will contain the remaining elements and may be of a smaller size.
+        /// </remarks>
+        /// <param name="source">
+        /// An <see cref="IEnumerable{T}"/> whose elements to chunk.
+        /// </param>
+        /// <param name="size">
+        /// Maximum size of each chunk.
+        /// </param>
+        /// <typeparam name="TSource">
+        /// The type of the elements of source.
+        /// </typeparam>
+        /// <returns>
+        /// An <see cref="IEnumerable{T}"/> that contains the elements of the input sequence split into chunks of size <paramref name="size"/>.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="source"/> is null.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <paramref name="size"/> is below 1.
+        /// </exception>
+        public static IEnumerable<TSource[]> Chunk1<TSource>(this IEnumerable<TSource> source, int size)
         {
 #if !NET6_0_OR_GREATER //.net6开始有官方Chunk实现
-            if (size <= 0)
-                throw new ArgumentOutOfRangeException(nameof(size), "chunkSize must greater than 0");
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (size < 1)
+                throw new ArgumentOutOfRangeException(nameof(size));
 
-            var buffer = new List<T>(size);
-            foreach (var item in source)
+            return EnumerateChunks();
+
+            IEnumerable<TSource[]> EnumerateChunks()
             {
-                buffer.Add(item);
-                if (buffer.Count == size)
+                using (IEnumerator<TSource> sourceEnumerator = source.GetEnumerator())
                 {
-                    yield return buffer.ToArray();
-                    buffer.Clear();
+                    if (!sourceEnumerator.MoveNext())
+                        yield break;
+
+                    int chunkCapacity = Math.Min(size, 4);
+
+                    while (true)
+                    {
+                        TSource[] chunk = new TSource[chunkCapacity];
+                        chunk[0] = sourceEnumerator.Current;
+                        int chunkCount = 1;
+
+                        while (chunkCount < size && sourceEnumerator.MoveNext())
+                        {
+                            // Grow gradually so we do not allocate "size" upfront for short sequences.
+                            if (chunkCount == chunk.Length)
+                            {
+                                chunkCapacity = (int)Math.Min((uint)size, 2u * (uint)chunkCount);
+                                Array.Resize(ref chunk, chunkCapacity);
+                            }
+
+                            chunk[chunkCount] = sourceEnumerator.Current;
+                            chunkCount++;
+                        }
+
+                        if (chunkCount != chunk.Length)
+                            Array.Resize(ref chunk, chunkCount);
+
+                        yield return chunk;
+
+                        if (chunkCount < size || !sourceEnumerator.MoveNext())
+                            yield break;
+                    }
                 }
             }
-
-            if (buffer.Count > 0)
-                yield return buffer.ToArray();
 #else
             return System.Linq.Enumerable.Chunk(source, size);
 #endif

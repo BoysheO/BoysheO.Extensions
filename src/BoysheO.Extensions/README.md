@@ -1,6 +1,10 @@
 # BoysheO.Extensions
 
 simple,high performance, useful extensions
+# [7.0.0] - 2026-04-11
+1. To avoid naming conflicts, the Chunk function has been renamed to Chunk1, and the original function has been completely removed.
+2. The implementation of the Chunk function has been corrected so that its handling of edge cases matches the official implementation.
+
 # [6.9.0] - 2026-03-28
 bool TryPop<T>(IReadOnlyList<T>) is removed.
 
